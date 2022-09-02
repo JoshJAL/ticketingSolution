@@ -13,6 +13,7 @@ const Home: NextPage = () => {
       </Head>
       <main style={{ margin: 0, padding: 0 }}>
         <Header />
+        <p>This is the ticket list</p>
         <div style={{ display: "flex", justifyContent: "center", margin: "12px 0" }}>
           <TicketForm />
         </div>

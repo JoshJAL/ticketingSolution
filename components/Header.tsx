@@ -1,7 +1,15 @@
+import { faTicket } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 
 export default function Header() {
   const router = useRouter();
+
+  const buttonBackgroundColor = "rgba(0, 0, 0, 0.35)";
+  const buttonTextColor = "black";
+  const buttonPadding = '10px';
+  const buttonCursor = 'pointer';
+  const buttonBorderRadius = '5px';
 
   return (
     <header style={{
@@ -11,11 +19,14 @@ export default function Header() {
       top: 0,
       zIndex: 3,
       position: "sticky",
-      display: "flex"
+      display: "flex",
+      justifyContent: "flex-end",
+      alignItems: "center"
     }}>
-      <div style={{ display: "flex", width: "100%", position: "relative", padding: "30px" }}>
-        <p onClick={() => router.push("/ticket-list")} style={{ borderRadius: "5px", color: 'black', backgroundColor: "rgba(0, 0, 0, 0.35)", right: '6px', top: "-12%", position: "absolute", padding: "10px", cursor: "pointer" }}>Ticket List</p>
-        <p onClick={() => router.push("/")} style={{ borderRadius: "5px", color: 'black', backgroundColor: "rgba(0, 0, 0, 0.35)", right: '5.5%', top: "-12%", position: "absolute", padding: "10px", cursor: "pointer" }}>Ticket Form</p>
+      <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} style={{ color: "black", margin: "0 auto 0 12px", fontSize: 45, cursor: "pointer" }} />
+      <div style={{ display: "flex", margin: "0 12px" }}>
+        <p onClick={() => router.push("/")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Ticket Form</p>
+        <p onClick={() => router.push("/ticket-list")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius }}>Ticket List</p>
       </div>
     </header>
   )

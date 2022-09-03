@@ -1,7 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Header from '../components/Header'
-import supabase from '../components/supabase'
 import Ticket from '../components/Ticket'
 
 const Home: NextPage = () => {

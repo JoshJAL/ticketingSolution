@@ -15,8 +15,8 @@ const Home: NextPage = () => {
       </Head>
       <main style={{ margin: 0, padding: 0 }}>
         <Header />
-        <div style={{ display: "flex", justifyContent: "center", margin: "12px 0" }}>
-            <Ticket />
+        <div style={{ display: "flex", justifyContent: "center", margin: "12px 0", flexWrap: "wrap" }}>
+          <Ticket />
         </div>
       </main>
     </div>

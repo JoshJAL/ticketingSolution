@@ -91,15 +91,13 @@ export default function TicketForm() {
     setLoading(false);
   }
 
-  const downloadImgUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/`;
-
   return (
     <div style={{ width: "100%", display: "flex", alignItems: 'center', justifyContent: "center", margin: "12px 20px" }}>
       {
         showModal ?
           <Modal styleOverride={{ backgroundColor: "black", width: mediaQueries.under768 ? "90%" : "60%", height: mediaQueries.under768 ? "60%" : '30%', border: "1px solid rgba(255, 255, 255, 0.5)", top: mediaQueries.under768 ? "15%" : "15%", left: mediaQueries.under768 ? "5%" : "20%", padding: mediaQueries.under768 ? "18px" : "20px" }} >
-            <p onClick={(e) => handlePriorityInfoClick(e)} style={{ margin: "12px 12px 0 12px", cursor: "pointer", width: "fit-content" }} >X</p>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <p onClick={(e) => handlePriorityInfoClick(e)} style={{ margin: "12px 12px 0 12px", cursor: "pointer", width: "fit-content", marginLeft: "auto" }} >X</p>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: 'center' }}>
               <p>How important is this?</p>
               <p>Complete when you can tickets will take lowest priority</p>
               <p>Complete this week tickets will come next in line</p>

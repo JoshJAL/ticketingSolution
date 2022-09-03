@@ -24,7 +24,7 @@ export default function Ticket() {
   return (
     tickets ?
       tickets.map((ticket: any, index: number) => (
-        <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "50%" : "15%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "50px 150px", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+        <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "15%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "50px 150px", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
           <p onMouseOut={(e) => onMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%", cursor: "pointer" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
           <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
           <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>

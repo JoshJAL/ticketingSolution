@@ -10,12 +10,6 @@ export default function Ticket() {
       .from('tickets')
       .select('*')
     setTickets(tickets);
-    console.log(tickets)
-    if (tickets) {
-      let something = tickets.map((ticket: any) => {
-        console.log(ticket.title)
-      })
-    }
   }
 
   useEffect(() => {

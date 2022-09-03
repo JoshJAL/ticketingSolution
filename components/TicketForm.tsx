@@ -34,7 +34,6 @@ export default function TicketForm() {
   function handleFileUrl(e: any) {
     setFile(e.target.files[0]);
     setFileUrl(`public/${e.target.files[0].name}`);
-    console.log(fileUrl);
   }
 
   function handleSelectionChange(e: any) {

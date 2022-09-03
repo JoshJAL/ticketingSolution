@@ -21,9 +21,10 @@ export default function Header() {
       position: "sticky",
       display: "flex",
       justifyContent: "flex-end",
-      alignItems: "center"
+      alignItems: "center",
+
     }}>
-      <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} style={{ color: "black", margin: "0 auto 0 12px", fontSize: 45, cursor: "pointer" }} />
+      <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} style={{ color: "black", margin: "0 auto 0 12px", cursor: "pointer", maxWidth: "3%", fontSize: 24 }} />
       <div style={{ display: "flex", margin: "0 12px" }}>
         <p onClick={() => router.push("/")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Ticket Form</p>
         <p onClick={() => router.push("/ticket-list")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius }}>Ticket List</p>

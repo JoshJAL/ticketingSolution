@@ -1,8 +1,13 @@
 import { faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 
 export default function Header() {
+  const mediaQueries = useMediaQueries({
+    under768: '(max-width: 768px)',
+  });
+
   const router = useRouter();
 
   const buttonBackgroundColor = "rgba(0, 0, 0, 0.35)";
@@ -24,7 +29,7 @@ export default function Header() {
       alignItems: "center",
 
     }}>
-      <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} style={{ color: "black", margin: "0 auto 0 12px", cursor: "pointer", maxWidth: "3%", fontSize: 24 }} />
+      <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} style={{ color: "black", margin: "0 auto 0 12px", cursor: "pointer", maxWidth: mediaQueries.under768 ? "15%" : "3%", fontSize: 24 }} />
       <div style={{ display: "flex", margin: "0 12px" }}>
         <p onClick={() => router.push("/")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Ticket Form</p>
         <p onClick={() => router.push("/ticket-list")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius }}>Ticket List</p>

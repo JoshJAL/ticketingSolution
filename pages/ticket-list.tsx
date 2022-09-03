@@ -1,9 +1,11 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Header from '../components/Header'
-import TicketForm from '../components/TicketForm'
+import supabase from '../components/supabase'
+import Ticket from '../components/Ticket'
 
 const Home: NextPage = () => {
+
   return (
     <div style={{ margin: 0, padding: 0 }}>
       <Head>
@@ -13,9 +15,8 @@ const Home: NextPage = () => {
       </Head>
       <main style={{ margin: 0, padding: 0 }}>
         <Header />
-        <p>This is the ticket list</p>
         <div style={{ display: "flex", justifyContent: "center", margin: "12px 0" }}>
-          <TicketForm />
+            <Ticket />
         </div>
       </main>
     </div>

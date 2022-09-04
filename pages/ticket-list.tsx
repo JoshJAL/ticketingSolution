@@ -1,10 +1,13 @@
-import type { NextPage } from 'next'
+import useMediaQueries from 'media-queries-in-react'
 import Head from 'next/head'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import Ticket from '../components/Ticket'
 
-const Home: NextPage = () => {
+export default function ticketList() {
+  const mediaQueries = useMediaQueries({
+    under768: '(max-width: 768px)',
+  });
 
   return (
     <div style={{ margin: 0, padding: 0 }}>
@@ -18,10 +21,9 @@ const Home: NextPage = () => {
         <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px" }}>
           <Ticket />
         </div>
+        <div style={{ margin: mediaQueries.under768 ? "15% 0" : "2% 0" }} />
+        <Footer />
       </main>
-      <Footer />
     </div>
   )
 }
-
-export default Home

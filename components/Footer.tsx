@@ -8,7 +8,7 @@ export default function Footer() {
       width: "100%",
       bottom: 0,
       zIndex: 3,
-      position: "sticky",
+      position: "fixed",
     }}>
       <div style={{ display: "flex", flexDirection: "column", margin: "0 12px", alignItems: 'center', justifyContent: "center", color: "black" }}>
         <p style={{ marginBottom: 12 }}>Feature request?</p>

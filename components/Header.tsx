@@ -2,7 +2,7 @@ import { faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
-import { OnMouseEnter, onMouseOut } from '../functions/HeaderMouseEvents';
+import { OnMouseEnter, OnMouseOut } from '../functions/HeaderMouseEvents';
 
 export default function Header() {
   const mediaQueries = useMediaQueries({
@@ -31,8 +31,8 @@ export default function Header() {
     }}>
       <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} style={{ color: "black", margin: "0 auto 0 12px", cursor: "pointer", maxWidth: mediaQueries.under768 ? "15%" : "3%", fontSize: 24 }} />
       <div style={{ display: "flex", margin: "0 12px" }}>
-        <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => onMouseOut(e)} onClick={() => router.push("/")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Ticket Form</p>
-        <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => onMouseOut(e)} onClick={() => router.push("/ticket-list")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius }}>Ticket List</p>
+        <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Ticket Form</p>
+        <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/ticket-list")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius }}>Ticket List</p>
       </div>
     </header>
   )

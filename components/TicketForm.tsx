@@ -59,12 +59,16 @@ export default function TicketForm() {
 
   async function fileUpload() {
     // let fileNames = await readFiles();
-    const { data, error } = await supabase.storage
-      .from('ticket-images')
-      .upload(fileUrl, file, {
-        cacheControl: '3600',
-        upsert: false,
-      });
+    if (file) {
+      const { data, error } = await supabase.storage
+        .from('ticket-images')
+        .upload(fileUrl, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+    } else {
+      return
+    }
   }
 
   async function createTicket() {
@@ -106,7 +110,7 @@ export default function TicketForm() {
           </Modal>
           : null
       }
-      <form style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: mediaQueries.under768 ? "100%" : "50% ", border: mediaQueries.under768 ? "none" : "1px solid rgba(255, 255, 255, 0.5)" }}>
+      <form style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: mediaQueries.under768 ? "100%" : "50% ", border: mediaQueries.under768 ? "none" : "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px" }}>
         <label style={{ margin: "12px 0" }}>Title:</label>
         <input value={title} type="text" style={{ width: mediaQueries.under768 ? "75%" : "25%" }} onChange={(e) => handleTitle(e)} />
         <label style={{ margin: "12px 0" }}>Describe what you need:</label>

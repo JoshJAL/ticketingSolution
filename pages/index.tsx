@@ -12,7 +12,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
-      <main style={{ margin: 0, padding: 0 }}>
+      <main style={{ margin: 0, padding: 0, height: "92vh" }}>
         <div style={{ display: "flex", justifyContent: "center", margin: "12px 0" }}>
           <TicketForm />
         </div>

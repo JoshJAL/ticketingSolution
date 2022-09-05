@@ -101,7 +101,7 @@ function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles, hand
                     user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
                       <button onClick={(e) => handleClaimTicket(e, ticket.id)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
                       :
-                      <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
+                      <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
                   }
                 </div>
               </div>
@@ -155,7 +155,7 @@ function HighTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, han
                     user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
                       <button onClick={(e) => handleClaimTicket(e, ticket.id)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
                       :
-                      <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
+                      <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
                   }
                 </div>
               </div>
@@ -208,7 +208,7 @@ function MediumTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, h
                     user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
                       <button onClick={(e) => handleClaimTicket(e, ticket.id)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
                       :
-                      <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
+                      <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
                   }
                 </div>
               </div>
@@ -261,7 +261,7 @@ function LowTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, hand
                     user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
                       <button onClick={(e) => handleClaimTicket(e, ticket.id)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
                       :
-                      <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
+                      <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
                   }
                 </div>
               </div>

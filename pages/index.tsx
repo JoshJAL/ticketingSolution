@@ -4,11 +4,27 @@ import Footer from '../components/Footer'
 import Header from '../components/Header'
 import TicketForm from '../components/TicketForm'
 import useMediaQueries from 'media-queries-in-react'
+import supabase from '../components/supabase'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 const Home: NextPage = () => {
+  const [authedUser, setAuthedUser] = useState<any>(null)
+
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const user = supabase.auth.user()
+    if (!user) {
+      router.push('/login')
+    }
+    setAuthedUser(user)
+    console.log(user)
+  }, [])
 
   return (
     <div style={{ width: "100%", height: "100%" }}>

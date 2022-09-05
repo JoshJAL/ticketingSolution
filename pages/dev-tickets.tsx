@@ -1,5 +1,6 @@
 import useMediaQueries from 'media-queries-in-react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -21,6 +22,8 @@ export default function devTickets() {
   const [showKenTickets, setShowKenTickets] = useState(false);
   const [showRobertTickets, setShowRobertTickets] = useState(false);
 
+  const router = useRouter();
+
   async function getTickets() {
     setLoading(true);
     let { data: tickets, error } = await supabase
@@ -32,6 +35,11 @@ export default function devTickets() {
 
   useEffect(() => {
     getTickets();
+    const user = supabase.auth.user()
+    if (!user || user.user_metadata.typeOfUser !== "admin") {
+      router.push('/')
+    }
+    console.log(user)
   }, []);
 
   function updateComplexityLevel(e: any) {
@@ -55,7 +63,10 @@ export default function devTickets() {
     e.target.style.textDecoration = "none";
   }
 
-  const listItemMargin = "0 0 20px 0"
+  const listItemMargin = "0 0 20px 0";
+  const sorted = tickets.sort((a: any, b: any) => {
+    return a.priority_level - b.priority_level;
+  })
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -92,19 +103,19 @@ export default function devTickets() {
               : null}
             <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowJesseTickets(!showJesseTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>Jesse's Tickets</p>
             <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-              <JesseTickets showJesseTickets={showJesseTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} />
+              <JesseTickets showJesseTickets={showJesseTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} />
             </div>
             <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowJoshTickets(!showJoshTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>Josh's Tickets</p>
             <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-              <JoshTickets showJoshTickets={showJoshTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} />
+              <JoshTickets showJoshTickets={showJoshTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} />
             </div>
             <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowKenTickets(!showKenTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>Ken's Tickets</p>
             <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-              <KenTickets showKenTickets={showKenTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} />
+              <KenTickets showKenTickets={showKenTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} />
             </div>
             <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowRobertTickets(!showRobertTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>Robert's Tickets</p>
             <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-              <RobertTickets showRobertTickets={showRobertTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} />
+              <RobertTickets showRobertTickets={showRobertTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} />
             </div>
             <div style={{ margin: mediaQueries.under768 ? "15% 0" : "2% 0" }} />
           </>
@@ -115,18 +126,18 @@ export default function devTickets() {
   )
 }
 
-function JesseTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showJesseTickets }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showJesseTickets: boolean }) {
+function JesseTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showJesseTickets, sorted }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showJesseTickets: boolean, sorted: any }) {
   let claimedTickets = 0;
   tickets.map((ticket: any) => {
-    if (ticket.assigned_to === "Jesse") {
+    if (ticket.assigned_to === "Jesse Malmstrom") {
       claimedTickets++
     }
   })
 
   return (
     claimedTickets > 0 ?
-      tickets.map((ticket: any) => {
-        if (ticket.assigned_to === "Jesse" && showJesseTickets) {
+      sorted.map((ticket: any) => {
+        if (ticket.assigned_to === "Jesse Malmstrom" && showJesseTickets) {
           return (
             <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
               <p>{ticket.title}</p>
@@ -147,25 +158,26 @@ function JesseTickets({ tickets, complexityLevel, updateComplexityLevel, addComp
             </div>
           )
         }
-      })
+      }).reverse()
       : null
   )
 }
 
-function JoshTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showJoshTickets }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showJoshTickets: boolean }) {
+function JoshTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showJoshTickets, sorted }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showJoshTickets: boolean, sorted: any }) {
   let claimedTickets = 0;
   tickets.map((ticket: any) => {
-    if (ticket.assigned_to === "Josh") {
+    if (ticket.assigned_to === "Joshua Levine") {
       claimedTickets++
     }
   })
 
   return (
     claimedTickets > 0 ?
-      tickets.map((ticket: any) => {
-        if (ticket.assigned_to === "Josh" && showJoshTickets) {
+      sorted.map((ticket: any) => {
+        if (ticket.assigned_to === "Joshua Levine" && showJoshTickets) {
           return (
-            <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+            <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+              <p style={{ fontSize: 18, fontWeight: 700, color: ticket.priority_level === 3 ? "#a60505" : "white", textDecoration: "underline" }}>{ticket.priority_level === 3 ? "EMERGENCY TICKET" : ticket.priority_level === 2 ? "Complete Tomorrow Ticket" : ticket.priority_level === 1 ? "Complete This Week Ticket" : "Low Priority Ticket"}</p>
               <p>{ticket.title}</p>
               <p>{ticket.description}</p>
               <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "200px", margin: mediaQueries.under768 ? "0" : "30% 0" }}>
@@ -184,25 +196,26 @@ function JoshTickets({ tickets, complexityLevel, updateComplexityLevel, addCompl
             </div>
           )
         }
-      })
+      }).reverse()
       : null
   )
 }
 
-function KenTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showKenTickets }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showKenTickets: boolean }) {
+function KenTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showKenTickets, sorted }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showKenTickets: boolean, sorted: any }) {
   let claimedTickets = 0;
   tickets.map((ticket: any) => {
-    if (ticket.assigned_to === "Ken") {
+    if (ticket.assigned_to === "Ken Parsons") {
       claimedTickets++
     }
   })
 
   return (
     claimedTickets > 0 ?
-      tickets.map((ticket: any) => {
-        if (ticket.assigned_to === "Ken" && showKenTickets) {
+      sorted.map((ticket: any) => {
+        if (ticket.assigned_to === "Ken Parsons" && showKenTickets) {
           return (
             <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+              <p>{ticket.priority_level}</p>
               <p>{ticket.title}</p>
               <p>{ticket.description}</p>
               <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "200px", margin: mediaQueries.under768 ? "0" : "30% 0" }}>
@@ -221,23 +234,23 @@ function KenTickets({ tickets, complexityLevel, updateComplexityLevel, addComple
             </div>
           )
         }
-      })
+      }).reverse()
       : null
   )
 }
 
-function RobertTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showRobertTickets }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showRobertTickets: boolean }) {
+function RobertTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showRobertTickets, sorted }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showRobertTickets: boolean, sorted: any }) {
   let claimedTickets = 0;
   tickets.map((ticket: any) => {
-    if (ticket.assigned_to === "Robert") {
+    if (ticket.assigned_to === "Robert Thibault") {
       claimedTickets++
     }
   })
 
   return (
     claimedTickets > 0 ?
-      tickets.map((ticket: any) => {
-        if (ticket.assigned_to === "Robert" && showRobertTickets) {
+      sorted.map((ticket: any) => {
+        if (ticket.assigned_to === "Robert Thibault" && showRobertTickets) {
           return (
             <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
               <p>{ticket.title}</p>
@@ -258,7 +271,7 @@ function RobertTickets({ tickets, complexityLevel, updateComplexityLevel, addCom
             </div>
           )
         }
-      })
+      }).reverse()
       : null
   )
 }

@@ -2,9 +2,13 @@ import { faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { OnMouseEnter, OnMouseOut } from '../functions/HeaderMouseEvents';
+import supabase from './supabase';
 
 export default function Header() {
+  const [admin, setAdmin] = useState(false);
+
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
@@ -16,6 +20,18 @@ export default function Header() {
   const buttonPadding = '10px';
   const buttonCursor = 'pointer';
   const buttonBorderRadius = '5px';
+
+  async function handleLogout(e: any) {
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
+
+  useEffect(() => {
+    const user = supabase.auth.user()
+    if (user?.user_metadata?.typeOfUser === "admin") {
+      setAdmin(true)
+    }
+  })
 
   return (
     <header style={{
@@ -32,7 +48,14 @@ export default function Header() {
       <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} style={{ color: "black", margin: "0 auto 0 12px", cursor: "pointer", maxWidth: mediaQueries.under768 ? "15%" : "3%", fontSize: 24 }} />
       <div style={{ display: "flex", margin: "0 12px" }}>
         <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Ticket Form</p>
-        <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/ticket-list")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius }}>Ticket List</p>
+        <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/ticket-list")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Ticket List</p>
+        {admin ?
+          <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/dev-tickets")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Developer Tickets</p>
+          : null}
+        {admin ?
+          <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/create-user")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Create User</p>
+          : null}
+        <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={handleLogout} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius }}>Logout</p>
       </div>
     </header>
   )

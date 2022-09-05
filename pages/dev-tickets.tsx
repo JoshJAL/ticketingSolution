@@ -68,7 +68,7 @@ export default function devTickets() {
       <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", height: "100%", width: "100%", overflowY: "auto" }}>
         {loading ?
           <div style={{ width: "100%", height: "100vh" }}>
-            <p style={{ fontSize: 48, fontWeight: 700, fontStyle: "oblique", margin: "50% 0 0 0", textAlign: "center" }}>Grabbing tickets...</p>
+            <p style={{ fontSize: 48, fontWeight: 700, fontStyle: "oblique", margin: mediaQueries.under768 ? "50% 0 0 0" : "15% 0 0 0", textAlign: "center" }}>Grabbing tickets...</p>
           </div>
           :
           <>

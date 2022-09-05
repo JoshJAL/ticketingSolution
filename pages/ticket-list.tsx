@@ -18,7 +18,7 @@ export default function ticketList() {
       </Head>
       <Header />
       <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px" }}>
+        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%", }}>
           <Ticket />
         </div>
         <div style={{ margin: mediaQueries.under768 ? "15% 0" : "2% 0" }} />

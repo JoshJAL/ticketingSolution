@@ -1,6 +1,6 @@
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react'
+import React, { CSSProperties, useEffect, useState } from 'react'
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
 import supabase from "./supabase";
 
@@ -12,8 +12,6 @@ export default function Ticket() {
 
   const [tickets, setTickets] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const [info, setInfo] = useState(false);
-  const [complexityLevel, setComplexityLevel] = useState('1');
 
   async function getTickets() {
     setLoading(true);
@@ -22,25 +20,23 @@ export default function Ticket() {
       .select('*')
     setTickets(tickets);
     setLoading(false);
-    console.log(tickets)
   }
 
   useEffect(() => {
     getTickets();
   }, []);
 
-  function updateComplexityLevel(e: any) {
-    setComplexityLevel(e.target.value)
+  const priorityLevelTitleStyles: CSSProperties = {
+    fontSize: 24,
+    fontWeight: 700,
+    textDecoration: "underline",
+    textAlign: "center",
+    marginBottom: "10px"
   }
 
-  async function addComplexityLevel(e: any, id: number) {
-    console.log(id)
-    e.preventDefault();
-    const { data, error } = await supabase
-      .from('tickets')
-      .update({ complexity_level: complexityLevel })
-      .eq('id', id)
-  }
+  const sorted = tickets.sort((a: any, b: any) => {
+    return a.priority_level - b.priority_level;
+  })
 
   return (
     loading ?
@@ -49,7 +45,16 @@ export default function Ticket() {
       </div>
       :
       tickets.length > 0 ?
-        <IndividualTicket tickets={tickets} mediaQueries={mediaQueries} info={info} setInfo={setInfo} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} />
+        sorted.map((ticket: any, index: number) => {
+          return (
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", margin: "0 0 40px 0" }} key={ticket.id}>
+              <EmergencyTicket tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} />
+              <HighTicket tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} />
+              <MediumTicket tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} />
+              <LowTicket tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} />
+            </div>
+          )
+        }).reverse().slice(0, 1)
         :
         (
           <div style={{ display: "flex", alignItems: "center", flexDirection: "column", margin: "100px 0", height: "100vh" }}>
@@ -60,23 +65,179 @@ export default function Ticket() {
   )
 }
 
-function IndividualTicket({ tickets, mediaQueries, info, setInfo, complexityLevel, updateComplexityLevel, addComplexityLevel }: { tickets: any, mediaQueries: any, info: boolean, setInfo: Function, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function }) {
+function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties }) {
   const router = useRouter();
 
   return (
-    tickets.map((ticket: any, index: number) => (
-      <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
-        <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-          <p onClick={() => router.push("/dev-tickets")} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%", cursor: "pointer" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
-          <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
-          <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>
-          <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "200px", margin: mediaQueries.under768 ? "0" : "30% 0" }}>
-            <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
-          </div>
-          <p style={{ textAlign: "center", fontWeight: 500, fontSize: 18 }}>{ticket.priority_level}</p>
-          <button onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
-        </div>
+    <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
+      <EmergencyTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
+      <div style={{ display: "flex", width: "100%", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+        {tickets.map((ticket: any, index: number) => {
+          if (ticket.priority_level === 3) {
+            return (
+              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+                <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                  <p onClick={() => router.push("/dev-tickets")} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%", cursor: "pointer" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
+                  <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
+                  <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "200px", margin: mediaQueries.under768 ? "0 0 9% 0" : "30% 0" }}>
+                    <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
+                  </div>
+                  <button onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
+                </div>
+              </div>
+            )
+          }
+        })
+        }
       </div>
-    ))
+    </div>
+  )
+}
+
+function EmergencyTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any, priorityLevelTitleStyles: CSSProperties }) {
+  let titleIndex: any = []
+  return (
+    tickets.map((ticket: any, index: number) => {
+      if (ticket.priority_level === 3) {
+        titleIndex.push(index)
+        return (
+          <p key={index} style={priorityLevelTitleStyles}><span style={{ color: "#a60505", textDecoration: "underline" }}>EMERGENCY TICKETS</span></p>
+
+        )
+      }
+    }).slice(0, titleIndex[0] + 1)
+  )
+}
+
+function HighTicket({ tickets, mediaQueries, priorityLevelTitleStyles }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties }) {
+  const router = useRouter();
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
+      <HighTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
+      <div style={{ display: "flex", width: "100%", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+        {tickets.map((ticket: any, index: number) => {
+          if (ticket.priority_level === 2) {
+            return (
+              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+                <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                  <p onClick={() => router.push("/dev-tickets")} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%", cursor: "pointer" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
+                  <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
+                  <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "200px", margin: mediaQueries.under768 ? "0 0 9% 0" : "30% 0" }}>
+                    <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
+                  </div>
+                  <button onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
+                </div>
+              </div>
+            )
+          }
+        })
+        }
+      </div>
+    </div>
+  )
+}
+
+function HighTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any, priorityLevelTitleStyles: CSSProperties }) {
+  let titleIndex: any = []
+  return (
+    tickets.map((ticket: any, index: number) => {
+      if (ticket.priority_level === 2) {
+        titleIndex.push(index)
+        return (
+          <p key={index} style={priorityLevelTitleStyles}>Priority Tickets, need to be completed ASAP</p>
+        )
+      }
+    }).slice(0, titleIndex[0] + 1)
+  )
+}
+
+function MediumTicket({ tickets, mediaQueries, priorityLevelTitleStyles }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties }) {
+  const router = useRouter();
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
+      <MediumTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
+      <div style={{ display: "flex", width: "100%", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+        {tickets.map((ticket: any, index: number) => {
+          if (ticket.priority_level === 1) {
+            return (
+              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+                <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                  <p onClick={() => router.push("/dev-tickets")} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%", cursor: "pointer" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
+                  <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
+                  <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "200px", margin: mediaQueries.under768 ? "0 0 9% 0" : "30% 0" }}>
+                    <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
+                  </div>
+                  <button onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
+                </div>
+              </div>
+            )
+          }
+        })
+        }
+      </div>
+    </div>
+  )
+}
+
+function MediumTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any, priorityLevelTitleStyles: CSSProperties }) {
+  let titleIndex: any = []
+  return (
+    tickets.map((ticket: any, index: number) => {
+      if (ticket.priority_level === 1) {
+        titleIndex.push(index)
+        return (
+          <p key={index} style={priorityLevelTitleStyles}>Need to be completed by the end of the week</p>
+        )
+      }
+    }).slice(0, titleIndex[0] + 1)
+  )
+}
+
+function LowTicket({ tickets, mediaQueries, priorityLevelTitleStyles }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties }) {
+  const router = useRouter();
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
+      <LowTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
+      <div style={{ display: "flex", width: "100%", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+        {tickets.map((ticket: any, index: number) => {
+          if (ticket.priority_level === 0) {
+            return (
+              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+                <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                  <p onClick={() => router.push("/dev-tickets")} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%", cursor: "pointer" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
+                  <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
+                  <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "200px", margin: mediaQueries.under768 ? "0 0 9% 0" : "30% 0" }}>
+                    <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
+                  </div>
+                  <button onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
+                </div>
+              </div>
+            )
+          }
+        })
+        }
+      </div>
+    </div>
+  )
+}
+
+function LowTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any, priorityLevelTitleStyles: CSSProperties }) {
+  let titleIndex: any = []
+  return (
+    tickets.map((ticket: any, index: number) => {
+      if (ticket.priority_level === 0) {
+        titleIndex.push(index)
+        return (
+          <p key={index} style={priorityLevelTitleStyles}>Low priority tickets</p>
+        )
+      }
+    }).slice(0, titleIndex[0] + 1)
   )
 }

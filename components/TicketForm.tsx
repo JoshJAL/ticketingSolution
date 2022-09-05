@@ -11,7 +11,7 @@ export default function TicketForm() {
   const ref = useRef("");
 
   const [showModal, setShowModal] = useState(false);
-  const [selection, setSelection] = useState("Complete when you can");
+  const [selection, setSelection] = useState(0);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [fileUrl, setFileUrl] = useState("");
@@ -84,12 +84,11 @@ export default function TicketForm() {
     setLoading(true);
     await fileUpload();
     await createTicket();
-    setSelection("Complete when you can");
+    setSelection(0);
     setTitle("");
     setDescription("");
     setFileUrl("");
     setFile("");
-    setSelection("Complete when you can");
     ref.current = "";
     setLoading(false);
   }
@@ -123,11 +122,11 @@ export default function TicketForm() {
         <label style={{ margin: "12px 0" }}>Any pictures?</label>
         <input onChange={(e) => handleFileUrl(e)} type="file" style={{ cursor: "pointer" }} />
         <label style={{ margin: "12px 0", display: "flex", alignItems: 'center' }}>Priority Level <span onClick={(e) => handlePriorityInfoClick(e)} style={{ border: "1px solid white", borderRadius: "50%", margin: "0 5px", padding: "2px 4px", fontSize: 9, cursor: "pointer" }}>i</span></label>
-        <select defaultValue={selection} style={{ width: mediaQueries.under768 ? "75%" : "25%" }} onClick={(e) => handleSelectionChange(e)}>
-          <option value="Complete when you can">Complete when you can</option>
-          <option value="Complete this week">Complete this week</option>
-          <option value="Complete by tomorrow">Complete by tomorrow</option>
-          <option value="EMERGENCY NEEDS TO BE COMPLETED ASAP">EMERGENCY NEEDS TO BE COMPLETED ASAP</option>
+        <select style={{ width: mediaQueries.under768 ? "75%" : "25%" }} onClick={(e) => handleSelectionChange(e)}>
+          <option value={0}>Complete when you can</option>
+          <option value={1}>Complete this week</option>
+          <option value={2}>Complete by tomorrow</option>
+          <option value={3}>EMERGENCY NEEDS TO BE COMPLETED ASAP</option>
         </select>
         <button onClick={(e) => handleSubmit(e)} style={{ width: mediaQueries.under768 ? "40%" : "18%", margin: "12px 0", cursor: "pointer" }}>{loading ? "Submitting..." : "Submit Ticket"}</button>
       </form>

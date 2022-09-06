@@ -84,6 +84,16 @@ export default function DevTickets() {
     }
   }
 
+  async function handleSendToQA(e: any, ticket: any, setSending: any, urlText: any) {
+    e.preventDefault();
+    setSending(true);
+    const { data, error } = await supabase
+      .from('tickets')
+      .update({ page_url: urlText, status: 'Testing/QA' })
+      .eq('id', ticket.id)
+    setSending(false)
+  }
+
   function onMouseOver(e: any) {
     e.target.style.textDecoration = "underline";
   }
@@ -120,9 +130,9 @@ export default function DevTickets() {
             </div>
             :
             <>
-              <p onClick={() => setShowModal(!showModal)} onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} style={{ fontSize: 24, border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "50%", padding: "5px 15px", cursor: "pointer", position: "absolute", top: mediaQueries.under768 ? "9%" : "9%", right: "40px" }}>?</p>
+              <p onClick={() => setShowModal(!showModal)} onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} style={{ fontSize: 24, border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "50%", padding: "5px 15px", cursor: "pointer", position: "absolute", top: mediaQueries.under768 ? "9%" : "100px", right: "40px" }}>?</p>
               {showModal ?
-                <Modal styleOverride={{ maxHeight: "90vh", overflowY: "auto", backgroundColor: "black", width: mediaQueries.under768 ? "95%" : "50%", margin: mediaQueries.under768 ? "10% 2.5%" : "15% 25%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: "column", textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px" }}>
+                <Modal styleOverride={{ maxHeight: "90vh", overflowY: "auto", backgroundColor: "black", width: mediaQueries.under768 ? "95%" : "63%", margin: mediaQueries.under768 ? "10% 2.5%" : "10% 18.5%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: "column", textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px" }}>
                   <div style={{ width: "100%", margin: "2px", fontSize: mediaQueries.under768 ? 15 : 18, display: "flex", flexDirection: "column" }}>
                     <p onClick={() => setShowModal(false)} style={{ margin: 0, marginLeft: "auto", marginRight: "5px", marginTop: "5px", padding: "5px", cursor: "pointer" }}>X</p>
                     <p>{content.complexityLevelModalTitle}</p>
@@ -140,19 +150,19 @@ export default function DevTickets() {
                 : null}
               <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowJesseTickets(!showJesseTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Jesse's Tickets"}</p>
               <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets showTickets={showJesseTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Jesse Malmstrom"} />
+                <AssignedTickets showTickets={showJesseTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Jesse Malmstrom"} handleSendToQA={handleSendToQA} />
               </div>
               <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowJoshTickets(!showJoshTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Josh's Tickets"}</p>
               <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets showTickets={showJoshTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Joshua Levine"} />
+                <AssignedTickets showTickets={showJoshTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Joshua Levine"} handleSendToQA={handleSendToQA} />
               </div>
               <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowKenTickets(!showKenTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Ken's Tickets"}</p>
               <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets showTickets={showKenTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Ken Parsons"} />
+                <AssignedTickets showTickets={showKenTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Ken Parsons"} handleSendToQA={handleSendToQA} />
               </div>
               <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowRobertTickets(!showRobertTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Robert's Tickets"}</p>
               <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets showTickets={showRobertTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Robert Thibault"} />
+                <AssignedTickets showTickets={showRobertTickets} mediaQueries={mediaQueries} tickets={tickets} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Robert Thibault"} handleSendToQA={handleSendToQA} />
               </div>
               <div style={{ margin: mediaQueries.under768 ? "15% 0" : "2% 0" }} />
             </>
@@ -164,7 +174,7 @@ export default function DevTickets() {
   )
 }
 
-function AssignedTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showTickets, sorted, handleComplete, name }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showTickets: boolean, sorted: any, handleComplete: Function, name: string }) {
+function AssignedTickets({ tickets, complexityLevel, updateComplexityLevel, addComplexityLevel, mediaQueries, showTickets, sorted, handleComplete, name, handleSendToQA }: { tickets: any, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, mediaQueries: any, showTickets: boolean, sorted: any, handleComplete: Function, name: string, handleSendToQA: Function }) {
   let claimedTickets = 0;
   tickets.map((ticket: any) => {
     if (ticket.assigned_to === name) {
@@ -175,29 +185,49 @@ function AssignedTickets({ tickets, complexityLevel, updateComplexityLevel, addC
   return (
     claimedTickets > 0 ?
       sorted.map((ticket: any) => {
+        const [open, setOpen] = useState(false);
+        const [urlText, setUrlText] = useState("");
+        const [sending, setSending] = useState(false);
         if (ticket.assigned_to === name && showTickets) {
           return (
-            <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
-              {ticket.assigned_to === name ? <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => handleComplete(e, ticket)} style={{ marginRight: "auto", marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{"Complete?"}</p> : null}
+            <div key={ticket.id} style={{ textAlign: "center", border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
+              {ticket.assigned_to === name ?
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                  <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => handleComplete(e, ticket)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{"Complete?"}</p>
+                  <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => setOpen(!open)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{"Send to QA?"}</p>
+                </div>
+                : null}
+              {open ?
+                <div style={{ border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", padding: "20px", margin: "10px 20px" }}>
+                  <p>{"Is this ready to be tested?"}</p>
+                  <p>{"Don't forget to include the page below URL if necessary!"}</p>
+                  <input type="text" value={urlText} onChange={((e) => setUrlText(e.target.value))} />
+                  <br />
+                  <button style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToQA(e, ticket, setSending, urlText)}>{sending ? "Sending..." : "Send on over"}</button>
+                </div>
+                : null
+              }
               <p>{ticket.title}</p>
               <p>{ticket.description}</p>
               <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "200px", margin: mediaQueries.under768 ? "0" : "30% 0" }}>
                 <img style={{ maxWidth: "45%" }} alt={ticket.title} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
               </div>
               <p>Complexity level: {ticket.complexity_level ? ticket.complexity_level : "Not yet assigned"}</p>
-              {ticket.assigned_to === name ?
-                <select defaultValue={ticket.complexity_level ? ticket.complexity_level : complexityLevel} onClick={(e) => updateComplexityLevel(e)} style={{ margin: "0 0 10px 0" }} >
-                  <option value={"1"}>1</option>
-                  <option value={"2"}>2</option>
-                  <option value={"3"}>3</option>
-                  <option value={"5"}>5</option>
-                  <option value={"8"}>8</option>
-                  <option value={"13"}>13</option>
-                </select>
-                :
-                null}
+              {
+                ticket.assigned_to === name ?
+                  <select defaultValue={ticket.complexity_level ? ticket.complexity_level : complexityLevel} onClick={(e) => updateComplexityLevel(e)} style={{ margin: "0 0 10px 0" }} >
+                    <option value={"1"}>1</option>
+                    <option value={"2"}>2</option>
+                    <option value={"3"}>3</option>
+                    <option value={"5"}>5</option>
+                    <option value={"8"}>8</option>
+                    <option value={"13"}>13</option>
+                  </select>
+                  :
+                  null
+              }
               {ticket.assigned_to === name ? <button onClick={(e) => addComplexityLevel(e, ticket.id)}>{"Set"}</button> : null}
-            </div>
+            </div >
           )
         }
       }).reverse()

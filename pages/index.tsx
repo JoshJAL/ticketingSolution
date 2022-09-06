@@ -5,7 +5,6 @@ import Header from '../components/Header'
 import TicketForm from '../components/TicketForm'
 import useMediaQueries from 'media-queries-in-react'
 import supabase from '../components/supabase'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import HamburgerMenu from '../components/HamburgerMenu'
 
@@ -17,12 +16,10 @@ const Home: NextPage = () => {
     under768: '(max-width: 768px)',
   });
 
-  const router = useRouter();
-
   useEffect(() => {
     const user = supabase.auth.user()
     if (!user) {
-      router.push('/login')
+      window.location.href = '/login'
     }
     setAuthedUser(user)
     console.log(user)

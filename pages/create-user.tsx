@@ -1,6 +1,5 @@
 import useMediaQueries from 'media-queries-in-react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import Footer from '../components/Footer';
 import HamburgerMenu from '../components/HamburgerMenu';
@@ -82,9 +81,9 @@ export default function CreateUser() {
               </>
               :
               <>
-                <label style={{ margin: "10px" }} >Enter user's email: </label>
+                <label style={{ margin: "10px" }} >{"Enter user's email: "}</label>
                 <input onChange={(e) => setEmail(e.target.value)} style={{ padding: "5px", width: "40%" }} type="email" />
-                <label style={{ margin: "10px" }} >Enter user's name: </label>
+                <label style={{ margin: "10px" }} >{"Enter user's name: "}</label>
                 <input onChange={(e) => setName(e.target.value)} style={{ padding: "5px", width: "40%" }} type="text" />
                 <select defaultValue={"user"} style={{ width: mediaQueries.under768 ? "75%" : "fit-content", cursor: "pointer", margin: "20px 0 0 0", fontSize: 18 }} onClick={(e) => handleSelectionChange(e)}>
                   <option value="generalUser">General User</option>

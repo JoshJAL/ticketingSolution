@@ -1,6 +1,5 @@
 import useMediaQueries from 'media-queries-in-react'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Footer from '../components/Footer'
 import HamburgerMenu from '../components/HamburgerMenu'
@@ -17,10 +16,9 @@ export default function TicketList() {
   });
 
   useEffect(() => {
-    const router = useRouter();
     const user = supabase.auth.user()
     if (!user) {
-      router.push('/login')
+      window.location.href = '/login';
     }
     setAuthedUser(user)
   }, [])

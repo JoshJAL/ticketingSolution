@@ -7,7 +7,7 @@ export default function Footer() {
       backgroundColor: "#c2c2c2",
       width: "100%",
       bottom: 0,
-      zIndex: 3,
+      zIndex: 1,
       position: "fixed",
     }}>
       <div style={{ display: "flex", flexDirection: "column", margin: "0 12px", alignItems: 'center', justifyContent: "center", color: "black" }}>

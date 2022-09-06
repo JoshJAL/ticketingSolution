@@ -7,8 +7,10 @@ export default function signUp() {
   const [password, setPassword] = useState("");
   const [adminEmails, setAdminEmails] = useState<any>([]);
   const [admins, setAdmins] = useState<any>([]);
-  const [whiteListEmails, setWhitelistEmails] = useState<any>([]);
-  const [whitelist, setWhitelist] = useState<any>([]);
+  const [qAEmails, setqAEmails] = useState<any>([]);
+  const [qAs, setQAs] = useState<any>([]);
+  const [generalUserEmails, setGeneralUserEmails] = useState<any>([]);
+  const [generalUser, setGeneralUser] = useState<any>([]);
   const [notAllowed, setNotAllowed] = useState(false);
   const [verify, setVerify] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -21,12 +23,21 @@ export default function signUp() {
     setAdminEmails(devs?.map((dev) => dev.email))
   }
 
-  async function fetchWhiteListedEmails() {
-    let { data: users, error } = await supabase
-      .from('users')
+  async function fetchQAEmails() {
+    let { data: qas, error } = await supabase
+      .from('q&a')
       .select('*')
-    setWhitelist(users)
-    setWhitelistEmails(users?.map((whiteListedEmail) => whiteListedEmail.email))
+    setQAs(qas)
+    setqAEmails(qas?.map((qaMember) => qaMember.email))
+
+  }
+
+  async function fetchGeneralUserEmails() {
+    let { data: users, error } = await supabase
+      .from('generalUsers')
+      .select('*')
+    setGeneralUser(users)
+    setGeneralUserEmails(users?.map((generalUser) => generalUser.email))
   }
 
   function setAdminName(email: string) {
@@ -34,12 +45,13 @@ export default function signUp() {
   }
 
   function setWhiteListName(email: string) {
-    return whitelist.find((user: any) => user.email === email.toLowerCase().trim())?.name
+    return generalUser.find((user: any) => user.email === email.toLowerCase().trim())?.name
   }
 
   useEffect(() => {
     fetchAdminEmails();
-    fetchWhiteListedEmails();
+    fetchQAEmails();
+    fetchGeneralUserEmails();
   }, [])
 
   const mediaQueries = useMediaQueries({
@@ -63,7 +75,21 @@ export default function signUp() {
         }
       )
       setVerify(true);
-    } else if (whiteListEmails.includes(email.trim().toLowerCase())) {
+    } else if (qAEmails.includes(email.trim().toLowerCase())) {
+      let { user, error } = await supabase.auth.signUp(
+        {
+          email: email.toLowerCase().trim(),
+          password: password
+        },
+        {
+          data: {
+            typeOfUser: "q&a",
+            name: setWhiteListName(email)
+          },
+        }
+      )
+      setVerify(true);
+    } else if (generalUserEmails.includes(email.trim().toLowerCase())) {
       let { user, error } = await supabase.auth.signUp(
         {
           email: email.toLowerCase().trim(),

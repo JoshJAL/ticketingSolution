@@ -9,7 +9,7 @@ import Modal from '../components/Modal';
 import supabase from '../components/supabase';
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
 
-export default function devTickets() {
+export default function DevTickets() {
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
@@ -24,8 +24,6 @@ export default function devTickets() {
   const [showRobertTickets, setShowRobertTickets] = useState(false);
   const [hamburgerClick, setHamburgerClick] = useState(false);
 
-  const router = useRouter();
-
   async function getTickets() {
     setLoading(true);
     let { data: tickets, error } = await supabase
@@ -36,6 +34,7 @@ export default function devTickets() {
   }
 
   useEffect(() => {
+    const router = useRouter();
     getTickets();
     const user = supabase.auth.user()
     if (!user || user.user_metadata.typeOfUser !== "admin") {

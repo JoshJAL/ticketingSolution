@@ -31,7 +31,7 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
     if (user?.user_metadata?.typeOfUser === "admin") {
       setAdmin(true)
     }
-  })
+  }, [])
 
   return (
     <header style={{

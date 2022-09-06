@@ -7,7 +7,7 @@ import HamburgerMenu from '../components/HamburgerMenu';
 import Header from '../components/Header';
 import supabase from '../components/supabase';
 
-export default function createUser() {
+export default function CreateUser() {
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [selection, setSelection] = useState<string>('');
@@ -19,9 +19,8 @@ export default function createUser() {
     under768: '(max-width: 768px)',
   });
 
-  const router = useRouter();
-
   useEffect(() => {
+    const router = useRouter();
     const user = supabase.auth.user()
     if (!user || user.user_metadata.typeOfUser !== 'admin') {
       router.push('/')

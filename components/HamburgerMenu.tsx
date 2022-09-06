@@ -11,7 +11,7 @@ export default function HamburgerMenu({ hamburgerClick, setHamburgerClick, backg
     if (user?.user_metadata?.typeOfUser === "admin") {
       setAdmin(true)
     }
-  })
+  }, [])
 
   async function handleLogout(e: any) {
     await supabase.auth.signOut()

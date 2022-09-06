@@ -40,7 +40,9 @@ const Home: NextPage = () => {
         <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>
           <HamburgerMenu hamburgerClick={hamburgerClick} setHamburgerClick={setHamburgerClick} />
         </div>
-        <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
+        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+          <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
+        </div>
         <main style={{ margin: 0, padding: 0, height: mediaQueries.under768 ? "100%" : "92vh" }}>
           <div style={{ margin: mediaQueries.under768 ? "12px 0" : "6% 0", width: "100%" }}>
             <TicketForm />

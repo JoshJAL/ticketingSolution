@@ -73,7 +73,7 @@ export default function CreateUser() {
         </div>
         <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
         <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", height: "88vh", width: "100%", overflowY: "auto" }}>
-          <form style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: mediaQueries.under768 ? "100%" : "30%", height: mediaQueries.under768 ? "100%" : "30%", border: mediaQueries.under768 ? "none" : "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", fontSize: 24 }}>
+          <form style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: mediaQueries.under768 ? "100%" : "30%", height: mediaQueries.under768 ? "100%" : "40%", border: mediaQueries.under768 ? "none" : "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", fontSize: 24 }}>
             {submitted ?
               <>
                 <p>User has been created!</p>

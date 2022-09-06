@@ -8,7 +8,7 @@ import Header from '../components/Header'
 import supabase from '../components/supabase'
 import Ticket from '../components/Ticket'
 
-export default function ticketList() {
+export default function TicketList() {
   const [authedUser, setAuthedUser] = useState<any>(null);
   const [hamburgerClick, setHamburgerClick] = useState(false);
 

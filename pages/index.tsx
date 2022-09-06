@@ -17,8 +17,9 @@ const Home: NextPage = () => {
     under768: '(max-width: 768px)',
   });
 
+  const router = useRouter();
+
   useEffect(() => {
-    const router = useRouter();
     const user = supabase.auth.user()
     if (!user) {
       router.push('/login')

@@ -33,8 +33,9 @@ export default function DevTickets() {
     setLoading(false);
   }
 
+  const router = useRouter();
+
   useEffect(() => {
-    const router = useRouter();
     getTickets();
     const user = supabase.auth.user()
     if (!user || user.user_metadata.typeOfUser !== "admin") {

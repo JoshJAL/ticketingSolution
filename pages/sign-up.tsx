@@ -2,7 +2,7 @@ import useMediaQueries from 'media-queries-in-react';
 import React, { useEffect, useState } from 'react'
 import supabase from '../components/supabase';
 
-export default function signUp() {
+export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [adminEmails, setAdminEmails] = useState<any>([]);

@@ -35,7 +35,7 @@ export default function SignUp() {
         <label style={{ margin: "10px" }}>Password:</label>
         <input style={{ padding: "5px", width: "40%" }} onChange={(e) => setPassword(e.target.value)} value={password} type="password" />
         <button style={{ margin: "10px", fontSize: 18, padding: '10px', cursor: "pointer" }} onClick={(e) => handleSignIn(e)}>Login</button>
-        <p style={{ margin: "0 20px", textAlign: "center" }}>Don't have an account? <a onClick={() => router.push('/sign-up')} style={{ cursor: "pointer", textDecoration: "underline" }}>Sign Up!</a></p>
+        <p style={{ margin: "0 20px", textAlign: "center" }}>{"Don't have an account? "}<a onClick={() => router.push('/sign-up')} style={{ cursor: "pointer", textDecoration: "underline" }}>Sign Up!</a></p>
       </form>
     </div>
   )

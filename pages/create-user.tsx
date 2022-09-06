@@ -19,15 +19,10 @@ export default function CreateUser() {
     under768: '(max-width: 768px)',
   });
 
-  const router = useRouter();
-  function handleRedirect() {
-    router.push('/');
-  }
-
   useEffect(() => {
     const user = supabase.auth.user()
     if (!user || user.user_metadata.typeOfUser !== 'admin') {
-      handleRedirect()
+      window.location.href = "/"
     }
   }, [])
 

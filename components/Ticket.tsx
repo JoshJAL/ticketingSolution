@@ -50,8 +50,8 @@ export default function Ticket({ user }: { user: any }) {
 
   return (
     loading ?
-      <div style={{ width: "100%", height: "100vh" }}>
-        <p style={{ fontSize: 48, fontWeight: 700, fontStyle: "oblique", margin: "50% 0 0 0", textAlign: "center" }}>Grabbing tickets...</p>
+      <div style={{ width: "100%", height: "100%" }}>
+        <p style={{ fontSize: 48, fontWeight: 700, fontStyle: "oblique", margin: "10% 0 0 0", textAlign: "center" }}>Grabbing tickets...</p>
       </div>
       :
       tickets.length > 0 ?

@@ -44,6 +44,7 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
       display: "flex",
       justifyContent: "flex-end",
       alignItems: "center",
+      maxHeight: "84px"
     }}>
       <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} size={'10x'} style={{ color: "black", margin: "0 auto 0 12px", cursor: "pointer", maxWidth: mediaQueries.under768 ? "15%" : "3%" }} />
       {mediaQueries.under768 ?

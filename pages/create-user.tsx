@@ -20,11 +20,14 @@ export default function CreateUser() {
   });
 
   const router = useRouter();
+  function handleRedirect() {
+    router.push('/');
+  }
 
   useEffect(() => {
     const user = supabase.auth.user()
     if (!user || user.user_metadata.typeOfUser !== 'admin') {
-      router.push('/')
+      handleRedirect()
     }
   }, [])
 

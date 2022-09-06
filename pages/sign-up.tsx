@@ -48,6 +48,10 @@ export default function SignUp() {
     return generalUser.find((user: any) => user.email === email.toLowerCase().trim())?.name
   }
 
+  function setQAName(email: string) {
+    return qAs.find((qa: any) => qa.email === email.toLowerCase().trim())?.name
+  }
+
   useEffect(() => {
     fetchAdminEmails();
     fetchQAEmails();
@@ -98,7 +102,7 @@ export default function SignUp() {
         {
           data: {
             typeOfUser: "general",
-            name: setWhiteListName(email)
+            name: setQAName(email)
           },
         }
       )
@@ -112,13 +116,13 @@ export default function SignUp() {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
       <form style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: mediaQueries.under768 ? "100%" : "30%", height: mediaQueries.under768 ? "100%" : "fit-content", border: mediaQueries.under768 ? "none" : "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", fontSize: 24 }}>
-        {verify ? <p style={{ textAlign: "center", margin: "20px" }}>Please check your email and verify your account!</p>
+        {verify ? <p style={{ textAlign: "center", margin: "20px" }}>{"Please check your email and verify your account!"}</p>
           :
           <>
             <label style={{ textAlign: "center", color: notAllowed ? "#a60505" : "white" }}>{notAllowed ? "You are not authorized to create an account with that email" : "Create an account!"}</label>
-            <label style={{ margin: "10px" }}>Email:</label>
+            <label style={{ margin: "10px" }}>{"Email:"}</label>
             <input style={{ padding: "5px", width: "40%" }} onChange={(e) => setEmail(e.target.value)} value={email} type="email" />
-            <label style={{ margin: "10px" }}>Password:</label>
+            <label style={{ margin: "10px" }}>{"Password:"}</label>
             <input style={{ padding: "5px", width: "40%" }} onChange={(e) => setPassword(e.target.value)} value={password} type="password" />
             <button style={{ margin: "10px 20px", fontSize: 18, padding: '10px', cursor: "pointer" }} onClick={(e) => handleSignUp(e)}>{creating ? "Creating Account..." : "Sign Up"}</button>
           </>

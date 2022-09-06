@@ -1,6 +1,6 @@
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react'
+import React from 'react'
 import supabase from '../components/supabase';
 
 export default function SignUp() {

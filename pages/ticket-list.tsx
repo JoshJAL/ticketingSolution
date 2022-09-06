@@ -38,7 +38,7 @@ export default function ticketList() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div style={{ width: "100%", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute" }}>
+      <div style={{ minWidth: "100%", minHeight: "100vh", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute" }}>
         <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>
           <HamburgerMenu hamburgerClick={hamburgerClick} setHamburgerClick={setHamburgerClick} />
         </div>

@@ -39,7 +39,7 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
       backgroundColor: "#c2c2c2",
       width: "100%",
       top: 0,
-      zIndex: hamburgerClick ? -1 : 1,
+      zIndex: 1,
       position: "sticky",
       display: "flex",
       justifyContent: "flex-end",

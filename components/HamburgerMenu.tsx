@@ -5,11 +5,15 @@ import supabase from './supabase';
 export default function HamburgerMenu({ hamburgerClick, setHamburgerClick, backgroundColor, color }: { hamburgerClick: boolean, setHamburgerClick: (value: boolean) => void, backgroundColor?: string, color?: string }) {
   const router = useRouter();
   const [admin, setAdmin] = useState<boolean>(false);
+  const [QA, setQA] = useState(false);
 
   useEffect(() => {
     const user = supabase.auth.user()
     if (user?.user_metadata?.typeOfUser === "admin") {
       setAdmin(true)
+    }
+    if (user?.user_metadata?.typeOfUser === "q&a") {
+      setQA(true)
     }
   }, [])
 
@@ -42,6 +46,9 @@ export default function HamburgerMenu({ hamburgerClick, setHamburgerClick, backg
               : null}
             {admin ?
               <p style={{ cursor: "pointer" }} onClick={() => router.push("/create-user")}>Create User</p>
+              : null}
+            {admin || QA ?
+              <p onClick={() => router.push("/testing")} style={{ cursor: "pointer" }}>Review Tickets</p>
               : null}
             <p style={{ cursor: "pointer" }} onClick={handleLogout}>Logout</p>
           </div>

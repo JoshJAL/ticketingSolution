@@ -22,7 +22,6 @@ const Home: NextPage = () => {
       window.location.href = '/login'
     }
     setAuthedUser(user)
-    console.log(user)
   }, [])
 
   function handleHamburgerClick() {
@@ -31,6 +30,9 @@ const Home: NextPage = () => {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>
+        <HamburgerMenu hamburgerClick={hamburgerClick} setHamburgerClick={setHamburgerClick} />
+      </div>
       <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
       <Head>
         <title>Ticketing Solution</title>
@@ -38,9 +40,6 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div style={{ width: "100%", minHeight: "100vh", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", overflow: "hidden" }}>
-        <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>
-          <HamburgerMenu hamburgerClick={hamburgerClick} setHamburgerClick={setHamburgerClick} />
-        </div>
         <main style={{ margin: 0, padding: 0, height: "100%", width: "100%" }}>
           <div style={{ margin: mediaQueries.under768 ? "12px 0" : "6% 0", width: "100%" }}>
             <TicketForm />

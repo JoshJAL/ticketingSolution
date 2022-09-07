@@ -24,7 +24,7 @@ export default function DevTickets() {
   });
 
   const [tickets, setTickets] = useState<any>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [complexityLevel, setComplexityLevel] = useState('1');
   const [showJesseTickets, setShowJesseTickets] = useState(false);
@@ -41,7 +41,6 @@ export default function DevTickets() {
   }
 
   useEffect(() => {
-    setLoading(true);
     getTickets();
     const user = supabase.auth.user()
     if (!user || user.user_metadata.typeOfUser !== "admin") {
@@ -49,6 +48,7 @@ export default function DevTickets() {
     }
     setLoading(false);
   }, []);
+
 
   function updateComplexityLevel(e: any) {
     setComplexityLevel(e.target.value)
@@ -83,14 +83,15 @@ export default function DevTickets() {
     }
   }
 
-  async function handleSendToQA(e: any, ticket: any, setSending: any, urlText: any) {
+  async function handleSendToQA(e: any, ticket: any, setSending: Function, urlText: any, setOpen: Function) {
     e.preventDefault();
     setSending(true);
     const { data, error } = await supabase
       .from('tickets')
-      .update({ page_url: urlText, stlatus: 'Testing/QA' })
+      .update({ page_url: urlText, status: 'Testing/QA' })
       .eq('id', ticket.id)
     setSending(false)
+    setOpen(false)
   }
 
   function onMouseOver(e: any) {
@@ -102,7 +103,8 @@ export default function DevTickets() {
   }
 
   const listItemMargin = "0 0 20px 0";
-  const sorted = tickets.sort((a: any, b: any) => {
+  const firstSort = tickets.sort((a: any, b: any) => a.id - b.id).reverse();
+  const sorted = firstSort.sort((a: any, b: any) => {
     return a.priority_level - b.priority_level;
   })
 
@@ -192,39 +194,43 @@ function AssignedTickets({ tickets, complexityLevel, updateComplexityLevel, addC
               {ticket.assigned_to === name ?
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                   <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => handleComplete(e, ticket)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{"Complete?"}</p>
-                  <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => setOpen(!open)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{"Send to QA?"}</p>
+                  <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={ticket.status !== "Testing/QA" ? (e) => setOpen(!open) : () => { }} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{ticket.status === "Testing/QA" ? "In QA" : "Send to QA?"}</p>
                 </div>
                 : null}
               {open ?
                 <div style={{ border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", padding: "20px", margin: "10px 20px" }}>
                   <p>{"Is this ready to be tested?"}</p>
-                  <p>{"Don't forget to include the page below URL if necessary!"}</p>
+                  <p>{"Don't forget to include the page URL below if necessary!"}</p>
                   <input type="text" value={urlText} onChange={((e) => setUrlText(e.target.value))} />
                   <br />
-                  <button style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToQA(e, ticket, setSending, urlText)}>{sending ? "Sending..." : "Send on over"}</button>
+                  <button style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToQA(e, ticket, setSending, urlText, setOpen)}>{sending ? "Sending..." : "Send on over"}</button>
                 </div>
                 : null
               }
-              <p>{ticket.title}</p>
+              <p style={{ fontWeight: "bold", fontSize: 18, marginBottom: 0 }}>{ticket.title}</p>
               <p>{ticket.description}</p>
-              <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "200px", margin: mediaQueries.under768 ? "0" : "30% 0" }}>
+              {ticket.reviewed_by ? <p><span style={{ fontWeight: "bold", textDecoration: "underline" }}>{"Reviewed By:"}</span>{" "}{ticket.reviewed_by}</p> : null}
+              {ticket.notes ? <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold", textDecoration: "underline" }}>{"Notes:"}</span>{" "}{ticket.notes}</p> : null}
+              <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "fit-content", margin: "0" }}>
                 <img style={{ maxWidth: "45%" }} alt={ticket.title} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
               </div>
               <p>Complexity level: {ticket.complexity_level ? ticket.complexity_level : "Not yet assigned"}</p>
               {
-                ticket.assigned_to === name ?
-                  <select defaultValue={ticket.complexity_level ? ticket.complexity_level : complexityLevel} onClick={(e) => updateComplexityLevel(e)} style={{ margin: "0 0 10px 0" }} >
-                    <option value={"1"}>1</option>
-                    <option value={"2"}>2</option>
-                    <option value={"3"}>3</option>
-                    <option value={"5"}>5</option>
-                    <option value={"8"}>8</option>
-                    <option value={"13"}>13</option>
-                  </select>
+                ticket.assigned_to == name ?
+                  <>
+                    <select defaultValue={ticket.complexity_level ? ticket.complexity_level : complexityLevel} onClick={(e) => updateComplexityLevel(e)} style={{ margin: "0 0 10px 0" }} >
+                      <option value={"1"}>1</option>
+                      <option value={"2"}>2</option>
+                      <option value={"3"}>3</option>
+                      <option value={"5"}>5</option>
+                      <option value={"8"}>8</option>
+                      <option value={"13"}>13</option>
+                    </select>
+                    <button onClick={(e) => addComplexityLevel(e, ticket.id)}>{"Set"}</button>
+                  </>
                   :
                   null
               }
-              {ticket.assigned_to === name ? <button onClick={(e) => addComplexityLevel(e, ticket.id)}>{"Set"}</button> : null}
             </div >
           )
         }

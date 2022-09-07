@@ -8,6 +8,7 @@ import supabase from './supabase';
 
 export default function Header({ hamburgerClick, handleHamburgerClick }: { hamburgerClick: boolean, handleHamburgerClick: () => void }) {
   const [admin, setAdmin] = useState(false);
+  const [QA, setQA] = useState(false);
 
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
@@ -27,9 +28,12 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
   }
 
   useEffect(() => {
-    const user = supabase.auth.user() 
+    const user = supabase.auth.user()
     if (user?.user_metadata?.typeOfUser === "admin") {
       setAdmin(true)
+    }
+    if (user?.user_metadata?.typeOfUser === "q&a") {
+      setQA(true)
     }
   }, [])
 
@@ -56,7 +60,9 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
             margin: "0 10px 0 0",
             cursor: "pointer",
           }}
-          onClick={handleHamburgerClick}
+          onClick={() => {
+            handleHamburgerClick();
+          }}
         />
         :
         <div style={{ display: "flex", margin: "0 12px" }}>
@@ -67,6 +73,9 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
             : null}
           {admin ?
             <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/create-user")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Create User</p>
+            : null}
+          {admin || QA ?
+            <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/testing")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Review Tickets</p>
             : null}
           <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={handleLogout} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius }}>Logout</p>
         </div>}

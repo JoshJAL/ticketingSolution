@@ -15,10 +15,12 @@ export default function Ticket() {
   const [user, setUser] = useState<any>(null);
 
   async function getTickets() {
-    let { data: tickets, error } = await supabase
+    let { data: updatedTickets, error } = await supabase
       .from('tickets')
       .select('*')
-    setTickets(tickets);
+    if (tickets !== updatedTickets) {
+      setTickets(updatedTickets);
+    }
     setLoading(false)
   }
 

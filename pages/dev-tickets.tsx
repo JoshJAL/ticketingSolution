@@ -1,7 +1,6 @@
 import useMediaQueries from 'media-queries-in-react';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react'
-import Footer from '../components/Footer';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
@@ -35,20 +34,20 @@ export default function DevTickets() {
   const [hamburgerClick, setHamburgerClick] = useState(false);
 
   async function getTickets() {
-    setLoading(true);
     let { data: tickets, error } = await supabase
       .from('tickets')
       .select('*')
     setTickets(tickets);
-    setLoading(false);
   }
 
   useEffect(() => {
+    setLoading(true);
     getTickets();
     const user = supabase.auth.user()
     if (!user || user.user_metadata.typeOfUser !== "admin") {
       window.location.href = '/'
     }
+    setLoading(false);
   }, []);
 
   function updateComplexityLevel(e: any) {
@@ -89,7 +88,7 @@ export default function DevTickets() {
     setSending(true);
     const { data, error } = await supabase
       .from('tickets')
-      .update({ page_url: urlText, status: 'Testing/QA' })
+      .update({ page_url: urlText, stlatus: 'Testing/QA' })
       .eq('id', ticket.id)
     setSending(false)
   }
@@ -167,7 +166,6 @@ export default function DevTickets() {
               <div style={{ margin: mediaQueries.under768 ? "15% 0" : "2% 0" }} />
             </>
           }
-          <Footer />
         </main>
       </div >
     </div >

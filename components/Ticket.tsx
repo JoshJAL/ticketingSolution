@@ -4,26 +4,33 @@ import React, { CSSProperties, useEffect, useState } from 'react'
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
 import supabase from "./supabase";
 
-export default function Ticket({ user }: { user: any }) {
+export default function Ticket() {
   const router = useRouter();
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
 
   const [tickets, setTickets] = useState<any>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   async function getTickets() {
-    setLoading(true);
     let { data: tickets, error } = await supabase
       .from('tickets')
       .select('*')
     setTickets(tickets);
-    setLoading(false);
+    setLoading(false)
   }
 
+
+
   useEffect(() => {
+    const authenticatedUser = supabase.auth.user()
+    if (!authenticatedUser) {
+      window.location.href = '/login';
+    }
     getTickets();
+    setUser(authenticatedUser);
   }, []);
 
   const priorityLevelTitleStyles: CSSProperties = {
@@ -34,19 +41,28 @@ export default function Ticket({ user }: { user: any }) {
     marginBottom: "10px"
   }
 
-  const sorted = tickets.sort((a: any, b: any) => {
+  const firstSort = tickets.sort((a: any, b: any) => {
+    return a.id - b.id
+  }).reverse();
+  const sorted = firstSort.sort((a: any, b: any) => {
     return a.priority_level - b.priority_level;
   })
 
-  async function handleClaimTicket(e: any, ticketId: number) {
+  async function handleClaimTicket(e: any, ticket: any, setClaiming: Function, setClaimed: Function) {
     e.preventDefault();
-    if (user.user_metadata.typeOfUser === "admin") {
+    getTickets();
+    setClaiming(true)
+    if (user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to) {
       const { data, error } = await supabase
         .from('tickets')
         .update({ assigned_to: user.user_metadata.name })
-        .eq("id", ticketId)
+        .eq("id", ticket.id)
     }
+    setClaiming(false)
+    setClaimed(true)
   }
+
+  setTimeout(() => getTickets(), 5000)
 
   return (
     loading ?
@@ -76,16 +92,16 @@ export default function Ticket({ user }: { user: any }) {
 }
 
 function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles, handleClaimTicket, user }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, handleClaimTicket: Function, user: any }) {
-  const router = useRouter();
-
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
       <EmergencyTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
       <div style={{ display: "flex", width: "100%", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
         {tickets.map((ticket: any, index: number) => {
+          const [claiming, setClaiming] = useState(false);
+          const [claimed, setClaimed] = useState(false);
           if (ticket.priority_level === 3) {
             return (
-              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888", alignSelf: "stretch" }}>
+              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888", maxHeight: "fit-content" }}>
                 <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
                   {
                     user.user_metadata.typeOfUser === "admin" ? <p style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
@@ -94,12 +110,12 @@ function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles, hand
                   }
                   <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
                   <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>
-                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "200px", margin: mediaQueries.under768 ? "0 0 9% 0" : "30% 0" }}>
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
                     <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
                   </div>
                   {
                     user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
-                      <button onClick={(e) => handleClaimTicket(e, ticket.id)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
+                      <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
                       :
                       <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
                   }
@@ -130,16 +146,16 @@ function EmergencyTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: 
 }
 
 function HighTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, handleClaimTicket }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, user: any, handleClaimTicket: Function }) {
-  const router = useRouter();
-
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
       <HighTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
       <div style={{ display: "flex", width: "100%", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
         {tickets.map((ticket: any, index: number) => {
+          const [claiming, setClaiming] = useState(false);
+          const [claimed, setClaimed] = useState(false);
           if (ticket.priority_level === 2) {
             return (
-              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888", alignSelf: "stretch" }}>
+              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888", maxHeight: "fit-content" }}>
                 <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
                   {
                     user.user_metadata.typeOfUser === "admin" ? <p style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
@@ -148,12 +164,12 @@ function HighTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, han
                   }
                   <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
                   <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>
-                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "200px", margin: mediaQueries.under768 ? "0 0 9% 0" : "30% 0" }}>
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
                     <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
                   </div>
                   {
                     user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
-                      <button onClick={(e) => handleClaimTicket(e, ticket.id)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
+                      <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
                       :
                       <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
                   }
@@ -183,16 +199,16 @@ function HighTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any, 
 }
 
 function MediumTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, handleClaimTicket }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, user: any, handleClaimTicket: Function }) {
-  const router = useRouter();
-
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
       <MediumTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
       <div style={{ display: "flex", width: "100%", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
         {tickets.map((ticket: any, index: number) => {
+          const [claiming, setClaiming] = useState(false);
+          const [claimed, setClaimed] = useState(false);
           if (ticket.priority_level === 1) {
             return (
-              <div key={ticket.id} style={{ alignSelf: "stretch", textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888", maxHeight: "fit-content" }}>
                 <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
                   {
                     user.user_metadata.typeOfUser === "admin" ? <p style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
@@ -201,12 +217,12 @@ function MediumTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, h
                   }
                   <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
                   <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>
-                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "200px", margin: mediaQueries.under768 ? "0 0 9% 0" : "30% 0" }}>
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
                     <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
                   </div>
                   {
                     user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
-                      <button onClick={(e) => handleClaimTicket(e, ticket.id)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
+                      <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
                       :
                       <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
                   }
@@ -243,9 +259,11 @@ function LowTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, hand
       <LowTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
       <div style={{ display: "flex", width: "100%", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
         {tickets.map((ticket: any, index: number) => {
+          const [claiming, setClaiming] = useState(false);
+          const [claimed, setClaimed] = useState(false);
           if (ticket.priority_level === 0) {
             return (
-              <div key={ticket.id} style={{ alignSelf: "stretch", textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888" }}>
+              <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888", maxHeight: "fit-content" }}>
                 <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
                   {
                     user.user_metadata.typeOfUser === "admin" ? <p style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
@@ -254,12 +272,12 @@ function LowTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, hand
                   }
                   <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
                   <p style={{ fontWeight: 500, fontSize: 18 }}>{ticket.description}</p>
-                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "200px", margin: mediaQueries.under768 ? "0 0 9% 0" : "30% 0" }}>
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
                     <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
                   </div>
                   {
                     user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
-                      <button onClick={(e) => handleClaimTicket(e, ticket.id)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>Claim</button>
+                      <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
                       :
                       <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
                   }

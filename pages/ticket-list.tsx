@@ -1,27 +1,16 @@
-import useMediaQueries from 'media-queries-in-react'
-import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import Footer from '../components/Footer'
-import HamburgerMenu from '../components/HamburgerMenu'
-import Header from '../components/Header'
-import supabase from '../components/supabase'
-import Ticket from '../components/Ticket'
+import useMediaQueries from 'media-queries-in-react';
+import Head from 'next/head';
+import React, { useState } from 'react';
+import HamburgerMenu from '../components/HamburgerMenu';
+import Header from '../components/Header';
+import Ticket from '../components/Ticket';
 
 export default function TicketList() {
-  const [authedUser, setAuthedUser] = useState<any>(null);
   const [hamburgerClick, setHamburgerClick] = useState(false);
 
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
-
-  useEffect(() => {
-    const user = supabase.auth.user()
-    if (!user) {
-      window.location.href = '/login';
-    }
-    setAuthedUser(user)
-  }, [])
 
   function handleHamburgerClick() {
     setHamburgerClick(true);
@@ -42,10 +31,9 @@ export default function TicketList() {
         <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
         <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
           <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%", }}>
-            <Ticket user={authedUser} />
+            <Ticket />
           </div>
           <div style={{ margin: mediaQueries.under768 ? "15% 0" : "2% 0" }} />
-          <Footer />
         </main>
       </div>
     </div>

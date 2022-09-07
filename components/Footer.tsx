@@ -7,7 +7,6 @@ export default function Footer() {
       backgroundColor: "#c2c2c2",
       width: "100%",
       bottom: 0,
-      zIndex: 1,
       position: "fixed",
       maxHeight: "84px"
     }}>

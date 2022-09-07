@@ -27,7 +27,7 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
   }
 
   useEffect(() => {
-    const user = supabase.auth.user()
+    const user = supabase.auth.user() 
     if (user?.user_metadata?.typeOfUser === "admin") {
       setAdmin(true)
     }

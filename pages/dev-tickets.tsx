@@ -185,56 +185,67 @@ function AssignedTickets({ tickets, complexityLevel, updateComplexityLevel, addC
   return (
     claimedTickets > 0 ?
       sorted.map((ticket: any) => {
-        const [open, setOpen] = useState(false);
-        const [urlText, setUrlText] = useState("");
-        const [sending, setSending] = useState(false);
-        if (ticket.assigned_to === name && showTickets) {
-          return (
-            <div key={ticket.id} style={{ textAlign: "center", border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "30%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
-              {ticket.assigned_to === name ?
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-                  <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => handleComplete(e, ticket)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{"Complete?"}</p>
-                  <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={ticket.status !== "Testing/QA" ? (e) => setOpen(!open) : () => { }} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{ticket.status === "Testing/QA" ? "In QA" : "Send to QA?"}</p>
-                </div>
-                : null}
-              {open ?
-                <div style={{ border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", padding: "20px", margin: "10px 20px" }}>
-                  <p>{"Is this ready to be tested?"}</p>
-                  <p>{"Don't forget to include the page URL below if necessary!"}</p>
-                  <input type="text" value={urlText} onChange={((e) => setUrlText(e.target.value))} />
-                  <br />
-                  <button style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToQA(e, ticket, setSending, urlText, setOpen)}>{sending ? "Sending..." : "Send on over"}</button>
-                </div>
-                : null
-              }
-              <p style={{ fontWeight: "bold", fontSize: 18, marginBottom: 0 }}>{ticket.title}</p>
-              <p>{ticket.description}</p>
-              {ticket.reviewed_by ? <p><span style={{ fontWeight: "bold", textDecoration: "underline" }}>{"Reviewed By:"}</span>{" "}{ticket.reviewed_by}</p> : null}
-              {ticket.notes ? <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold", textDecoration: "underline" }}>{"Notes:"}</span>{" "}{ticket.notes}</p> : null}
-              <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "fit-content", margin: "0" }}>
-                <img style={{ maxWidth: "45%" }} alt={ticket.title} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
-              </div>
-              <p>Complexity level: {ticket.complexity_level ? ticket.complexity_level : "Not yet assigned"}</p>
-              {
-                ticket.assigned_to == name ?
-                  <>
-                    <select defaultValue={ticket.complexity_level ? ticket.complexity_level : complexityLevel} onClick={(e) => updateComplexityLevel(e)} style={{ margin: "0 0 10px 0" }} >
-                      <option value={"1"}>1</option>
-                      <option value={"2"}>2</option>
-                      <option value={"3"}>3</option>
-                      <option value={"5"}>5</option>
-                      <option value={"8"}>8</option>
-                      <option value={"13"}>13</option>
-                    </select>
-                    <button onClick={(e) => addComplexityLevel(e, ticket.id)}>{"Set"}</button>
-                  </>
-                  :
-                  null
-              }
-            </div >
-          )
-        }
+        return (
+          ticket.assigned_to === name && showTickets ?
+            <div key={ticket.id} style={{ display: "flex", justifyContent: "center", width: "30%", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", alignItems: "center" }}>
+              <ActualTicket ticket={ticket} name={name} showTickets={showTickets} handleComplete={handleComplete} mediaQueries={mediaQueries} handleSendToQA={handleSendToQA} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} />
+            </div>
+            : null
+        )
       }).reverse()
+      : null
+  )
+}
+
+function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries, handleSendToQA, complexityLevel, updateComplexityLevel, addComplexityLevel }: { ticket: any, name: string, showTickets: boolean, handleComplete: Function, mediaQueries: any, handleSendToQA: Function, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function }) {
+  const [open, setOpen] = useState(false);
+  const [urlText, setUrlText] = useState("");
+  const [sending, setSending] = useState(false);
+
+  return (
+    ticket.assigned_to === name && showTickets ?
+      <div style={{ textAlign: "center", border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "100%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
+        {ticket.assigned_to === name ?
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+            <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => handleComplete(e, ticket)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{"Complete?"}</p>
+            <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={ticket.status !== "Testing/QA" ? (e) => setOpen(!open) : () => { }} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{ticket.status === "Testing/QA" ? "In QA" : "Send to QA?"}</p>
+          </div>
+          : null}
+        {open ?
+          <div style={{ border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", padding: "20px", margin: "10px 20px" }}>
+            <p>{"Is this ready to be tested?"}</p>
+            <p>{"Don't forget to include the page URL below if necessary!"}</p>
+            <input type="text" value={urlText} onChange={((e) => setUrlText(e.target.value))} />
+            <br />
+            <button style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToQA(e, ticket, setSending, urlText, setOpen)}>{sending ? "Sending..." : "Send on over"}</button>
+          </div>
+          : null
+        }
+        <p style={{ fontWeight: "bold", fontSize: 18, marginBottom: 0 }}>{ticket.title}</p>
+        <p style={{ wordBreak: "break-all" }}>{ticket.description}</p>
+        {ticket.reviewed_by ? <p><span style={{ fontWeight: "bold", textDecoration: "underline" }}>{"Reviewed By:"}</span>{" "}{ticket.reviewed_by}</p> : null}
+        {ticket.notes ? <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold", textDecoration: "underline" }}>{"Notes:"}</span>{" "}{ticket.notes}</p> : null}
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "fit-content", margin: "0" }}>
+          <img style={{ maxWidth: "45%" }} alt={ticket.title} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
+        </div>
+        <p>Complexity level: {ticket.complexity_level ? ticket.complexity_level : "Not yet assigned"}</p>
+        {
+          ticket.assigned_to == name ?
+            <>
+              <select defaultValue={ticket.complexity_level ? ticket.complexity_level : complexityLevel} onClick={(e) => updateComplexityLevel(e)} style={{ margin: "0 0 10px 0" }} >
+                <option value={"1"}>1</option>
+                <option value={"2"}>2</option>
+                <option value={"3"}>3</option>
+                <option value={"5"}>5</option>
+                <option value={"8"}>8</option>
+                <option value={"13"}>13</option>
+              </select>
+              <button onClick={(e) => addComplexityLevel(e, ticket.id)}>{"Set"}</button>
+            </>
+            :
+            null
+        }
+      </div >
       : null
   )
 }

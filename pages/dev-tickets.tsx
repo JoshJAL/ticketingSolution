@@ -200,9 +200,9 @@ function AssignedTickets({ tickets, complexityLevel, updateComplexityLevel, addC
     claimedTickets > 0 ?
       sorted.map((ticket: any) => {
         return (
-          ticket.assigned_to === authedUser.user_metadata.name && showTickets ?
+          ticket.assigned_to === name && showTickets ?
             <div key={ticket.id} style={{ display: "flex", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", alignItems: "center", width: mediaQueries.under768 ? "75%" : "30%" }}>
-              <ActualTicket ticket={ticket} name={name} showTickets={showTickets} handleComplete={handleComplete} mediaQueries={mediaQueries} handleSendToQA={handleSendToQA} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} />
+              <ActualTicket authedUser={authedUser} ticket={ticket} name={name} showTickets={showTickets} handleComplete={handleComplete} mediaQueries={mediaQueries} handleSendToQA={handleSendToQA} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} />
             </div>
             : null
         )
@@ -211,7 +211,7 @@ function AssignedTickets({ tickets, complexityLevel, updateComplexityLevel, addC
   )
 }
 
-function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries, handleSendToQA, complexityLevel, updateComplexityLevel, addComplexityLevel }: { ticket: any, name: string, showTickets: boolean, handleComplete: Function, mediaQueries: any, handleSendToQA: Function, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function }) {
+function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries, handleSendToQA, complexityLevel, updateComplexityLevel, addComplexityLevel, authedUser }: { ticket: any, name: string, showTickets: boolean, handleComplete: Function, mediaQueries: any, handleSendToQA: Function, complexityLevel: string, updateComplexityLevel: Function, addComplexityLevel: Function, authedUser: any }) {
   const [open, setOpen] = useState(false);
   const [urlText, setUrlText] = useState("");
   const [sending, setSending] = useState(false);
@@ -219,7 +219,7 @@ function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries,
   return (
     ticket.assigned_to === name && showTickets ?
       <div className="devTicketList-ticket" style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.4)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
-        {ticket.assigned_to === name ?
+        {ticket.assigned_to === authedUser.user_metadata.name ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
             <button className="dev-ticket-button" onClick={(e) => handleComplete(e, ticket)}>{"Complete?"}</button>
             <button className="dev-ticket-button" onClick={ticket.status !== "Testing/QA" ? (e) => setOpen(!open) : () => { }}>{ticket.status === "Testing/QA" ? "In QA" : "Send to QA?"}</button>

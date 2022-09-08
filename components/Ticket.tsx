@@ -126,7 +126,7 @@ function ActualTicket({ ticket, mediaQueries, user, handleClaimTicket, setPriori
     ticket.priority_level === setPriorityLevel ?
       (
         <div className='ticketList-ticket' key={ticket.id} >
-          <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", margin: "0 12px" }}>
+          <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", margin: "0 12px", color: "black" }}>
             {
               user.user_metadata.typeOfUser === "admin" ? <p style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid black", padding: "4px 10px", borderRadius: "50%" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
                 :

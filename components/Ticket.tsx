@@ -68,6 +68,10 @@ export default function Ticket() {
     getTickets();
   }
 
+  setTimeout(() => {
+    getTickets();
+  }, 720000)
+
   return (
     loading ?
       <div style={{ width: "100%", height: "100%", margin: "20px" }}>

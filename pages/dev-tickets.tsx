@@ -108,14 +108,21 @@ export default function DevTickets() {
   }
 
   const listItemMargin = "0 0 20px 0";
-  const firstSort = tickets.sort((a: any, b: any) => a.id - b.id).reverse();
-  const sorted = firstSort.sort((a: any, b: any) => {
-    return a.priority_level - b.priority_level;
-  })
+  let sorted = [];
+  if (tickets) {
+    const firstSort = tickets.sort((a: any, b: any) => a.id - b.id).reverse();
+    sorted = firstSort.sort((a: any, b: any) => {
+      return a.priority_level - b.priority_level;
+    })
+  }
 
   function handleHamburgerClick() {
     setHamburgerClick(true);
   }
+
+  setTimeout(() => {
+    getTickets()
+  }, 720000)
 
   return (
     <div style={{ width: "100%", height: "100%" }}>

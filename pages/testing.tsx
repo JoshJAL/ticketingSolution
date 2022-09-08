@@ -70,6 +70,10 @@ export default function Testing() {
     })
   }
 
+  setTimeout(() => {
+    getTickets();
+  }, 720000)
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>

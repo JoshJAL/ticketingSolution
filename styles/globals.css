@@ -8,6 +8,7 @@ body {
 
 * {
   box-sizing: border-box;
+  color: black;
 }
 
 input { 
@@ -235,6 +236,16 @@ select {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+  body {
+    color: black;
+    background: rgb(235, 235, 235);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html {
+    color-scheme: light;
   }
   body {
     color: black;

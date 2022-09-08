@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react'
 import HamburgerMenu from '../components/HamburgerMenu'
 
 const Home: NextPage = () => {
-  const [authedUser, setAuthedUser] = useState<any>(null);
   const [hamburgerClick, setHamburgerClick] = useState(false);
 
   const mediaQueries = useMediaQueries({
@@ -21,7 +20,6 @@ const Home: NextPage = () => {
     if (!user) {
       window.location.href = '/login'
     }
-    setAuthedUser(user)
   }, [])
 
   function handleHamburgerClick() {
@@ -29,7 +27,7 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
+    <div style={{ width: "100%", height: "100vh" }}>
       <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>
         <HamburgerMenu hamburgerClick={hamburgerClick} setHamburgerClick={setHamburgerClick} />
       </div>
@@ -39,9 +37,9 @@ const Home: NextPage = () => {
         <meta name="ticketing" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div style={{ width: "100%", minHeight: "100vh", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", overflow: "hidden" }}>
-        <main style={{ margin: 0, padding: 0, height: "100%", width: "100%" }}>
-          <div style={{ margin: mediaQueries.under768 ? "12px 0" : "6% 0", width: "100%" }}>
+      <div style={{ width: "100%", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", overflow: "hidden" }}>
+        <main style={{ margin: 0, padding: 0, width: "100%", overflow: mediaQueries.under768 ? "hidden" : "initial" }}>
+          <div style={{ margin: mediaQueries.under768 ? "12px 0" : "50px 0", width: "100%", }}>
             <TicketForm />
           </div>
         </main>

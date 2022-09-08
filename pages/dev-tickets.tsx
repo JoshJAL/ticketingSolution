@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import Modal from '../components/Modal';
 import supabase from '../components/supabase';
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
+import palette from '../styles/palette';
 
 export default function DevTickets() {
   const content = {
@@ -59,7 +60,8 @@ export default function DevTickets() {
     const { data, error } = await supabase
       .from('tickets')
       .update({ complexity_level: complexityLevel })
-      .eq('id', id)
+      .eq('id', id);
+    getTickets();
   }
 
   async function addToCompleted(ticket: any) {
@@ -77,8 +79,10 @@ export default function DevTickets() {
       const { data, error } = await supabase
         .from('tickets')
         .delete()
-        .eq('id', ticket.id)
+        .eq('id', ticket.id);
+      getTickets();
     } else {
+      getTickets();
       return;
     }
   }
@@ -92,6 +96,7 @@ export default function DevTickets() {
       .eq('id', ticket.id)
     setSending(false)
     setOpen(false)
+    getTickets();
   }
 
   function onMouseOver(e: any) {
@@ -131,9 +136,9 @@ export default function DevTickets() {
             </div>
             :
             <>
-              <p onClick={() => setShowModal(!showModal)} onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} style={{ fontSize: 24, border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "50%", padding: "5px 15px", cursor: "pointer", position: "absolute", top: mediaQueries.under768 ? "9%" : "100px", right: "40px" }}>?</p>
+              <p onClick={() => setShowModal(!showModal)} onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} style={{ fontSize: 24, border: "1px solid black", borderRadius: "50%", padding: "5px 15px", cursor: "pointer", position: "absolute", top: mediaQueries.under768 ? "9%" : "100px", right: "40px" }}>?</p>
               {showModal ?
-                <Modal styleOverride={{ maxHeight: "90vh", overflowY: "auto", backgroundColor: "black", width: mediaQueries.under768 ? "95%" : "63%", margin: mediaQueries.under768 ? "10% 2.5%" : "10% 18.5%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: "column", textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px" }}>
+                <Modal styleOverride={{ maxHeight: "90vh", padding: "5px", overflowY: "auto", backgroundColor: palette.pageBackgroundColor, width: mediaQueries.under768 ? "90%" : "63%", margin: mediaQueries.under768 ? "5% 5%" : "10% 18.5%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: "column", textAlign: "center", border: "1px solid rgba(0, 0, 0, 0.4)", borderRadius: "10px", color: "black" }}>
                   <div style={{ width: "100%", margin: "2px", fontSize: mediaQueries.under768 ? 15 : 18, display: "flex", flexDirection: "column" }}>
                     <p onClick={() => setShowModal(false)} style={{ margin: 0, marginLeft: "auto", marginRight: "5px", marginTop: "5px", padding: "5px", cursor: "pointer" }}>X</p>
                     <p>{content.complexityLevelModalTitle}</p>
@@ -187,7 +192,7 @@ function AssignedTickets({ tickets, complexityLevel, updateComplexityLevel, addC
       sorted.map((ticket: any) => {
         return (
           ticket.assigned_to === name && showTickets ?
-            <div key={ticket.id} style={{ display: "flex", justifyContent: "center", width: "30%", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", alignItems: "center" }}>
+            <div key={ticket.id} style={{ display: "flex", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", alignItems: "center", width: mediaQueries.under768 ? "75%" : "30%" }}>
               <ActualTicket ticket={ticket} name={name} showTickets={showTickets} handleComplete={handleComplete} mediaQueries={mediaQueries} handleSendToQA={handleSendToQA} complexityLevel={complexityLevel} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} />
             </div>
             : null
@@ -204,22 +209,23 @@ function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries,
 
   return (
     ticket.assigned_to === name && showTickets ?
-      <div style={{ textAlign: "center", border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "100%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
+      <div className="devTicketList-ticket" style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.4)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
         {ticket.assigned_to === name ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-            <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => handleComplete(e, ticket)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{"Complete?"}</p>
-            <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={ticket.status !== "Testing/QA" ? (e) => setOpen(!open) : () => { }} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{ticket.status === "Testing/QA" ? "In QA" : "Send to QA?"}</p>
+            <button className="dev-ticket-button" onClick={(e) => handleComplete(e, ticket)}>{"Complete?"}</button>
+            <button className="dev-ticket-button" onClick={ticket.status !== "Testing/QA" ? (e) => setOpen(!open) : () => { }}>{ticket.status === "Testing/QA" ? "In QA" : "Send to QA?"}</button>
           </div>
           : null}
-        {open ?
-          <div style={{ border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", padding: "20px", margin: "10px 20px" }}>
-            <p>{"Is this ready to be tested?"}</p>
-            <p>{"Don't forget to include the page URL below if necessary!"}</p>
-            <input type="text" value={urlText} onChange={((e) => setUrlText(e.target.value))} />
-            <br />
-            <button style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToQA(e, ticket, setSending, urlText, setOpen)}>{sending ? "Sending..." : "Send on over"}</button>
-          </div>
-          : null
+        {
+          open ?
+            <div style={{ border: "1px solid black", borderRadius: "10px", padding: "20px", margin: "10px 20px", width: "100%" }}>
+              <p>{"Is this ready to be tested?"}</p>
+              <p>{"Don't forget to include the page URL below if necessary!"}</p>
+              <input type="text" value={urlText} onChange={((e) => setUrlText(e.target.value))} style={{ width: "250px" }} />
+              <br />
+              <button className="sendToQA-button" onClick={(e) => handleSendToQA(e, ticket, setSending, urlText, setOpen)}>{sending ? "Sending..." : "Send on over"}</button>
+            </div>
+            : null
         }
         <p style={{ fontWeight: "bold", fontSize: 18, marginBottom: 0 }}>{ticket.title}</p>
         <p style={{ wordBreak: "break-all" }}>{ticket.description}</p>
@@ -232,7 +238,7 @@ function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries,
         {
           ticket.assigned_to == name ?
             <>
-              <select defaultValue={ticket.complexity_level ? ticket.complexity_level : complexityLevel} onClick={(e) => updateComplexityLevel(e)} style={{ margin: "0 0 10px 0" }} >
+              <select defaultValue={ticket.complexity_level ? ticket.complexity_level : complexityLevel} onClick={(e) => updateComplexityLevel(e)} style={{ margin: "0 0 12px 0", width: mediaQueries.under768 ? "250px" : "250px" }} >
                 <option value={"1"}>1</option>
                 <option value={"2"}>2</option>
                 <option value={"3"}>3</option>
@@ -240,7 +246,7 @@ function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries,
                 <option value={"8"}>8</option>
                 <option value={"13"}>13</option>
               </select>
-              <button onClick={(e) => addComplexityLevel(e, ticket.id)}>{"Set"}</button>
+              <button className="dev-ticket-button set" onClick={(e) => addComplexityLevel(e, ticket.id)}>{"Set"}</button>
             </>
             :
             null

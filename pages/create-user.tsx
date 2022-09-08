@@ -73,7 +73,7 @@ export default function CreateUser() {
         </div>
         <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
         <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", height: "88vh", width: "100%", overflowY: "auto" }}>
-          <form style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: mediaQueries.under768 ? "100%" : "30%", height: mediaQueries.under768 ? "100%" : "40%", border: mediaQueries.under768 ? "none" : "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", fontSize: 24 }}>
+          <form style={{ margin: "-150px 0 0 0" }}>
             {submitted ?
               <>
                 <p>User has been created!</p>
@@ -82,15 +82,15 @@ export default function CreateUser() {
               :
               <>
                 <label style={{ margin: "10px" }} >{"Enter user's email: "}</label>
-                <input onChange={(e) => setEmail(e.target.value)} style={{ padding: "5px", width: "40%" }} type="email" />
+                <input onChange={(e) => setEmail(e.target.value)} style={{ width: "250px" }} type="email" />
                 <label style={{ margin: "10px" }} >{"Enter user's name: "}</label>
-                <input onChange={(e) => setName(e.target.value)} style={{ padding: "5px", width: "40%" }} type="text" />
-                <select defaultValue={"user"} style={{ width: mediaQueries.under768 ? "75%" : "fit-content", cursor: "pointer", margin: "20px 0 0 0", fontSize: 18 }} onClick={(e) => handleSelectionChange(e)}>
+                <input onChange={(e) => setName(e.target.value)} style={{ width: "250px" }} type="text" />
+                <select defaultValue={"user"} style={{ width: "250px", margin: "20px 0 0 0" }} onClick={(e) => handleSelectionChange(e)}>
                   <option value="generalUser">General User</option>
                   <option value="q&a">Q & A Team</option>
                   <option value="admin">Admin</option>
                 </select>
-                <button style={{ margin: "5%", fontSize: 18, padding: '10px', cursor: "pointer" }} onClick={(e) => createUser(e)} >{creating ? "Creating user..." : "Create user"}</button>
+                <button style={{ margin: "20px 0 10px 0", padding: '10px 20px' }} onClick={(e) => createUser(e)} >{creating ? "Creating user..." : "Create user"}</button>
               </>
             }
           </form>

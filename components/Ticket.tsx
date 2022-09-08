@@ -1,6 +1,5 @@
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
-import { setPriority } from 'os';
 import React, { CSSProperties, useEffect, useState } from 'react'
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
 import supabase from "./supabase";
@@ -44,12 +43,15 @@ export default function Ticket() {
     marginBottom: "10px"
   }
 
-  const firstSort = tickets.sort((a: any, b: any) => {
-    return a.id - b.id
-  }).reverse();
-  const sorted = firstSort.sort((a: any, b: any) => {
-    return a.priority_level - b.priority_level;
-  })
+  let sorted = [];
+  if (tickets) {
+    const firstSort = tickets.sort((a: any, b: any) => {
+      return a.id - b.id
+    }).reverse();
+    sorted = firstSort.sort((a: any, b: any) => {
+      return a.priority_level - b.priority_level;
+    })
+  }
 
   async function handleClaimTicket(e: any, ticket: any, setClaiming: Function, setClaimed: Function) {
     e.preventDefault();
@@ -62,19 +64,18 @@ export default function Ticket() {
         .eq("id", ticket.id)
     }
     setClaiming(false)
-    setClaimed(true)
+    setClaimed(true);
+    getTickets();
   }
-
-  setTimeout(() => getTickets(), 5000)
 
   return (
     loading ?
-      <div style={{ width: "100%", height: "100%" }}>
-        <p style={{ fontSize: 48, fontWeight: 700, fontStyle: "oblique", margin: "10% 0 0 0", textAlign: "center" }}>Grabbing tickets...</p>
+      <div style={{ width: "100%", height: "100%", margin: "20px" }}>
+        <p style={{ fontSize: 48, fontWeight: 700, fontStyle: "oblique", textAlign: "center" }}>Grabbing tickets...</p>
       </div>
       :
-      tickets.length > 0 ?
-        sorted.map((ticket: any, index: number) => {
+      sorted.length > 0 ?
+        sorted.map((ticket: any) => {
           return (
             <div style={{ width: "100%", display: "flex", flexDirection: "column", margin: "0 0 40px 0" }} key={ticket.id}>
               <EmergencyTicket tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} handleClaimTicket={handleClaimTicket} user={user} />
@@ -86,10 +87,10 @@ export default function Ticket() {
         }).reverse().slice(0, 1)
         :
         (
-          <div style={{ display: "flex", alignItems: "center", flexDirection: "column", margin: "100px 0", height: "100vh" }}>
+          <div style={{ display: "flex", alignItems: "center", flexDirection: "column", margin: "100px 0" }}>
             <p style={{ fontSize: 24, fontWeight: 600 }}>No tickets</p>
-            <a onClick={() => router.push('/')} onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} style={{ cursor: "pointer", backgroundColor: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "10px", borderRadius: "5px", fontWeight: 700, fontSize: 24 }}>Submit a ticket</a>
-          </div>
+            <button className="redirectButton" onClick={() => router.push('/')}>Submit a ticket</button>
+          </div >
         )
   )
 }
@@ -99,10 +100,10 @@ function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles, hand
     <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
       <EmergencyTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
       <div style={{ display: "flex", width: "100%", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
-        {tickets.map((ticket: any, index: number) => {
+        {tickets.map((ticket: any) => {
           if (ticket.priority_level === 3) {
             return (
-              <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: "30%" }}>
+              <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: mediaQueries.under768 ? "75%" : "30%" }}>
                 <ActualTicket ticket={ticket} mediaQueries={mediaQueries} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={3} />
               </div>
             )
@@ -120,10 +121,10 @@ function ActualTicket({ ticket, mediaQueries, user, handleClaimTicket, setPriori
   return (
     ticket.priority_level === setPriorityLevel ?
       (
-        <div key={ticket.id} style={{ textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "100%", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: "4px 2px 9px 1px #888888", maxHeight: "fit-content" }}>
-          <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+        <div className='ticketList-ticket' key={ticket.id} >
+          <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", margin: "0 12px" }}>
             {
-              user.user_metadata.typeOfUser === "admin" ? <p style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid rgba(255, 255, 255, 0.5)", padding: "4px 10px", borderRadius: "50%" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
+              user.user_metadata.typeOfUser === "admin" ? <p style={{ marginLeft: 'auto', marginBottom: "auto", marginRight: "6px", border: "1px solid black", padding: "4px 10px", borderRadius: "50%" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
                 :
                 null
             }
@@ -134,7 +135,7 @@ function ActualTicket({ ticket, mediaQueries, user, handleClaimTicket, setPriori
             </div>
             {
               user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
-                <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)} onMouseOut={(e) => OnMouseOut(e)} onMouseEnter={(e) => OnMouseEnter(e)} style={{ background: "transparent", border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "6px", padding: '5px', cursor: "pointer", fontSize: 18, fontWeight: 500, margin: "0 0 6px 0" }}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
+                <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
                 :
                 <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
             }
@@ -167,7 +168,7 @@ function HighTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, han
         {tickets.map((ticket: any, index: number) => {
           if (ticket.priority_level === 2) {
             return (
-              <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: "30%" }}>
+              <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: mediaQueries.under768 ? "75%" : "30%" }}>
                 <ActualTicket ticket={ticket} mediaQueries={mediaQueries} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={2} />
               </div>
             )
@@ -201,7 +202,7 @@ function MediumTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, h
         {tickets.map((ticket: any, index: number) => {
           if (ticket.priority_level === 1) {
             return (
-              <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: "30%" }}>
+              <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: mediaQueries.under768 ? "75%" : "30%" }}>
                 <ActualTicket ticket={ticket} mediaQueries={mediaQueries} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={1} />
               </div>
             )
@@ -237,7 +238,7 @@ function LowTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, hand
         {tickets.map((ticket: any, index: number) => {
           if (ticket.priority_level === 0) {
             return (
-              <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: "30%" }}>
+              <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: mediaQueries.under768 ? "75%" : "30%" }}>
                 <ActualTicket ticket={ticket} mediaQueries={mediaQueries} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={0} />
               </div>
             )

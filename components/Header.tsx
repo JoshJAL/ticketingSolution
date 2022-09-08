@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { OnMouseEnter, OnMouseOut } from '../functions/HeaderMouseEvents';
 import supabase from './supabase';
 
 export default function Header({ hamburgerClick, handleHamburgerClick }: { hamburgerClick: boolean, handleHamburgerClick: () => void }) {
@@ -15,12 +14,6 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
   });
 
   const router = useRouter();
-
-  const buttonBackgroundColor = "rgba(0, 0, 0, 0.25)";
-  const buttonTextColor = "black";
-  const buttonPadding = '10px';
-  const buttonCursor = 'pointer';
-  const buttonBorderRadius = '5px';
 
   async function handleLogout(e: any) {
     await supabase.auth.signOut()
@@ -48,9 +41,10 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
       display: "flex",
       justifyContent: "flex-end",
       alignItems: "center",
-      maxHeight: "84px"
+      maxHeight: "84px",
+      height: "84px"
     }}>
-      <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} size={'10x'} style={{ color: "black", margin: "0 auto 0 12px", cursor: "pointer", maxWidth: mediaQueries.under768 ? "15%" : "3%" }} />
+      <FontAwesomeIcon onClick={() => router.push('/')} icon={faTicket} size={'10x'} style={{ color: "black", margin: "0 auto 0 12px", cursor: "pointer", maxWidth: mediaQueries.under768 ? "15%" : "3%", height: "100%" }} />
       {mediaQueries.under768 ?
         <FontAwesomeIcon
           icon={faBars}
@@ -59,6 +53,7 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
             maxWidth: '7%',
             margin: "0 10px 0 0",
             cursor: "pointer",
+            height: "100%"
           }}
           onClick={() => {
             handleHamburgerClick();
@@ -66,18 +61,18 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
         />
         :
         <div style={{ display: "flex", margin: "0 12px" }}>
-          <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Ticket Form</p>
-          <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/ticket-list")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Ticket List</p>
+          <button className="header-button" onClick={() => router.push("/")}>Ticket Form</button>
+          <button className="header-button" onClick={() => router.push("/ticket-list")}>Ticket List</button>
           {admin ?
-            <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/dev-tickets")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Developer Tickets</p>
+            <button className="header-button" onClick={() => router.push("/dev-tickets")}>Developer Tickets</button>
             : null}
           {admin ?
-            <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/create-user")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Create User</p>
+            <button className="header-button" onClick={() => router.push("/create-user")}>Create User</button>
             : null}
           {admin || QA ?
-            <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={() => router.push("/testing")} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius, marginRight: "10px" }}>Review Tickets</p>
+            <button className="header-button" onClick={() => router.push("/testing")}>Review Tickets</button>
             : null}
-          <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={handleLogout} style={{ backgroundColor: buttonBackgroundColor, color: buttonTextColor, padding: buttonPadding, cursor: buttonCursor, borderRadius: buttonBorderRadius }}>Logout</p>
+          <button className="lastHeader-button" onClick={handleLogout}>Logout</button>
         </div>}
     </header>
   )

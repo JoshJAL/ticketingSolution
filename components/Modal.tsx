@@ -1,4 +1,5 @@
 import { CSSProperties } from "react";
+import palette from "../styles/palette";
 
 export default function Modal({ children, styleOverride }: { children: any, styleOverride?: CSSProperties }) {
 
@@ -10,7 +11,7 @@ export default function Modal({ children, styleOverride }: { children: any, styl
       zIndex: 10,
       width: "100%",
       height: "100%",
-      backgroundColor: "rgba(0,0,0,35%)",
+      backgroundColor: palette.pageBackgroundColor,
       ...styleOverride
     }}>
       {children}

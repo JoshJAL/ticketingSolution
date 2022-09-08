@@ -24,7 +24,6 @@ export default function Testing() {
 
   useEffect(() => {
     const user = supabase.auth.user()
-    getTickets();
     if (!user) {
       window.location.href = '/login'
     } else if (user.user_metadata.typeOfUser !== "admin") {
@@ -32,6 +31,7 @@ export default function Testing() {
     } else if (user.user_metadata.typeOfUser === "q&a") {
       window.location.href = '/login'
     }
+    getTickets();
     setAuthedUser(user)
   }, [])
 
@@ -46,7 +46,8 @@ export default function Testing() {
       .from('tickets')
       .update({ notes: notes, status: "In Development" })
       .eq('id', ticket.id)
-    setSending(false)
+    setSending(false);
+    getTickets();
   }
 
   async function handleReviewClick(e: any, ticket: any, setClaiming: Function) {
@@ -56,18 +57,18 @@ export default function Testing() {
       .update({ reviewed_by: authedUser.user_metadata.name })
       .eq('id', ticket.id)
     setClaiming(true);
+    getTickets();
   }
 
-  const initialSort = tickets.sort((a: any, b: any) => {
-    return a.id - b.id;
-  })
-  const sorted = initialSort.sort((a: any, b: any) => {
-    return a.priority_level - b.priority_level;
-  })
-
-  setTimeout(() => {
-    getTickets();
-  }, 10000)
+  let sorted = [];
+  if (tickets) {
+    const initialSort = tickets.sort((a: any, b: any) => {
+      return a.id - b.id;
+    })
+    sorted = initialSort.sort((a: any, b: any) => {
+      return a.priority_level - b.priority_level;
+    })
+  }
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -102,7 +103,7 @@ function NotReviewedTickets({ mediaQueries, sorted, handleSendToDev, handleRevie
     sorted.map((ticket: any) => {
       return (
         !ticket.reviewed_by && ticket.status === "Testing/QA" ?
-          <div style={{ width: "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%" }}>
+          <div key={ticket.id} style={{ width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%" }}>
             <ActualTicket ticket={ticket} mediaQueries={mediaQueries} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} />
           </div>
           : null
@@ -119,8 +120,7 @@ function ActualTicket({ ticket, mediaQueries, handleSendToDev, handleReviewClick
 
   return (
     !ticket.reviewed_by && ticket.status === "Testing/QA" ?
-      <div key={ticket.id} style={{ textAlign: "center", border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "100%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
-
+      <div className='testing-ticket' key={ticket.id} style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
         {ticket.reviewed_by ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
             <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => setOpen(!open)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{`Send to ${ticket.assigned_to.split(" ")[0]}?`}</p>
@@ -142,7 +142,7 @@ function ActualTicket({ ticket, mediaQueries, handleSendToDev, handleReviewClick
         <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "fit-content", margin: "0" }}>
           <img style={{ maxWidth: "45%" }} alt={ticket.title} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.jpg"} />
         </div>
-        <p onClick={!ticket.reviewed_by || !claiming ? (e) => handleReviewClick(e, ticket, setClaiming) : () => { }} onMouseEnter={!ticket.reviewed_by ? (e) => OnMouseEnter((e)) : () => { }} onMouseOut={!ticket.reviewed_by ? (e) => OnMouseOut(e) : () => { }} style={{ fontSize: 18, fontWeight: 600, border: ticket.reviewed_by ? "none" : "1px solid rgba(255, 255, 255,  0.5)", padding: "5px 10px", borderRadius: "10px", cursor: ticket.reviewed_by ? "auto" : "pointer" }}>{ticket.reviewed_by ? `Being reviewed by: ${ticket.reviewed_by}` : claiming ? "Claimed!" : "Review me!"}</p>
+        <button className="reviewMe-button" onClick={!ticket.reviewed_by || !claiming ? (e) => handleReviewClick(e, ticket, setClaiming) : () => { }} style={{ cursor: ticket.reviewed_by ? "auto" : "pointer" }}>{ticket.reviewed_by ? `Being reviewed by: ${ticket.reviewed_by}` : claiming ? "Claimed!" : "Review me!"}</button>
       </div >
       :
       null
@@ -155,7 +155,7 @@ function YourTickets({ mediaQueries, sorted, handleSendToDev, handleReviewClick,
     sorted.map((ticket: any) => {
       return (
         ticket.reviewed_by === authedUser.user_metadata.name && ticket.status ?
-          <div style={{ width: "30%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%" }}>
+          <div style={{ width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%" }}>
             <YourActualTicket ticket={ticket} authedUser={authedUser} mediaQueries={mediaQueries} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} />
           </div>
           : null
@@ -172,28 +172,28 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
 
   return (
     ticket.reviewed_by === authedUser.user_metadata.name && ticket.status ?
-      <div key={ticket.id} style={{ textAlign: "center", border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", width: mediaQueries.under768 ? "75%" : "100%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", padding: "12px", color: "white", borderRadius: "15px", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
+      <div key={ticket.id} className="testing-ticket" style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
 
         {ticket.reviewed_by ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-            <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => setOpen(!open)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{`Send to ${ticket.assigned_to.split(" ")[0]}?`}</p>
+            <button className="dev-ticket-button" onClick={(e) => setOpen(!open)}>{`Send to ${ticket.assigned_to.split(" ")[0]}?`}</button>
           </div>
           : null}
 
         {open ?
-          <div style={{ border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", padding: "20px", margin: "10px 20px" }}>
+          <div style={{ border: "1px solid black", borderRadius: "10px", padding: "20px", margin: "10px 20px", width: "100%" }}>
             <p>{"Any notes?"}</p>
             <p>{"If this is ready to be pushed to production let us know!"}</p>
-            <input type="text" value={notes} onChange={((e) => setNotes(e.target.value))} />
+            <input type="text" value={notes} onChange={((e) => setNotes(e.target.value))} style={{ width: "250px" }} />
             <br />
-            <button style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToDev(e, ticket, setSending, notes)}>{sending ? "Sending..." : "Send on over"}</button>
+            <button className='sendToDev-button' style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToDev(e, ticket, setSending, notes)}>{sending ? "Sending..." : "Send on over"}</button>
           </div>
           : null
         }
         <p style={{ fontWeight: 600, fontSize: 24 }} >{ticket.title}</p>
         <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-all" }}>{ticket.description}</p>
         {ticket.page_url.includes(".com") ?
-          <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold", textDecoration: "underline" }}>{"Page Url:"}</span>{" "}<a href={ticket.page_url}>{ticket.page_url}</a></p>
+          <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Page Url:"}</span>{" "}<a style={{ color: "#2b27ff" }} href={ticket.page_url}>{ticket.page_url}</a></p>
           :
           null
         }

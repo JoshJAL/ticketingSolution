@@ -39,7 +39,7 @@ const Home: NextPage = () => {
       </Head>
       <div style={{ width: "100%", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", overflow: "hidden" }}>
         <main style={{ margin: 0, padding: 0, width: "100%", overflow: mediaQueries.under768 ? "hidden" : "initial" }}>
-          <div style={{ margin: mediaQueries.under768 ? "12px 0" : "50px 0", width: "100%", }}>
+          <div style={{ margin: mediaQueries.under768 ? "12px 0" : "50px 0 111px 0", width: "100%", minHeight: "100%" }}>
             <TicketForm />
           </div>
         </main>

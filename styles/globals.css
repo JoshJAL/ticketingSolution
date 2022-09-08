@@ -13,6 +13,16 @@ body {
   color: black;
 }
 
+button { 
+  background-color: #6b6b6b;
+  border: none;
+  border-radius: 10px;
+}
+
+button:hover { 
+  background-color: #7b7b7b;
+}
+
 input { 
   border: none;
   color: black;
@@ -28,6 +38,13 @@ input {
 input::file-selector-button {
   color: rgb(235, 235, 235);
   cursor: pointer;
+  background-color: #6b6b6b;
+  border: none;
+  padding: 3px 5px;
+}
+
+input::file-selector-button:hover {
+  background-color: #7b7b7b;
 }
 
 label {
@@ -233,24 +250,4 @@ select {
     width: 341px;
   }
 
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: black;
-    background: rgb(235, 235, 235);
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  html {
-    color-scheme: light;
-  }
-  body {
-    color: black;
-    background: rgb(235, 235, 235);
-  }
 }

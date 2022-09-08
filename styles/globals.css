@@ -64,7 +64,6 @@ form > button {
   letter-spacing: 1px;
   cursor: pointer;
   color: rgb(235, 235, 235);
-  background-color: #6b6b6b;
 }
 
 select {
@@ -88,7 +87,6 @@ select {
   letter-spacing: 1px;
   cursor: pointer;
   color: rgb(235, 235, 235);
-  background-color: #6b6b6b;
 }
 
 .ticketList-ticket {
@@ -113,7 +111,6 @@ select {
   letter-spacing: 1px;
   cursor: pointer;
   color: rgb(235, 235, 235);
-  background-color: #6b6b6b;
 }
 
 .devTicketList-ticket {
@@ -137,7 +134,6 @@ select {
   letter-spacing: 1px;
   cursor: pointer;
   color: rgb(235, 235, 235);
-  background-color: #6b6b6b;
 }
 
 .dev-ticket-button { 
@@ -150,7 +146,6 @@ select {
   color: rgb(235, 235, 235);
   border-radius: 10px;
   border: none;
-  background-color: #6b6b6b;
 }
 
 .dev-ticket-button:hover { 
@@ -170,7 +165,6 @@ select {
   letter-spacing: 1px;
   cursor: pointer;
   color: rgb(235, 235, 235);
-  background-color: #6b6b6b;
 }
 
 .lastHeader-button {
@@ -181,7 +175,6 @@ select {
   letter-spacing: 1px;
   cursor: pointer;
   color: rgb(235, 235, 235);
-  background-color: #6b6b6b;
 }
 
 .testing-ticket { 
@@ -204,7 +197,6 @@ select {
   font-size: 15px;
   letter-spacing: 1px;
   color: rgb(235, 235, 235);
-  background-color: #6b6b6b;
 }
 
 .sendToDev-button {
@@ -215,7 +207,6 @@ select {
   letter-spacing: 1px;
   cursor: pointer;
   color: rgb(235, 235, 235);
-  background-color: #6b6b6b;
 }
 
 @media screen and (max-width: 768px) {

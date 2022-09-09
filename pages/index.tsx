@@ -10,6 +10,7 @@ import HamburgerMenu from '../components/HamburgerMenu'
 
 const Home: NextPage = () => {
   const [hamburgerClick, setHamburgerClick] = useState(false);
+  const [authedUser, setAuthedUser] = useState<any>(null);
 
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
@@ -20,6 +21,7 @@ const Home: NextPage = () => {
     if (!user) {
       window.location.href = '/login'
     }
+    setAuthedUser(user);
   }, [])
 
   function handleHamburgerClick() {
@@ -40,7 +42,7 @@ const Home: NextPage = () => {
       <div style={{ width: "100%", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", overflow: "hidden" }}>
         <main style={{ margin: 0, padding: 0, width: "100%", overflow: mediaQueries.under768 ? "hidden" : "initial" }}>
           <div style={{ margin: mediaQueries.under768 ? "12px 0" : "50px 0 111px 0", width: "100%", minHeight: "100%" }}>
-            <TicketForm />
+            <TicketForm user={authedUser} />
           </div>
         </main>
       </div>

@@ -1,15 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Modal from './Modal';
 import useMediaQueries from 'media-queries-in-react';
 import supabase from './supabase';
 import axios from 'axios';
 
-export default function TicketForm() {
+export default function TicketForm({ user }: { user: any }) {
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
-
-  const ref = useRef("");
 
   const [showModal, setShowModal] = useState(false);
   const [selection, setSelection] = useState(0);
@@ -57,12 +55,22 @@ export default function TicketForm() {
   }
 
   async function sendSlackMessage() {
-    const url = 'https://slack.com/api/chat.postMessage';
-
-    const res = await axios.post(url, {
-      channel: "C041L9PJ5G9",
-      text: "Hello world!"
-    }, { headers: { "Authorization": `Bearer ${process.env.NEXT_PUBLIC_SLACK_TOKEN}` } });
+    console.log(selection)
+    const url = 'https://hooks.slack.com/services/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';
+    const data = {
+      "username": "Ticket Bot",
+      "icon_url": "https://camo.githubusercontent.com/6e466156683138348d4283ec8ab1a8a8a959dbb6e2f9c06c1300f06ab01c7504/687474703a2f2f66696c65732d6d6973632e73332e616d617a6f6e6177732e636f6d2f6c756e6368626f742e6a7067",
+      "text": `A new ticket was submitted by ${user.user_metadata.name}! \n Title: ${title} \n Description: ${description} \n Priority: ${selection} \n Priority: ${selection == 3 ? "EMERGENCY" : selection == 2 ? "NEED TODAY OR TOMORROW" : selection == 1 ? "Need by the end of the week" : "No rush"}`,
+    }
+    const res = await axios.post(url, JSON.stringify(data),
+      {
+        withCredentials: false,
+        transformRequest: [(data, headers) => {
+          //@ts-ignore
+          delete headers.post['Content-Type'];
+          return data;
+        }]
+      });
 
     console.log("Done", res.data)
   }
@@ -80,12 +88,12 @@ export default function TicketForm() {
     setLoading(true);
     await fileUpload();
     await createTicket();
+    await sendSlackMessage();
     setSelection(0);
     setTitle("");
     setDescription("");
     setFileUrl("");
     setFile("");
-    ref.current = "";
     setLoading(false);
     setSubmitted(true)
   }
@@ -133,7 +141,7 @@ export default function TicketForm() {
               <input onChange={(e) => handleFileUrl(e)} type="file" style={{ cursor: "pointer", width: "100%" }} />
             </div>
             <label style={{ margin: "12px 0", display: "flex", alignItems: 'center' }}>Priority Level <span onClick={(e) => handlePriorityInfoClick(e)} style={{ border: "1px solid black", borderRadius: "50%", margin: "0 5px", padding: "2px 4px", fontSize: 9, cursor: "pointer" }}>i</span></label>
-            <select onClick={(e) => handleSelectionChange(e)}>
+            <select value={selection} onChange={(e) => handleSelectionChange(e)}>
               <option value={0}>Complete when you can</option>
               <option value={1}>Complete this week</option>
               <option value={2}>Complete by tomorrow</option>

@@ -1,4 +1,3 @@
-import useMediaQueries from 'media-queries-in-react';
 import Head from 'next/head';
 import React, { useState } from 'react';
 import HamburgerMenu from '../components/HamburgerMenu';
@@ -7,10 +6,6 @@ import Ticket from '../components/Ticket';
 
 export default function TicketList() {
   const [hamburgerClick, setHamburgerClick] = useState(false);
-
-  const mediaQueries = useMediaQueries({
-    under768: '(max-width: 768px)',
-  });
 
   function handleHamburgerClick() {
     setHamburgerClick(true);

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import Modal from './Modal';
 import useMediaQueries from 'media-queries-in-react';
 import supabase from './supabase';
+import axios from 'axios';
 
 export default function TicketForm() {
   const mediaQueries = useMediaQueries({
@@ -41,23 +42,6 @@ export default function TicketForm() {
     setSelection(e.target.value)
   }
 
-  async function readFiles() {
-    let dataMap: any[] = [];
-    const { data, error } = await supabase.storage.from('ticket-images').list('public', {
-      limit: 100,
-      offset: 0,
-      sortBy: { column: 'name', order: 'asc' },
-    })
-    if (data) {
-      dataMap = data.map((file) => {
-        file.name
-      })
-      return dataMap;
-    } else {
-      return dataMap;
-    }
-  }
-
   async function fileUpload() {
     // let fileNames = await readFiles();
     if (file) {
@@ -70,6 +54,17 @@ export default function TicketForm() {
     } else {
       return
     }
+  }
+
+  async function sendSlackMessage() {
+    const url = 'https://slack.com/api/chat.postMessage';
+
+    const res = await axios.post(url, {
+      channel: "C041L9PJ5G9",
+      text: "Hello world!"
+    }, { headers: { "Authorization": `Bearer ${process.env.NEXT_PUBLIC_SLACK_TOKEN}` } });
+
+    console.log("Done", res.data)
   }
 
   async function createTicket() {
@@ -113,6 +108,10 @@ export default function TicketForm() {
       }
 
       <form>
+        <button onClick={(e) => {
+          e.preventDefault();
+          sendSlackMessage();
+        }}>Send the message</button>
         {submitted ?
           <>
             <p>Thank you for reaching out!</p>

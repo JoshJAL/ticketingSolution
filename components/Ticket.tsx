@@ -55,7 +55,7 @@ export default function Ticket() {
 
   async function handleClaimTicket(e: any, ticket: any, setClaiming: Function, setClaimed: Function) {
     e.preventDefault();
-    getTickets();
+    await getTickets();
     setClaiming(true)
     if (user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to) {
       const { data, error } = await supabase

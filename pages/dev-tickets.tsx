@@ -7,6 +7,7 @@ import Modal from '../components/Modal';
 import supabase from '../components/supabase';
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
 import palette from '../styles/palette';
+import axios from 'axios';
 
 export default function DevTickets() {
   const content = {
@@ -89,6 +90,23 @@ export default function DevTickets() {
     }
   }
 
+  async function sendSlackMessage(webhookUrl: string, ticket: any, urlText: any) {
+    const data = {
+      "username": "Ticket Bot",
+      "icon_url": "https://camo.githubusercontent.com/6e466156683138348d4283ec8ab1a8a8a959dbb6e2f9c06c1300f06ab01c7504/687474703a2f2f66696c65732d6d6973632e73332e616d617a6f6e6177732e636f6d2f6c756e6368626f742e6a7067",
+      "text": `A new ticket is ready for review from ${authedUser.user_metadata.name}! \n Title: ${ticket.title} \n Description: ${ticket.description} \n Priority: ${ticket.priority_level == 3 ? "EMERGENCY" : ticket.priority_level == 2 ? "NEED TODAY OR TOMORROW" : ticket.priority_level == 1 ? "Need by the end of the week" : "No rush"} ${urlText.trim() !== "" && urlText ? `\n Page URL: ${urlText}` : ``} `,
+    }
+    const res = await axios.post(webhookUrl, JSON.stringify(data),
+      {
+        withCredentials: false,
+        transformRequest: [(data, headers) => {
+          //@ts-ignore
+          delete headers.post['Content-Type'];
+          return data;
+        }]
+      });
+  }
+
   async function handleSendToQA(e: any, ticket: any, setSending: Function, urlText: any, setOpen: Function) {
     e.preventDefault();
     setSending(true);
@@ -96,6 +114,7 @@ export default function DevTickets() {
       .from('tickets')
       .update({ page_url: urlText, status: 'Testing/QA' })
       .eq('id', ticket.id)
+    sendSlackMessage(`${process.env.NEXT_PUBLIC_SLACK_WEBHOOK_TICKETS_TO_REVIEW}`, ticket, urlText)
     setSending(false)
     setOpen(false)
     getTickets();

@@ -55,7 +55,7 @@ export default function TicketForm({ user }: { user: any }) {
   }
 
   async function sendSlackMessage() {
-    const url = 'https://hooks.slack.com/services/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';
+    const url = `${process.env.NEXT_PUBLIC_SLACK_WEBHOOK}`;
     const data = {
       "username": "Ticket Bot",
       "icon_url": "https://camo.githubusercontent.com/6e466156683138348d4283ec8ab1a8a8a959dbb6e2f9c06c1300f06ab01c7504/687474703a2f2f66696c65732d6d6973632e73332e616d617a6f6e6177732e636f6d2f6c756e6368626f742e6a7067",
@@ -70,8 +70,6 @@ export default function TicketForm({ user }: { user: any }) {
           return data;
         }]
       });
-
-    console.log("Done", res.data)
   }
 
   async function createTicket() {

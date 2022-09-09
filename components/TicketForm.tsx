@@ -55,7 +55,6 @@ export default function TicketForm({ user }: { user: any }) {
   }
 
   async function sendSlackMessage() {
-    console.log(selection)
     const url = 'https://hooks.slack.com/services/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';
     const data = {
       "username": "Ticket Bot",
@@ -116,10 +115,6 @@ export default function TicketForm({ user }: { user: any }) {
       }
 
       <form>
-        <button onClick={(e) => {
-          e.preventDefault();
-          sendSlackMessage();
-        }}>Send the message</button>
         {submitted ?
           <>
             <p>Thank you for reaching out!</p>

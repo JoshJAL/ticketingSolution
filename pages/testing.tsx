@@ -143,9 +143,17 @@ function ActualTicket({ ticket, mediaQueries, handleSendToDev, handleReviewClick
         }
         <p style={{ fontWeight: 600, fontSize: 24 }} >{ticket.title}</p>
         <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-all" }}>{ticket.description}</p>
-        <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "fit-content", margin: "0" }}>
-          <img style={{ maxWidth: "45%" }} alt={ticket.title} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.png"} />
-        </div>
+        {
+          ticket.picture.includes(".png") || ticket.picture.includes(".jpg") || ticket.picture.includes(".jpeg") || !ticket.picture ?
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
+              <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.png"} />
+            </div>
+            :
+            <button className="dev-ticket-button" style={{ padding: "9px 18px", fontSize: 18 }} onClick={(e) => {
+              e.preventDefault();
+              window.location.href = `${encodeURI(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}`)}`
+            }}>{"Download associated file"}</button>
+        }
         <button className="reviewMe-button" onClick={!ticket.reviewed_by || !claiming ? (e) => handleReviewClick(e, ticket, setClaiming) : () => { }} style={{ cursor: ticket.reviewed_by ? "auto" : "pointer" }}>{ticket.reviewed_by ? `Being reviewed by: ${ticket.reviewed_by}` : claiming ? "Claimed!" : "Review me!"}</button>
       </div >
       :
@@ -201,9 +209,17 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
           :
           null
         }
-        <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "fit-content", margin: "0" }}>
-          <img style={{ maxWidth: "45%" }} alt={ticket.title} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.png"} />
-        </div>
+        {
+          ticket.picture.includes(".png") || ticket.picture.includes(".jpg") || ticket.picture.includes(".jpeg") || !ticket.picture ?
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
+              <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.png"} />
+            </div>
+            :
+            <button className="dev-ticket-button" style={{ padding: "9px 18px", fontSize: 18 }} onClick={(e) => {
+              e.preventDefault();
+              window.location.href = `${encodeURI(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}`)}`
+            }}>{"Download associated file"}</button>
+        }
         <p onClick={!ticket.reviewed_by || !claiming ? (e) => handleReviewClick(e, ticket, setClaiming) : () => { }} onMouseEnter={!ticket.reviewed_by ? (e) => OnMouseEnter((e)) : () => { }} onMouseOut={!ticket.reviewed_by ? (e) => OnMouseOut(e) : () => { }} style={{ fontSize: 18, fontWeight: 600, border: ticket.reviewed_by ? "none" : "1px solid rgba(255, 255, 255,  0.5)", padding: "5px 10px", borderRadius: "10px", cursor: ticket.reviewed_by ? "auto" : "pointer" }}>{ticket.reviewed_by ? `Being reviewed by: ${ticket.reviewed_by}` : claiming ? "Claimed!" : "Review me!"}</p>
       </div >
       : null

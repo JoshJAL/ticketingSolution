@@ -1,7 +1,6 @@
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 import React, { CSSProperties, useEffect, useState } from 'react'
-import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
 import supabase from "./supabase";
 
 export default function Ticket() {
@@ -24,8 +23,6 @@ export default function Ticket() {
     setLoading(false)
   }
 
-
-
   useEffect(() => {
     getTickets();
     const authenticatedUser = supabase.auth.user()
@@ -34,6 +31,10 @@ export default function Ticket() {
     }
     setUser(authenticatedUser);
   }, []);
+
+  function downloadFile(ticket: any) {
+    window.location.href = `${encodeURI(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}`)}`
+  }
 
   const priorityLevelTitleStyles: CSSProperties = {
     fontSize: 24,
@@ -82,10 +83,10 @@ export default function Ticket() {
         sorted.map((ticket: any) => {
           return (
             <div style={{ width: "100%", display: "flex", flexDirection: "column", margin: "0 0 40px 0" }} key={ticket.id}>
-              <EmergencyTicket tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} handleClaimTicket={handleClaimTicket} user={user} />
-              <HighTicket tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} handleClaimTicket={handleClaimTicket} user={user} />
-              <MediumTicket tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} handleClaimTicket={handleClaimTicket} user={user} />
-              <LowTicket tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} handleClaimTicket={handleClaimTicket} user={user} />
+              <EmergencyTicket downloadFile={downloadFile} tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} handleClaimTicket={handleClaimTicket} user={user} />
+              <HighTicket downloadFile={downloadFile} tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} handleClaimTicket={handleClaimTicket} user={user} />
+              <MediumTicket downloadFile={downloadFile} tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} handleClaimTicket={handleClaimTicket} user={user} />
+              <LowTicket downloadFile={downloadFile} tickets={tickets} mediaQueries={mediaQueries} priorityLevelTitleStyles={priorityLevelTitleStyles} handleClaimTicket={handleClaimTicket} user={user} />
             </div>
           )
         }).reverse().slice(0, 1)
@@ -99,7 +100,7 @@ export default function Ticket() {
   )
 }
 
-function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles, handleClaimTicket, user }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, handleClaimTicket: Function, user: any }) {
+function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles, handleClaimTicket, user, downloadFile }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, handleClaimTicket: Function, user: any, downloadFile: Function }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
       <EmergencyTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
@@ -108,7 +109,7 @@ function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles, hand
           if (ticket.priority_level === 3) {
             return (
               <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: mediaQueries.under768 ? "75%" : "30%" }}>
-                <ActualTicket ticket={ticket} mediaQueries={mediaQueries} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={3} />
+                <ActualTicket downloadFile={downloadFile} ticket={ticket} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={3} />
               </div>
             )
           }
@@ -119,7 +120,7 @@ function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles, hand
   )
 }
 
-function ActualTicket({ ticket, mediaQueries, user, handleClaimTicket, setPriorityLevel }: { ticket: any, mediaQueries: any, user: any, handleClaimTicket: Function, setPriorityLevel: number }) {
+function ActualTicket({ ticket, user, handleClaimTicket, setPriorityLevel, downloadFile }: { ticket: any, user: any, handleClaimTicket: Function, setPriorityLevel: number, downloadFile: Function }) {
   const [claiming, setClaiming] = useState(false);
   const [claimed, setClaimed] = useState(false);
   return (
@@ -134,9 +135,16 @@ function ActualTicket({ ticket, mediaQueries, user, handleClaimTicket, setPriori
             }
             <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
             <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", wordBreak: "break-word" }}>{ticket.description}</p>
-            <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
-              <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.png"} />
-            </div>
+            {ticket.picture.includes(".png") || ticket.picture.includes(".jpg") || ticket.picture.includes(".jpeg") || !ticket.picture ?
+              <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
+                <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.png"} />
+              </div>
+              :
+              <button onClick={(e) => {
+                e.preventDefault();
+                downloadFile(ticket);
+              }}>{"Download associated file"}</button>
+            }
             {
               user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
                 <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
@@ -144,7 +152,7 @@ function ActualTicket({ ticket, mediaQueries, user, handleClaimTicket, setPriori
                 <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
             }
           </div>
-        </div>
+        </div >
       ) : null
   )
 }
@@ -164,7 +172,7 @@ function EmergencyTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: 
   )
 }
 
-function HighTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, handleClaimTicket }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, user: any, handleClaimTicket: Function }) {
+function HighTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, handleClaimTicket, downloadFile }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, user: any, handleClaimTicket: Function, downloadFile: Function }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
       <HighTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
@@ -173,7 +181,7 @@ function HighTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, han
           if (ticket.priority_level === 2) {
             return (
               <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: mediaQueries.under768 ? "75%" : "30%" }}>
-                <ActualTicket ticket={ticket} mediaQueries={mediaQueries} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={2} />
+                <ActualTicket downloadFile={downloadFile} ticket={ticket} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={2} />
               </div>
             )
           }
@@ -198,7 +206,7 @@ function HighTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any, 
   )
 }
 
-function MediumTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, handleClaimTicket }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, user: any, handleClaimTicket: Function }) {
+function MediumTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, handleClaimTicket, downloadFile }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, user: any, handleClaimTicket: Function, downloadFile: Function }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
       <MediumTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />
@@ -207,7 +215,7 @@ function MediumTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, h
           if (ticket.priority_level === 1) {
             return (
               <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: mediaQueries.under768 ? "75%" : "30%" }}>
-                <ActualTicket ticket={ticket} mediaQueries={mediaQueries} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={1} />
+                <ActualTicket downloadFile={downloadFile} ticket={ticket} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={1} />
               </div>
             )
           }
@@ -232,7 +240,7 @@ function MediumTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any
   )
 }
 
-function LowTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, handleClaimTicket }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, user: any, handleClaimTicket: Function }) {
+function LowTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, handleClaimTicket, downloadFile }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, user: any, handleClaimTicket: Function, downloadFile: Function }) {
   const router = useRouter();
 
   return (
@@ -243,7 +251,7 @@ function LowTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, hand
           if (ticket.priority_level === 0) {
             return (
               <div key={ticket.id} style={{ margin: mediaQueries.under768 ? "21px 15px" : "25px 1%", width: mediaQueries.under768 ? "75%" : "30%" }}>
-                <ActualTicket ticket={ticket} mediaQueries={mediaQueries} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={0} />
+                <ActualTicket downloadFile={downloadFile} ticket={ticket} user={user} handleClaimTicket={handleClaimTicket} setPriorityLevel={0} />
               </div>
             )
           }

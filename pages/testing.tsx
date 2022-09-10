@@ -108,7 +108,7 @@ function NotReviewedTickets({ mediaQueries, sorted, handleSendToDev, handleRevie
       return (
         !ticket.reviewed_by && ticket.status === "Testing/QA" ?
           <div key={ticket.id} style={{ width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%" }}>
-            <ActualTicket ticket={ticket} mediaQueries={mediaQueries} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} />
+            <ActualTicket ticket={ticket} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} />
           </div>
           : null
       )
@@ -116,7 +116,7 @@ function NotReviewedTickets({ mediaQueries, sorted, handleSendToDev, handleRevie
   )
 }
 
-function ActualTicket({ ticket, mediaQueries, handleSendToDev, handleReviewClick }: { ticket: any, mediaQueries: any, handleSendToDev: Function, handleReviewClick: Function }) {
+function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: any, handleSendToDev: Function, handleReviewClick: Function }) {
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState("");
   const [sending, setSending] = useState(false);

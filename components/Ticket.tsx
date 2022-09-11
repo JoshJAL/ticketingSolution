@@ -1,6 +1,7 @@
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 import React, { CSSProperties, useEffect, useState } from 'react'
+import LoadingSpinner from './LoadingSpinner/LoadingSpinner';
 import supabase from "./supabase";
 
 export default function Ticket() {
@@ -74,9 +75,9 @@ export default function Ticket() {
   }, 720000)
 
   return (
-    loading ?
-      <div style={{ width: "100%", height: "100%", margin: "20px" }}>
-        <p style={{ fontSize: 48, fontWeight: 700, fontStyle: "oblique", textAlign: "center" }}>Grabbing tickets...</p>
+    loading || !user ?
+      <div style={{ width: "100%", height: "50vh", margin: "20px", display: "flex", alignItems: "center", justifyContent: "center", transform: "scale(3)" }}>
+        <LoadingSpinner />
       </div>
       :
       sorted.length > 0 ?

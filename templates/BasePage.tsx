@@ -1,21 +1,15 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import TicketForm from '../components/TicketForm'
 import useMediaQueries from 'media-queries-in-react'
-import supabase from '../components/supabase'
-import { useEffect, useState } from 'react'
+import Head from 'next/head'
+import React, { useEffect, useState } from 'react'
+import Footer from '../components/Footer'
 import HamburgerMenu from '../components/HamburgerMenu'
+import Header from '../components/Header'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
+import supabase from '../components/supabase'
 
-const Home: NextPage = () => {
+export default function Page() {
   const [hamburgerClick, setHamburgerClick] = useState(false);
   const [authedUser, setAuthedUser] = useState<any>(null);
-
-  const mediaQueries = useMediaQueries({
-    under768: '(max-width: 768px)',
-  });
 
   useEffect(() => {
     const user = supabase.auth.user()
@@ -24,6 +18,10 @@ const Home: NextPage = () => {
     }
     setAuthedUser(user);
   }, [])
+
+  const mediaQueries = useMediaQueries({
+    under768: '(max-width: 768px)',
+  });
 
   function handleHamburgerClick() {
     setHamburgerClick(true);
@@ -44,18 +42,17 @@ const Home: NextPage = () => {
         <main style={{ margin: 0, padding: 0, width: "100%", overflow: mediaQueries.under768 ? "hidden" : "initial" }}>
           <div style={{ margin: mediaQueries.under768 ? "12px 0" : "50px 0 111px 0", width: "100%", minHeight: "100%" }}>
             {!authedUser ?
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: "center", height: "50vh", transform: "scale(3)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "50vh", transform: "scale(3)" }}>
                 <LoadingSpinner />
               </div>
               :
-              <TicketForm user={authedUser} />
+              <p>Page Content here</p>
             }
           </div>
         </main>
       </div>
+      // Feel free to remove the footer if you don't think the page needs it
       <Footer />
     </div>
   )
 }
-
-export default Home

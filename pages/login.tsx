@@ -7,6 +7,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [noAccount, setNoAccount] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
@@ -15,6 +16,7 @@ export default function SignUp() {
 
   async function handleSignIn(e: any) {
     e.preventDefault();
+    setLoading(true);
     let { user, error } = await supabase.auth.signIn({
       email: email,
       password: password
@@ -26,6 +28,7 @@ export default function SignUp() {
     if (user) {
       router.push('/');
     }
+    setLoading(false);
   }
 
   return (
@@ -40,7 +43,7 @@ export default function SignUp() {
             <input style={{ width: mediaQueries.under768 ? "250px" : "350px" }} onChange={(e) => setEmail(e.target.value)} value={email} type="email" />
             <label style={{ margin: "10px" }}>Password:</label>
             <input style={{ width: mediaQueries.under768 ? "250px" : "350px" }} onChange={(e) => setPassword(e.target.value)} value={password} type="password" />
-            <button style={{ margin: "10px", fontSize: 18, padding: '10px', cursor: "pointer" }} onClick={(e) => handleSignIn(e)}>Login</button>
+            <button style={{ margin: "10px", fontSize: 18, padding: '10px', cursor: "pointer" }} onClick={(e) => handleSignIn(e)}>{loading ? "Logging in..." : "Login"}</button>
             <p style={{ margin: "0 20px", textAlign: "center" }}>{"Don't have an account? "}<a onClick={() => router.push('/sign-up')} style={{ cursor: "pointer", textDecoration: "underline" }}>Sign Up!</a></p>
           </>
         }

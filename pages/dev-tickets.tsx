@@ -8,6 +8,7 @@ import supabase from '../components/supabase';
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
 import palette from '../styles/palette';
 import axios from 'axios';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 
 export default function DevTickets() {
   const content = {
@@ -157,9 +158,9 @@ export default function DevTickets() {
         </div>
         <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
         <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", height: "100%", width: "100%", overflowY: "auto" }}>
-          {loading ?
-            <div style={{ width: "100%", height: "100vh" }}>
-              <p style={{ fontSize: 48, fontWeight: 700, fontStyle: "oblique", margin: mediaQueries.under768 ? "50% 0 0 0" : "15% 0 0 0", textAlign: "center" }}>Grabbing tickets...</p>
+          {loading || !authedUser ?
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: "center", height: "50vh", transform: "scale(3)" }}>
+              <LoadingSpinner />
             </div>
             :
             <>

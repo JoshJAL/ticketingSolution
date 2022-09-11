@@ -5,6 +5,7 @@ import supabase from '../components/supabase'
 import { useEffect, useState } from 'react'
 import HamburgerMenu from '../components/HamburgerMenu'
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents'
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 
 export default function Testing() {
   const [hamburgerClick, setHamburgerClick] = useState(false);
@@ -88,14 +89,26 @@ export default function Testing() {
       <div style={{ width: "100%", minHeight: "100vh", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", overflow: "hidden" }}>
 
         <main style={{ margin: 0, padding: 0, height: "100%", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-          <p style={{ fontWeight: 700, fontSize: 30, marginBottom: 0 }}>Unclaimed Tickets</p>
-          <div style={{ margin: mediaQueries.under768 ? "12px 0" : "0", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
-            <NotReviewedTickets mediaQueries={mediaQueries} sorted={sorted} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} />
-          </div>
-          <p style={{ fontWeight: 700, fontSize: 30, marginBottom: 0 }}>Your Tickets</p>
-          <div style={{ margin: mediaQueries.under768 ? "12px 0" : "0", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
-            <YourTickets mediaQueries={mediaQueries} sorted={sorted} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} authedUser={authedUser} />
-          </div>
+          {!authedUser ?
+            (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "50vh", transform: "scale(3)" }}>
+                <LoadingSpinner />
+              </div>
+            )
+            :
+            (
+              <>
+                <p style={{ fontWeight: 700, fontSize: 30, marginBottom: 0 }}>Unclaimed Tickets</p>
+                <div style={{ margin: mediaQueries.under768 ? "12px 0" : "0", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
+                  <NotReviewedTickets mediaQueries={mediaQueries} sorted={sorted} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} />
+                </div>
+                <p style={{ fontWeight: 700, fontSize: 30, marginBottom: 0 }}>Your Tickets</p>
+                <div style={{ margin: mediaQueries.under768 ? "12px 0" : "0", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
+                  <YourTickets mediaQueries={mediaQueries} sorted={sorted} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} authedUser={authedUser} />
+                </div>
+              </>
+            )
+          }
         </main>
       </div>
     </div>

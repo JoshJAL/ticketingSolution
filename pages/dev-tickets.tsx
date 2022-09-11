@@ -9,6 +9,7 @@ import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
 import palette from '../styles/palette';
 import axios from 'axios';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import { useRouter } from 'next/router';
 
 export default function DevTickets() {
   const content = {
@@ -16,7 +17,7 @@ export default function DevTickets() {
     modalList: "1 is the lowest complexity level where 13 is the highest",
     modalList1: "A complexity level of 1 should mean that the ticket can likely be completed in one day by one person",
     modalList2: "A complexity level of 2 should mean that the ticket can likely be completed in two or three days by one person",
-    modalList3: "A complexity level of 3 should mean that the ticket can likely be completed in three days plus by one person with some potential need for help",
+    modalList3: "A complexity level of 3 should mean that the ticket can likely be completed in three or more days by one person with some potential need for help",
     modalList4: "A complexity level of 5 should mean that the ticket can likely be completed in a day or two by two or more people",
     modalList5: "A complexity level of 8 should mean that the ticket can likely be completed in a week plus by two or more people",
     modalList6: "A complexity level of 13 should mean that the ticket is likely a full project warranting discussion by the whole team",
@@ -25,6 +26,8 @@ export default function DevTickets() {
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
+
+  const router = useRouter();
 
   const [tickets, setTickets] = useState<any>([]);
   const [loading, setLoading] = useState(true);
@@ -58,13 +61,25 @@ export default function DevTickets() {
     setComplexityLevel(e.target.value)
   }
 
-  async function addComplexityLevel(e: any, id: number, complexityLevel: number | string) {
+  async function addComplexityLevel(e: any, ticket: any, complexityLevel: number | string, setSetting: Function) {
     e.preventDefault();
+    setSetting(true);
+    if (complexityLevel == 13) {
+      if (confirm("Would you like to create a Kanban project from this ticket?")) {
+        const { data, error } = await supabase
+          .from('kanbanCards')
+          .insert([
+            { project_name: ticket.title },
+          ])
+        router.push('/kanban')
+      }
+    }
     const { data, error } = await supabase
       .from('tickets')
       .update({ complexity_level: complexityLevel })
-      .eq('id', id);
+      .eq('id', ticket.id);
     getTickets();
+    setSetting(false);
   }
 
   async function addToCompleted(ticket: any) {
@@ -166,7 +181,7 @@ export default function DevTickets() {
             <>
               <p onClick={() => setShowModal(!showModal)} onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} style={{ fontSize: 24, border: "1px solid black", borderRadius: "50%", padding: "5px 15px", cursor: "pointer", position: "absolute", top: mediaQueries.under768 ? "9%" : "100px", right: "40px" }}>?</p>
               {showModal ?
-                <Modal styleOverride={{ maxHeight: "90vh", padding: "5px", overflowY: "auto", backgroundColor: palette.pageBackgroundColor, width: mediaQueries.under768 ? "90%" : "63%", margin: mediaQueries.under768 ? "5% 5%" : "10% 18.5%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: "column", textAlign: "center", border: "1px solid rgba(0, 0, 0, 0.4)", borderRadius: "10px", color: "black" }}>
+                <Modal styleOverride={{ maxHeight: "90vh", padding: "10px", backgroundColor: palette.pageBackgroundColor, width: mediaQueries.under768 ? "90%" : "63%", margin: mediaQueries.under768 ? "5% 5%" : "10% 18.5%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: "column", textAlign: "center", border: "1px solid rgba(0, 0, 0, 0.4)", borderRadius: "10px", color: "black" }}>
                   <div style={{ width: "100%", margin: "2px", fontSize: mediaQueries.under768 ? 15 : 18, display: "flex", flexDirection: "column" }}>
                     <p onClick={() => setShowModal(false)} style={{ margin: 0, marginLeft: "auto", marginRight: "5px", marginTop: "5px", padding: "5px", cursor: "pointer" }}>X</p>
                     <p>{content.complexityLevelModalTitle}</p>
@@ -235,6 +250,7 @@ function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries,
   const [urlText, setUrlText] = useState("");
   const [sending, setSending] = useState(false);
   const [complexityLevel, setComplexityLevel] = useState('1');
+  const [setting, setSetting] = useState(false);
 
   return (
     ticket.assigned_to === name && showTickets ?
@@ -283,7 +299,7 @@ function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries,
                 <option value={"8"}>8</option>
                 <option value={"13"}>13</option>
               </select>
-              <button className="dev-ticket-button set" onClick={(e) => addComplexityLevel(e, ticket.id, complexityLevel)}>{"Set"}</button>
+              <button className="dev-ticket-button set" onClick={(e) => addComplexityLevel(e, ticket, complexityLevel, setSetting)}>{setting ? "Setting..." : "Set"}</button>
             </>
             :
             null

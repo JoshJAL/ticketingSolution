@@ -121,14 +121,15 @@ export default function TicketForm({ user }: { user: any }) {
           :
           <>
             <label style={{ margin: "12px 0" }}>Title:</label>
-            <input value={title} type="text" onChange={(e) => handleTitle(e)} />
+            <input value={title} type="text" onChange={(e) => handleTitle(e)} placeholder="Page URL(s)/descriptive title" />
             <label style={{ margin: "12px 0" }}>Describe what you need:</label>
             <textarea
+              placeholder='A description of what needs to be done, please be as detailed as possible'
               value={description}
               onChange={(e) => handleDescription(e)}
               rows={mediaQueries.under768 ? 5 : 10}
             />
-            <label style={{ margin: "12px 0" }}>Any pictures?</label>
+            <label style={{ margin: "12px 0", textAlign: "center" }}>Picture or document?</label>
             <div style={{ width: mediaQueries.under768 ? "341px" : "47%" }}>
               <input onChange={(e) => handleFileUrl(e)} type="file" style={{ cursor: "pointer", width: "100%" }} />
             </div>

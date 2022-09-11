@@ -1,10 +1,13 @@
-import React, { CSSProperties, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import supabase from './supabase';
 import styles from '../styles/kanban.module.css'
 import palette from '../styles/palette';
 import Modal from './Modal';
+import { useRouter } from 'next/router';
 
 function DragAndDropColumns() {
+  const router = useRouter();
+
   const defaultGroups = ['To Do', 'In Progress', 'Code Review', 'Testing', 'QA', 'Done'];
 
   async function getCards() {
@@ -119,8 +122,39 @@ function DragAndDropColumns() {
         { project_name: newProjectName },
       ])
     getCards();
-    setCreating(false)
+    setCreating(false);
     setShowNewProjectModal(false);
+  }
+
+  async function addToCompletedProjects(items: any) {
+    items.map(async (item: any) => {
+      if (item.project_name == selectedProject) {
+        const { data, error } = await supabase
+          .from('completedKanbanCards')
+          .insert([
+            { created_at: item.created_at, title: item.title, description: item.description, status: item.status, assigned_to: item.assigned_to, project_name: item.project_name },
+          ])
+      }
+    })
+  }
+
+  async function handleCompleteProject(items: any) {
+    if (confirm(`Are you sure this project is finished? \n\n This cannot be undone.`)) {
+      addToCompletedProjects(items);
+      items.map(async (item: any) => {
+        if (item.project_name == selectedProject) {
+          const { data, error } = await supabase
+            .from('kanbanCards')
+            .delete()
+            .eq('project_name', item.project_name)
+        }
+      })
+      router.reload();
+      getCards();
+    } else {
+      getCards();
+      return;
+    };
   }
 
   let uniqueProjects = projects.filter((name: string, index: number) => {
@@ -156,7 +190,12 @@ function DragAndDropColumns() {
       }
 
       {selectedProject ? (
-        <KanbanTable showModal={showModal} setShowModal={setShowModal} setTaskName={setTaskName} setTaskDescription={setTaskDescription} setDeveloperAssigned={setDeveloperAssigned} developers={developers} addTask={addTask} adding={adding} defaultGroups={defaultGroups} handleDragEnter={handleDragEnter} handleDragOver={handleDragOver} handleDrop={handleDrop} items={items} selectedProject={selectedProject} handleDragStart={handleDragStart} assignCardToDev={assignCardToDev} />
+        <>
+          <KanbanTable showModal={showModal} setShowModal={setShowModal} setTaskName={setTaskName} setTaskDescription={setTaskDescription} setDeveloperAssigned={setDeveloperAssigned} developers={developers} addTask={addTask} adding={adding} defaultGroups={defaultGroups} handleDragEnter={handleDragEnter} handleDragOver={handleDragOver} handleDrop={handleDrop} items={items} selectedProject={selectedProject} handleDragStart={handleDragStart} assignCardToDev={assignCardToDev} />
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <button className='dev-ticket-button' style={{ padding: "10px 20px", fontSize: "21px", margin: "10px 0 0 0" }} onClick={() => handleCompleteProject(items)} >Complete Project</button>
+          </div>
+        </>
       ) : null
       }
 
@@ -220,7 +259,7 @@ function KanbanTable({ showModal, setShowModal, setTaskName, setTaskDescription,
                     handleDragStart(e, item.id, group);
                   }}
                 >
-                  <TaskCards item={item} group={group} handleDragStart={handleDragStart} developers={developers} assignCardToDev={assignCardToDev} />
+                  <OpenCard item={item} developers={developers} assignCardToDev={assignCardToDev} />
                 </div>
               ))}
               {group === 'To Do' ?
@@ -239,29 +278,30 @@ function KanbanTable({ showModal, setShowModal, setTaskName, setTaskDescription,
   )
 }
 
-function TaskCards({ item, group, handleDragStart, developers, assignCardToDev }: { item: any, group: any, handleDragStart: Function, developers: any, assignCardToDev: Function }) {
+function OpenCard({ item, developers, assignCardToDev }: { item: any, developers: any, assignCardToDev: Function }) {
   const [clicked, setClicked] = useState(false);
 
   return (
 
     <>
-      <button style={{ float: "right", margin: "0 0 0 0", cursor: "pointer", padding: "10px", borderRadius: "50%", color: palette.pageBackgroundColor }} onClick={() => setClicked(!clicked)}>{clicked ? "︽" : "︾"}</button>
+      <button style={{ float: "right", margin: "0 0 0 0", cursor: "pointer", padding: "5px 10px", borderRadius: "10px", color: palette.pageBackgroundColor }} onClick={() => setClicked(true)}>{clicked ? "Opened" : "Open"}</button>
       <p>{item.title}</p>
-      <OpenCard item={item} developers={developers} assignCardToDev={assignCardToDev} clicked={clicked} />
-
-
+      <TaskCard item={item} developers={developers} assignCardToDev={assignCardToDev} clicked={clicked} setClicked={setClicked} />
     </>
   )
 }
 
-function OpenCard({ item, developers, assignCardToDev, clicked }: { item: any, developers: any, assignCardToDev: Function, clicked: boolean }) {
+function TaskCard({ item, developers, assignCardToDev, clicked, setClicked }: { item: any, developers: any, assignCardToDev: Function, clicked: boolean, setClicked: Function }) {
   return (
 
     clicked ?
-      <>
-        <p>{item.description}</p>
+      <Modal styleOverride={{ maxHeight: "90vh", padding: "10px", overflowY: "auto", backgroundColor: palette.pageBackgroundColor, width: "50%", margin: "10% 25%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: "column", textAlign: "center", border: "1px solid rgba(0, 0, 0, 0.4)", borderRadius: "10px", color: "black" }}>
+        <p style={{ marginLeft: "auto", marginRight: "0px", cursor: "pointer", padding: "10px", marginBottom: 0 }} onClick={() => setClicked(false)} >X</p>
+        <p><span style={{ fontWeight: 700 }}>Status: </span>{item.status}</p>
+        <p><span style={{ fontWeight: 700 }}>Title: </span>{item.title}</p>
+        <p><span style={{ fontWeight: 700 }}>Description: </span>{item.description}</p>
         <AssignedTo item={item} developers={developers} assignCardToDev={assignCardToDev} />
-      </>
+      </Modal>
       :
       null
   )
@@ -276,7 +316,7 @@ function AssignedTo({ item, developers, assignCardToDev }: { item: any, develope
     )
       :
       (
-        <p>Assigned To: {item.assigned_to}</p>
+        <p><span style={{ fontWeight: 700 }}>Assigned To:</span> {item.assigned_to}</p>
       )
   )
 }

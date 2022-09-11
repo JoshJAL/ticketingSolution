@@ -138,7 +138,7 @@ function DragAndDropColumns() {
             )
           })}
         </select>
-        <button className='dev-ticket-button' style={{ margin: "0 0 0 20px", padding: "10px 20px", fontSize: "21px" }}>Start New Project</button>
+        <button className='dev-ticket-button' style={{ margin: "0 0 0 20px", padding: "10px 20px", fontSize: "21px" }} onClick={(e) => { e.preventDefault(); setShowNewProjectModal(true) }} >Start New Project</button>
       </div>
 
       {

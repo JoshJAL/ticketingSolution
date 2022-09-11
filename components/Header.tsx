@@ -72,6 +72,9 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
           {admin || QA ?
             <button className="header-button" onClick={() => router.push("/testing")}>QA Tickets</button>
             : null}
+          {admin ?
+            <button className="header-button" onClick={() => router.push("/kanban")}>Kanban Tables</button>
+            : null}
           <button className="lastHeader-button" onClick={handleLogout}>Logout</button>
         </div>}
     </header>

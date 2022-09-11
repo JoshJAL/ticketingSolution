@@ -1,24 +1,23 @@
 import useMediaQueries from 'media-queries-in-react'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
+import DragAndDropColumns from '../components/DragAndDropColumns'
 import HamburgerMenu from '../components/HamburgerMenu'
 import Header from '../components/Header'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 import supabase from '../components/supabase'
-import styles from '../styles/Kanban.module.css'
 
 export default function Kanban() {
   const [hamburgerClick, setHamburgerClick] = useState(false);
   const [authedUser, setAuthedUser] = useState<any>(null);
-  const [columns, setColumns] = useState<any>(null);
 
   useEffect(() => {
     const user = supabase.auth.user()
-    if (!user) {
-      window.location.href = '/login'
+    if (!user || user.user_metadata.typeOfUser !== "admin") {
+      window.location.href = '/'
     }
     setAuthedUser(user);
-  }, [])
+  }, []);
 
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
@@ -47,32 +46,7 @@ export default function Kanban() {
                 <LoadingSpinner />
               </div>
               :
-              <div style={{ display: "flex", justifyContent: "space-evenly", width: "100%" }}>
-                <div className={styles.column}>
-                  <p style={{ textAlign: "center", fontWeight: 700, fontSize: 18 }}>Backlog</p>
-                  <hr style={{ border: "1px solid black", width: "100%", margin: "0 0 10px 0" }} />
-                  <div className={styles.items}>
-                    <p style={{ margin: "0 5px" }}><span style={{ fontWeight: 700 }}>Title:</span> something</p>
-                    <p style={{ margin: "0 5px" }}><span style={{ fontWeight: 700 }}>Title:</span> something</p>
-                  </div>
-                </div>
-                <div className={styles.column}>
-                  <p style={{ textAlign: "center", fontWeight: 700, fontSize: 18 }}>In Progress</p>
-                  <hr style={{ border: "1px solid black", width: "100%" }} />
-                </div>
-                <div className={styles.column}>
-                  <p style={{ textAlign: "center", fontWeight: 700, fontSize: 18 }}>Code Review</p>
-                  <hr style={{ border: "1px solid black", width: "100%" }} />
-                </div>
-                <div className={styles.column}>
-                  <p style={{ textAlign: "center", fontWeight: 700, fontSize: 18 }}>QA Testing</p>
-                  <hr style={{ border: "1px solid black", width: "100%" }} />
-                </div>
-                <div className={styles.column}>
-                  <p style={{ textAlign: "center", fontWeight: 700, fontSize: 18 }}>Done</p>
-                  <hr style={{ border: "1px solid black", width: "100%" }} />
-                </div>
-              </div>
+              <DragAndDropColumns />
             }
           </div>
         </main>

@@ -71,7 +71,7 @@ export default function CreateUser() {
         <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>
           <HamburgerMenu hamburgerClick={hamburgerClick} setHamburgerClick={setHamburgerClick} />
         </div>
-        <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
+        <Header handleHamburgerClick={handleHamburgerClick} />
         <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", height: "88vh", width: "100%", overflowY: "auto" }}>
           <form style={{ margin: "-150px 0 0 0" }}>
             {submitted ?

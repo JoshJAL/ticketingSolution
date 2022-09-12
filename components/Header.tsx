@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import supabase from './supabase';
 
-export default function Header({ hamburgerClick, handleHamburgerClick }: { hamburgerClick: boolean, handleHamburgerClick: () => void }) {
+export default function Header({ handleHamburgerClick }: { handleHamburgerClick: () => void }) {
   const [admin, setAdmin] = useState(false);
   const [QA, setQA] = useState(false);
 
@@ -20,8 +20,26 @@ export default function Header({ hamburgerClick, handleHamburgerClick }: { hambu
     router.push('/login')
   }
 
+  async function updateUserDataLauren() {
+    const { user, error } = await supabase.auth.update({
+      data: { name: 'Lauren Hanan', typeOfUser: "q&a" }
+    })
+  }
+
+  async function updateUserDataErin() {
+    const { user, error } = await supabase.auth.update({
+      data: { name: 'Erin Potter', typeOfUser: "q&a" }
+    })
+  }
+
   useEffect(() => {
     const user = supabase.auth.user()
+    if (user && user.email == "laurenh@robgrahamenterprises.com" && !user.user_metadata.name) {
+      updateUserDataLauren();
+    }
+    if (user && user.email == "erin@robgrahamenterprises.com" && !user.user_metadata.name) {
+      updateUserDataErin();
+    }
     if (user?.user_metadata?.typeOfUser === "admin") {
       setAdmin(true)
     }

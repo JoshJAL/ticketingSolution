@@ -80,7 +80,7 @@ export default function Testing() {
       <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>
         <HamburgerMenu hamburgerClick={hamburgerClick} setHamburgerClick={setHamburgerClick} />
       </div>
-      <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
+      <Header handleHamburgerClick={handleHamburgerClick} />
       <Head>
         <title>Ticketing Solution</title>
         <meta name="ticketing" />

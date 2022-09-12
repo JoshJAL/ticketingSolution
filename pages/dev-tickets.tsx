@@ -171,7 +171,7 @@ export default function DevTickets() {
         <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>
           <HamburgerMenu hamburgerClick={hamburgerClick} setHamburgerClick={setHamburgerClick} />
         </div>
-        <Header hamburgerClick={hamburgerClick} handleHamburgerClick={handleHamburgerClick} />
+        <Header handleHamburgerClick={handleHamburgerClick} />
         <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", height: "100%", width: "100%", overflowY: "auto" }}>
           {loading || !authedUser ?
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: "center", height: "50vh", transform: "scale(3)" }}>

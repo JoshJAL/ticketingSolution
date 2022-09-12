@@ -66,6 +66,7 @@ function DragAndDropColumns() {
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
   const [creating, setCreating] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   const handleDragStart = (e: any, id: number, group: string) => {
     setDragData({ id: id, initialGroup: group });
@@ -137,6 +138,7 @@ function DragAndDropColumns() {
   }
 
   async function handleCompleteProject(items: any) {
+    setDeleting(true);
     if (confirm(`Are you sure this project is finished? \n\n This cannot be undone.`)) {
       addToCompletedProjects(items);
       items.map(async (item: any) => {
@@ -148,10 +150,10 @@ function DragAndDropColumns() {
         }
       })
       getCards();
-      window.location.reload();
+    } else {
+      setDeleting(false);
     }
     getCards();
-
   }
 
   let uniqueProjects = projects.filter((name: string, index: number) => {
@@ -160,17 +162,26 @@ function DragAndDropColumns() {
 
   return (
     <>
-      <div style={{ margin: "-30px 0 10px 0", display: 'flex', alignItems: "center", justifyContent: "center" }}>
-        <select onClick={(e: any) => setSelectedProject(e.target.value)} style={{ width: "fit-content" }}>
-          <option value={selectedProject ? selectedProject : ""}>Pick A Project</option>
-          {uniqueProjects.map((project: string, index: number) => {
-            return (
-              <option key={index} value={project}>{project}</option>
-            )
-          })}
-        </select>
-        <button className='dev-ticket-button' style={{ margin: "0 0 0 20px", padding: "10px 20px", fontSize: "21px" }} onClick={(e) => { e.preventDefault(); setShowNewProjectModal(true) }} >Start New Project</button>
-      </div>
+      {deleting ?
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: "center" }}>
+          <form style={{ width: "50%" }}>
+            <p>Project was completed successfully!</p>
+            <button onClick={(e) => { e.preventDefault(); setShowNewProjectModal(true) }}> Would you like to create another ?</button>
+          </form>
+        </div>
+        :
+        <div style={{ margin: "-30px 0 10px 0", display: 'flex', alignItems: "center", justifyContent: "center" }}>
+          <select onClick={(e: any) => setSelectedProject(e.target.value)} style={{ width: "fit-content" }}>
+            <option value={selectedProject ? selectedProject : ""}>Pick A Project</option>
+            {uniqueProjects.map((project: string, index: number) => {
+              return (
+                <option key={index} value={project}>{project}</option>
+              )
+            })}
+          </select>
+          <button className='dev-ticket-button' style={{ margin: "0 0 0 20px", padding: "10px 20px", fontSize: "21px" }} onClick={(e) => { e.preventDefault(); setShowNewProjectModal(true) }} >Start New Project</button>
+        </div>
+      }
 
       {
         showNewProjectModal ?
@@ -179,21 +190,22 @@ function DragAndDropColumns() {
             <form style={{ border: "none" }}>
               <label style={{ margin: "10px 0" }}>New Project Name:</label>
               <input type="text" onChange={(e) => setNewProjectName(e.target.value)} />
-              <button style={{ marginBottom: "20px" }} onClick={(e) => CreateProject(e)}>{creating ? "Creating..." : "Create"}</button>
+              <button style={{ marginBottom: "20px" }} onClick={(e) => { CreateProject(e); setDeleting(false) }}>{creating ? "Creating..." : "Create"}</button>
             </form>
           </Modal>
           :
           null
       }
 
-      {selectedProject ? (
-        <>
-          <KanbanTable showModal={showModal} setShowModal={setShowModal} setTaskName={setTaskName} setTaskDescription={setTaskDescription} setDeveloperAssigned={setDeveloperAssigned} developers={developers} addTask={addTask} adding={adding} defaultGroups={defaultGroups} handleDragEnter={handleDragEnter} handleDragOver={handleDragOver} handleDrop={handleDrop} items={items} selectedProject={selectedProject} handleDragStart={handleDragStart} assignCardToDev={assignCardToDev} />
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <button className='dev-ticket-button' style={{ padding: "10px 20px", fontSize: "21px", margin: "10px 0 0 0" }} onClick={() => handleCompleteProject(items)} >Complete Project</button>
-          </div>
-        </>
-      ) : null
+      {deleting ? null :
+        selectedProject ? (
+          <>
+            <KanbanTable showModal={showModal} setShowModal={setShowModal} setTaskName={setTaskName} setTaskDescription={setTaskDescription} setDeveloperAssigned={setDeveloperAssigned} developers={developers} addTask={addTask} adding={adding} defaultGroups={defaultGroups} handleDragEnter={handleDragEnter} handleDragOver={handleDragOver} handleDrop={handleDrop} items={items} selectedProject={selectedProject} handleDragStart={handleDragStart} assignCardToDev={assignCardToDev} />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <button className='dev-ticket-button' style={{ padding: "10px 20px", fontSize: "21px", margin: "10px 0 0 0" }} onClick={() => handleCompleteProject(items)} >Complete Project</button>
+            </div>
+          </>
+        ) : null
       }
 
 

@@ -88,7 +88,7 @@ export default function SignUp() {
         {
           data: {
             typeOfUser: "q&a",
-            name: setWhiteListName(email)
+            name: setQAName(email)
           },
         }
       )
@@ -102,7 +102,7 @@ export default function SignUp() {
         {
           data: {
             typeOfUser: "general",
-            name: setQAName(email)
+            name: setWhiteListName(email)
           },
         }
       )

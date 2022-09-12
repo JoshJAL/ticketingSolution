@@ -265,7 +265,8 @@ function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries,
           open ?
             <div style={{ border: "1px solid black", borderRadius: "10px", padding: "20px", margin: "10px 20px", width: "100%" }}>
               <p>{"Is this ready to be tested?"}</p>
-              <p>{"Don't forget to include the page URL below if necessary!"}</p>
+              <p>{"Don't forget to include the page URL(s) below if necessary!"}</p>
+              <p>{"If there are multiple URLs, separate with a comma!"}</p>
               <input type="text" value={urlText} onChange={((e) => setUrlText(e.target.value))} style={{ width: "250px" }} />
               <br />
               <button className="sendToQA-button" onClick={(e) => handleSendToQA(e, ticket, setSending, urlText, setOpen)}>{sending ? "Sending..." : "Send on over"}</button>

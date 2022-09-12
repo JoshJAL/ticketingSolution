@@ -3,10 +3,8 @@ import supabase from './supabase';
 import styles from '../styles/kanban.module.css'
 import palette from '../styles/palette';
 import Modal from './Modal';
-import { useRouter } from 'next/router';
 
 function DragAndDropColumns() {
-  const router = useRouter();
 
   const defaultGroups = ['To Do', 'In Progress', 'Code Review', 'Testing', 'QA', 'Done'];
 
@@ -149,12 +147,11 @@ function DragAndDropColumns() {
             .eq('project_name', item.project_name)
         }
       })
-      router.reload();
       getCards();
-    } else {
-      getCards();
-      return;
-    };
+      window.location.reload();
+    }
+    getCards();
+
   }
 
   let uniqueProjects = projects.filter((name: string, index: number) => {

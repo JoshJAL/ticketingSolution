@@ -29,7 +29,6 @@ export default function SignUp() {
       .select('*')
     setQAs(qas)
     setqAEmails(qas?.map((qaMember) => qaMember.email))
-
   }
 
   async function fetchGeneralUserEmails() {

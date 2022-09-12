@@ -1,29 +1,27 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import TicketForm from '../components/TicketForm'
 import useMediaQueries from 'media-queries-in-react'
-import supabase from '../components/supabase'
-import { useEffect, useState } from 'react'
+import Head from 'next/head'
+import React, { useEffect, useState } from 'react'
+import DragAndDropColumns from '../components/DragAndDropColumns'
 import HamburgerMenu from '../components/HamburgerMenu'
+import Header from '../components/Header'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
+import supabase from '../components/supabase'
 
-const Home: NextPage = () => {
+export default function Kanban() {
   const [hamburgerClick, setHamburgerClick] = useState(false);
   const [authedUser, setAuthedUser] = useState<any>(null);
+
+  useEffect(() => {
+    const user = supabase.auth.user()
+    if (!user || user.user_metadata.typeOfUser !== "admin") {
+      window.location.href = '/'
+    }
+    setAuthedUser(user);
+  }, []);
 
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
-
-  useEffect(() => {
-    const user = supabase.auth.user()
-    if (!user) {
-      window.location.href = '/login'
-    }
-    setAuthedUser(user);
-  }, [])
 
   function handleHamburgerClick() {
     setHamburgerClick(true);
@@ -44,18 +42,15 @@ const Home: NextPage = () => {
         <main style={{ margin: 0, padding: 0, width: "100%", overflow: mediaQueries.under768 ? "hidden" : "initial" }}>
           <div style={{ margin: mediaQueries.under768 ? "12px 0" : "50px 0 111px 0", width: "100%", minHeight: "100%" }}>
             {!authedUser ?
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: "center", height: "50vh", transform: "scale(3)" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "50vh", transform: "scale(3)" }}>
                 <LoadingSpinner />
               </div>
               :
-              <TicketForm user={authedUser} />
+              <DragAndDropColumns />
             }
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   )
 }
-
-export default Home

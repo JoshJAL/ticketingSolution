@@ -40,15 +40,15 @@ export default function HamburgerMenu({ hamburgerClick, setHamburgerClick, backg
           <p onClick={() => setHamburgerClick(false)} style={{ margin: "3% 0 0 87%", padding: "10px", cursor: "pointer" }}>X</p>
           <div style={{ margin: "1% 0 0 5%" }}>
             <p style={{ cursor: "pointer", fontSize: "18px", fontWeight: 700 }} onClick={() => router.push("/")}>Ticket Form</p>
-            <p style={{ cursor: "pointer", fontSize: "18px", fontWeight: 700 }} onClick={() => router.push("/ticket-list")}>Ticket List</p>
+            <p style={{ cursor: "pointer", fontSize: "18px", fontWeight: 700 }} onClick={() => router.push("/ticket-list")}>All Tickets</p>
             {admin ?
-              <p style={{ cursor: "pointer", fontSize: "18px", fontWeight: 700 }} onClick={() => router.push("/dev-tickets")}>Developer Tickets</p>
+              <p style={{ cursor: "pointer", fontSize: "18px", fontWeight: 700 }} onClick={() => router.push("/dev-tickets")}>Review Claimed Tickets</p>
               : null}
             {admin ?
               <p style={{ cursor: "pointer", fontSize: "18px", fontWeight: 700 }} onClick={() => router.push("/create-user")}>Create User</p>
               : null}
             {admin || QA ?
-              <p onClick={() => router.push("/testing")} style={{ cursor: "pointer", fontSize: "18px", fontWeight: 700 }}>Review Tickets</p>
+              <p onClick={() => router.push("/testing")} style={{ cursor: "pointer", fontSize: "18px", fontWeight: 700 }}>QA Tickets</p>
               : null}
             <p style={{ cursor: "pointer", fontSize: "18px", fontWeight: 700 }} onClick={handleLogout}>Logout</p>
           </div>

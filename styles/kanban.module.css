@@ -1,0 +1,22 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 15%;
+  min-height: 210px;
+  height: fit-content;
+}
+
+.items { 
+  border: 1px solid black;
+  margin: 0 10px 10px 10px;
+  padding: 5px;
+  border-radius: 10px;
+  cursor: grab;
+  user-select: none;
+}
+
+.items:active {
+  cursor: grabbing;
+}

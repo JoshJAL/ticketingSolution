@@ -221,7 +221,7 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
           <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Page Url(s):"}</span>{" "}
             {ticket.page_url.split(",").map((url: string) => {
               <a style={{ color: "#2b27ff" }} href={url.trim()}>{url.trim()}</a>
-            }).join(", ")}
+            })}
           </p>
           :
           null

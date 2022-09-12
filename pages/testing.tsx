@@ -218,7 +218,11 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
         <p style={{ fontWeight: 600, fontSize: 24 }} >{ticket.title}</p>
         <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-all" }}>{ticket.description}</p>
         {ticket.page_url.includes(".com") ?
-          <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Page Url:"}</span>{" "}<a style={{ color: "#2b27ff" }} href={ticket.page_url}>{ticket.page_url}</a></p>
+          <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Page Url(s):"}</span>{" "}
+            {ticket.page_url.split(",").map((url: string) => {
+              <a style={{ color: "#2b27ff" }} href={url.trim()}>{url.trim()}</a>
+            }).join(", ")}
+          </p>
           :
           null
         }

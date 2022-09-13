@@ -20,6 +20,12 @@ export default function Header({ handleHamburgerClick }: { handleHamburgerClick:
     router.push('/login')
   }
 
+  async function updateUserDataLauren() {
+    const { user, error } = await supabase.auth.update({
+      data: { name: 'Lauren Hanan', typeOfUser: "q&a" }
+    })
+  }
+
   async function updateUserDataErin() {
     const { user, error } = await supabase.auth.update({
       data: { name: 'Erin Potter', typeOfUser: "q&a" }
@@ -28,8 +34,11 @@ export default function Header({ handleHamburgerClick }: { handleHamburgerClick:
 
   useEffect(() => {
     const user = supabase.auth.user()
-    if (user && user.email == "erin@robgrahamenterprises.com" && !user.user_metadata.name) {
+    if (user && user.email == "erin@robgrahamenterprises.com" && user.user_metadata.name !== "Erin Potter") {
       updateUserDataErin();
+    }
+    if (user && user.email == "laurenh@robgrahamenterprises.com" && user.user_metadata.name !== "Lauren Hanan") {
+      updateUserDataLauren();
     }
     if (user?.user_metadata?.typeOfUser === "admin") {
       setAdmin(true)

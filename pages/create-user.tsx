@@ -5,8 +5,10 @@ import Footer from '../components/Footer';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Header from '../components/Header';
 import supabase from '../components/supabase';
+import { useUser } from '../context/user';
 
 export default function CreateUser() {
+  const { user } = useUser();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [selection, setSelection] = useState<string>('');
@@ -19,7 +21,6 @@ export default function CreateUser() {
   });
 
   useEffect(() => {
-    const user = supabase.auth.user()
     if (!user || user.user_metadata.typeOfUser !== 'admin') {
       window.location.href = "/"
     }
@@ -36,23 +37,34 @@ export default function CreateUser() {
       const { data, error } = await supabase
         .from('devs')
         .insert([
-          { name: name.trim(), email: email.toLowerCase().trim() },
+          { name: name.trim(), email: email.toLowerCase().trim(), user_type: selection },
         ])
+      handleCreateProfile()
     } else if (selection === "q&a") {
       const { data, error } = await supabase
         .from('q&a')
         .insert([
-          { name: name.trim(), email: email.toLowerCase().trim() },
+          { name: name.trim(), email: email.toLowerCase().trim(), user_type: selection },
         ])
-    } else if (selection === 'generalUser') {
+      handleCreateProfile()
+    } else if (selection === 'general') {
       const { data, error } = await supabase
         .from('generalUsers')
         .insert([
-          { name: name.trim(), email: email.toLowerCase().trim() },
+          { name: name.trim(), email: email.toLowerCase().trim(), user_type: selection },
         ])
+      handleCreateProfile()
     }
     setCreating(false)
     setSubmitted(true)
+  }
+
+  async function handleCreateProfile() {
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert([
+        { name: name.trim(), email: email.toLowerCase().trim(), user_type: selection },
+      ])
   }
 
   function handleHamburgerClick() {
@@ -85,12 +97,13 @@ export default function CreateUser() {
                 <input onChange={(e) => setEmail(e.target.value)} style={{ width: "250px" }} type="email" />
                 <label style={{ margin: "10px" }} >{"Enter user's name: "}</label>
                 <input onChange={(e) => setName(e.target.value)} style={{ width: "250px" }} type="text" />
-                <select defaultValue={"user"} style={{ width: "250px", margin: "20px 0 0 0" }} onClick={(e) => handleSelectionChange(e)}>
-                  <option value="generalUser">General User</option>
+                <select defaultValue={""} style={{ width: "250px", margin: "20px 0 0 0" }} onClick={(e) => handleSelectionChange(e)}>
+                  <option value="">Select a user type</option>
+                  <option value="general">General User</option>
                   <option value="q&a">Q & A Team</option>
                   <option value="admin">Admin</option>
                 </select>
-                <button style={{ margin: "20px 0 10px 0", padding: '10px 20px' }} onClick={(e) => createUser(e)} >{creating ? "Creating user..." : "Create user"}</button>
+                <button style={{ margin: "20px 0 10px 0", padding: '10px 20px' }} onClick={(e) => { e.preventDefault(); !selection ? {} : createUser(e) }} >{!selection ? "Please select a user type" : creating ? "Creating user..." : "Create user"}</button>
               </>
             }
           </form>

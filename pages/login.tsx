@@ -1,9 +1,10 @@
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react'
-import supabase from '../components/supabase';
+import { useUser } from '../context/user';
 
 export default function SignUp() {
+  const { handleSignIn } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [noAccount, setNoAccount] = useState(false);
@@ -12,24 +13,8 @@ export default function SignUp() {
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
-  const router = useRouter();
 
-  async function handleSignIn(e: any) {
-    e.preventDefault();
-    setLoading(true);
-    let { user, error } = await supabase.auth.signIn({
-      email: email,
-      password: password
-    })
-    if (error) {
-      setNoAccount(true)
-      return;
-    }
-    if (user) {
-      router.push('/');
-    }
-    setLoading(false);
-  }
+  const router = useRouter();
 
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
@@ -43,7 +28,7 @@ export default function SignUp() {
             <input style={{ width: mediaQueries.under768 ? "250px" : "350px" }} onChange={(e) => setEmail(e.target.value)} value={email} type="email" />
             <label style={{ margin: "10px" }}>Password:</label>
             <input style={{ width: mediaQueries.under768 ? "250px" : "350px" }} onChange={(e) => setPassword(e.target.value)} value={password} type="password" />
-            <button style={{ margin: "10px", fontSize: 18, padding: '10px', cursor: "pointer" }} onClick={(e) => handleSignIn(e)}>{loading ? "Logging in..." : "Login"}</button>
+            <button style={{ margin: "10px", fontSize: 18, padding: '10px', cursor: "pointer" }} onClick={(e) => handleSignIn(e, setLoading, setNoAccount, email, password)}>{loading ? "Logging in..." : "Login"}</button>
             <p style={{ margin: "0 20px", textAlign: "center" }}>{"Don't have an account? "}<a onClick={() => router.push('/sign-up')} style={{ cursor: "pointer", textDecoration: "underline" }}>Sign Up!</a></p>
           </>
         }

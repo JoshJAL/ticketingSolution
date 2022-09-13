@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import useMediaQueries from 'media-queries-in-react';
 import supabase from './supabase';
-import axios from 'axios';
 
 export default function TicketForm({ user }: { user: any }) {
   const mediaQueries = useMediaQueries({
@@ -41,7 +40,6 @@ export default function TicketForm({ user }: { user: any }) {
   }
 
   async function fileUpload() {
-    // let fileNames = await readFiles();
     if (file) {
       const { data, error } = await supabase.storage
         .from('ticket-images')
@@ -75,7 +73,7 @@ export default function TicketForm({ user }: { user: any }) {
     const { data, error } = await supabase
       .from('tickets')
       .insert([
-        { title, description, picture: fileUrl, priority_level: selection },
+        { title, description, picture: fileUrl, priority_level: selection, created_by: user.email.trim() },
       ]);
   }
 

@@ -10,6 +10,7 @@ import palette from '../styles/palette';
 import axios from 'axios';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import { useRouter } from 'next/router';
+import { useUser } from '../context/user';
 
 export default function DevTickets() {
   const content = {
@@ -29,6 +30,7 @@ export default function DevTickets() {
 
   const router = useRouter();
 
+  const { user } = useUser();
   const [tickets, setTickets] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -37,7 +39,6 @@ export default function DevTickets() {
   const [showKenTickets, setShowKenTickets] = useState(false);
   const [showRobertTickets, setShowRobertTickets] = useState(false);
   const [hamburgerClick, setHamburgerClick] = useState(false);
-  const [authedUser, setAuthedUser] = useState<any>(null);
 
   async function getTickets() {
     let { data: tickets, error } = await supabase
@@ -48,11 +49,9 @@ export default function DevTickets() {
 
   useEffect(() => {
     getTickets();
-    const user = supabase.auth.user()
     if (!user || user.user_metadata.typeOfUser !== "admin") {
       window.location.href = '/'
     }
-    setAuthedUser(user);
     setLoading(false);
   }, []);
 
@@ -109,7 +108,7 @@ export default function DevTickets() {
     const data = {
       "username": "Ticket Bot",
       "icon_url": "https://camo.githubusercontent.com/6e466156683138348d4283ec8ab1a8a8a959dbb6e2f9c06c1300f06ab01c7504/687474703a2f2f66696c65732d6d6973632e73332e616d617a6f6e6177732e636f6d2f6c756e6368626f742e6a7067",
-      "text": `A new ticket is ready for review from ${authedUser.user_metadata.name}! \n Title: ${ticket.title} \n Description: ${ticket.description} \n Priority: ${ticket.priority_level == 3 ? "EMERGENCY" : ticket.priority_level == 2 ? "NEED TODAY OR TOMORROW" : ticket.priority_level == 1 ? "Need by the end of the week" : "No rush"} ${urlText.trim() !== "" && urlText ? `\n Page URL: ${urlText}` : ``} `,
+      "text": `A new ticket is ready for review from ${user.user_metadata.name}! \n Title: ${ticket.title} \n Description: ${ticket.description} \n Priority: ${ticket.priority_level == 3 ? "EMERGENCY" : ticket.priority_level == 2 ? "NEED TODAY OR TOMORROW" : ticket.priority_level == 1 ? "Need by the end of the week" : "No rush"} ${urlText.trim() !== "" && urlText ? `\n Page URL: ${urlText}` : ``} `,
     }
     const res = await axios.post(webhookUrl, JSON.stringify(data),
       {
@@ -173,7 +172,7 @@ export default function DevTickets() {
         </div>
         <Header handleHamburgerClick={handleHamburgerClick} />
         <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", height: "100%", width: "100%", overflowY: "auto" }}>
-          {loading || !authedUser ?
+          {loading || !user ?
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: "center", height: "50vh", transform: "scale(3)" }}>
               <LoadingSpinner />
             </div>
@@ -199,19 +198,19 @@ export default function DevTickets() {
                 : null}
               <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowJesseTickets(!showJesseTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Jesse's Tickets"}</p>
               <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets authedUser={authedUser} showTickets={showJesseTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Jesse Malmstrom"} handleSendToQA={handleSendToQA} />
+                <AssignedTickets authedUser={user} showTickets={showJesseTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Jesse Malmstrom"} handleSendToQA={handleSendToQA} />
               </div>
               <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowJoshTickets(!showJoshTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Josh's Tickets"}</p>
               <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets authedUser={authedUser} showTickets={showJoshTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Joshua Levine"} handleSendToQA={handleSendToQA} />
+                <AssignedTickets authedUser={user} showTickets={showJoshTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Joshua Levine"} handleSendToQA={handleSendToQA} />
               </div>
               <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowKenTickets(!showKenTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Ken's Tickets"}</p>
               <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets authedUser={authedUser} showTickets={showKenTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Ken Parsons"} handleSendToQA={handleSendToQA} />
+                <AssignedTickets authedUser={user} showTickets={showKenTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Ken Parsons"} handleSendToQA={handleSendToQA} />
               </div>
               <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowRobertTickets(!showRobertTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Robert's Tickets"}</p>
               <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets authedUser={authedUser} showTickets={showRobertTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Robert Thibault"} handleSendToQA={handleSendToQA} />
+                <AssignedTickets authedUser={user} showTickets={showRobertTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Robert Thibault"} handleSendToQA={handleSendToQA} />
               </div>
               <div style={{ margin: mediaQueries.under768 ? "15% 0" : "2% 0" }} />
             </>

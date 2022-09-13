@@ -2,12 +2,15 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Provider as SupabaseProvider } from 'react-supabase';
 import supabase from '../components/supabase';
+import UserProvider from '../context/user';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SupabaseProvider value={supabase}>
-      <Component {...pageProps} />
-    </SupabaseProvider>
+    <UserProvider>
+      <SupabaseProvider value={supabase}>
+        <Component {...pageProps} />
+      </SupabaseProvider>
+    </UserProvider>
   )
 }
 

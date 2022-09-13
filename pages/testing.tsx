@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react'
 import HamburgerMenu from '../components/HamburgerMenu'
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
+import { useUser } from '../context/user'
 
 export default function Testing() {
+  const { user } = useUser()
   const [hamburgerClick, setHamburgerClick] = useState(false);
   const [tickets, setTickets] = useState<any>([]);
   const [authedUser, setAuthedUser] = useState<any>(null);
@@ -23,18 +25,18 @@ export default function Testing() {
     setTickets(tickets);
   }
 
+  const allowedUserTypes = ['admin', 'q&a'];
+
   useEffect(() => {
-    const user = supabase.auth.user()
     if (!user) {
       window.location.href = '/login'
-    } else if (user.user_metadata.typeOfUser !== "admin") {
-      window.location.href = '/login'
-    } else if (user.user_metadata.typeOfUser === "q&a") {
+    } else if (!(user.user_metadata.typeOfUser === "admin" || user.user_metadata.typeOfUser === "q&a")) {
       window.location.href = '/login'
     }
     getTickets();
     setAuthedUser(user)
   }, [])
+
 
   function handleHamburgerClick() {
     setHamburgerClick(true);

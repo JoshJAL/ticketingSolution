@@ -42,7 +42,7 @@ export default function Testing() {
     setHamburgerClick(true);
   }
 
-  async function handleSendToDev(e: any, ticket: any, setSending: any, notes: any) {
+  async function handleSendToDev(e: any, ticket: any, setSending: any, notes: any, setOpen: Function) {
     e.preventDefault();
     setSending(true);
     const { data, error } = await supabase
@@ -50,6 +50,7 @@ export default function Testing() {
       .update({ notes: notes, status: "In Development" })
       .eq('id', ticket.id)
     setSending(false);
+    setOpen(false)
     getTickets();
   }
 
@@ -152,7 +153,7 @@ function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: 
             <p>{"If this is ready to be pushed to production let us know!"}</p>
             <input type="text" value={notes} onChange={((e) => setNotes(e.target.value))} />
             <br />
-            <button style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToDev(e, ticket, setSending, notes)}>{sending ? "Sending..." : "Send on over"}</button>
+            <button style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToDev(e, ticket, setSending, notes, setOpen)}>{sending ? "Sending..." : "Send on over"}</button>
           </div>
           : null
         }
@@ -213,7 +214,7 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
             <p>{"If this is ready to be pushed to production let us know!"}</p>
             <input type="text" value={notes} onChange={((e) => setNotes(e.target.value))} style={{ width: "250px" }} />
             <br />
-            <button className='sendToDev-button' style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToDev(e, ticket, setSending, notes)}>{sending ? "Sending..." : "Send on over"}</button>
+            <button className='sendToDev-button' style={{ margin: "20px 0 0 0" }} onClick={(e) => handleSendToDev(e, ticket, setSending, notes, setOpen)}>{sending ? "Sending..." : "Send on over"}</button>
           </div>
           : null
         }

@@ -10,7 +10,6 @@ import palette from '../styles/palette';
 import axios from 'axios';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import { useRouter } from 'next/router';
-import { useUser } from '../context/user';
 
 export default function DevTickets() {
   const content = {

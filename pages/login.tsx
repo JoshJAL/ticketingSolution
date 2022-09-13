@@ -1,7 +1,6 @@
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react'
-import { useUser } from '../context/user';
 import supabase from '../components/supabase';
 
 export default function SignUp() {

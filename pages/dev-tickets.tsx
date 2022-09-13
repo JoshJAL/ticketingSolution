@@ -30,7 +30,6 @@ export default function DevTickets() {
 
   const router = useRouter();
 
-  const { user } = useUser();
   const [tickets, setTickets] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -39,6 +38,7 @@ export default function DevTickets() {
   const [showKenTickets, setShowKenTickets] = useState(false);
   const [showRobertTickets, setShowRobertTickets] = useState(false);
   const [hamburgerClick, setHamburgerClick] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   async function getTickets() {
     let { data: tickets, error } = await supabase
@@ -48,10 +48,12 @@ export default function DevTickets() {
   }
 
   useEffect(() => {
+    const authenticatedUser = supabase.auth.user()
     getTickets();
-    if (!user || user.user_metadata.typeOfUser !== "admin") {
+    if (!authenticatedUser || authenticatedUser.user_metadata.typeOfUser !== "admin") {
       window.location.href = '/'
     }
+    setUser(authenticatedUser);
     setLoading(false);
   }, []);
 

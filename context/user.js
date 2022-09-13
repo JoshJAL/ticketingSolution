@@ -13,6 +13,7 @@ const Provider = ({ children }) => {
     supabase.auth.onAuthStateChange(() => {
       setUser(user);
     })
+    console.log(user)
   }, [])
 
   useEffect(() => {

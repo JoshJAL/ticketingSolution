@@ -5,25 +5,26 @@ import Footer from '../components/Footer';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Header from '../components/Header';
 import supabase from '../components/supabase';
-import { useUser } from '../context/user';
 
 export default function CreateUser() {
-  const { user } = useUser();
   const [email, setEmail] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [selection, setSelection] = useState<string>('');
   const [creating, setCreating] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [hamburgerClick, setHamburgerClick] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
 
   useEffect(() => {
-    if (!user || user.user_metadata.typeOfUser !== 'admin') {
+    const authenticatedUser = supabase.auth.user()
+    if (!authenticatedUser || authenticatedUser.user_metadata.typeOfUser !== 'admin') {
       window.location.href = "/"
     }
+    setUser(authenticatedUser);
   }, [])
 
   function handleSelectionChange(e: any) {

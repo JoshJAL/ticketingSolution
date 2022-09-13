@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 import { useUser } from '../context/user'
 
 export default function Testing() {
-  const { user } = useUser()
+  const [user, setUser] = useState<any>(null)
   const [hamburgerClick, setHamburgerClick] = useState(false);
   const [tickets, setTickets] = useState<any>([]);
   const [authedUser, setAuthedUser] = useState<any>(null);
@@ -25,16 +25,16 @@ export default function Testing() {
     setTickets(tickets);
   }
 
-  const allowedUserTypes = ['admin', 'q&a'];
-
   useEffect(() => {
-    if (!user) {
+    const authenticatedUser = supabase.auth.user()
+    if (!authenticatedUser) {
       window.location.href = '/login'
-    } else if (!(user.user_metadata.typeOfUser === "admin" || user.user_metadata.typeOfUser === "q&a")) {
+    } else if (!(authenticatedUser.user_metadata.typeOfUser === "admin" || authenticatedUser.user_metadata.typeOfUser === "q&a")) {
       window.location.href = '/login'
     }
     getTickets();
-    setAuthedUser(user)
+    setUser(authenticatedUser);
+    setAuthedUser(authenticatedUser)
   }, [])
 
 
@@ -182,7 +182,7 @@ function YourTickets({ mediaQueries, sorted, handleSendToDev, handleReviewClick,
     sorted.map((ticket: any) => {
       return (
         ticket.reviewed_by === authedUser.user_metadata.name && ticket.status ?
-          <div style={{ width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%" }}>
+          <div key={ticket.id} style={{ width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%" }}>
             <YourActualTicket ticket={ticket} authedUser={authedUser} mediaQueries={mediaQueries} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} />
           </div>
           : null
@@ -199,7 +199,7 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
 
   return (
     ticket.reviewed_by === authedUser.user_metadata.name && ticket.status ?
-      <div key={ticket.id} className="testing-ticket" style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
+      <div className="testing-ticket" style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
 
         {ticket.reviewed_by ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
@@ -218,13 +218,13 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
           : null
         }
         <p style={{ fontWeight: 600, fontSize: 24 }} >{ticket.title}</p>
-        <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-all" }}>{ticket.description}</p>
+        <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-word" }}>{ticket.description}</p>
         {ticket.page_url.includes(".com") ?
           <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Page Url(s):"}</span>{" "}
             {ticket.page_url.split(",").map((url: string) => {
               return (
                 <>
-                  <a style={{ color: "#2b27ff" }} href={url.trim()}>{url.trim()}</a>
+                  <a key={ticket.id} style={{ color: "#2b27ff" }} href={url.trim()}>{url.trim()}</a>
                   <br />
                 </>
               )

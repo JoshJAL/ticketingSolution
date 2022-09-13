@@ -5,16 +5,18 @@ import DragAndDropColumns from '../components/DragAndDropColumns'
 import HamburgerMenu from '../components/HamburgerMenu'
 import Header from '../components/Header'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
-import { useUser } from '../context/user'
+import supabase from '../components/supabase'
 
 export default function Kanban() {
-  const { user } = useUser()
+  const [user, setUser] = useState<any>(null)
   const [hamburgerClick, setHamburgerClick] = useState(false);
 
   useEffect(() => {
-    if (!user || user.user_metadata.typeOfUser !== "admin") {
+    const authenticatedUser = supabase.auth.user()
+    if (!authenticatedUser || authenticatedUser.user_metadata.typeOfUser !== "admin") {
       window.location.href = '/'
     }
+    setUser(authenticatedUser)
   }, []);
 
   const mediaQueries = useMediaQueries({

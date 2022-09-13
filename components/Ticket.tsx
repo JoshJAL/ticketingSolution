@@ -3,10 +3,9 @@ import { useRouter } from 'next/router';
 import React, { CSSProperties, useEffect, useState } from 'react'
 import LoadingSpinner from './LoadingSpinner/LoadingSpinner';
 import supabase from "./supabase";
-import { useUser } from '../context/user';
 
 export default function Ticket() {
-  const { user } = useUser();
+  const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
@@ -26,9 +25,11 @@ export default function Ticket() {
   }
 
   useEffect(() => {
-    if (!user) {
+    const authenticatedUser = supabase.auth.user()
+    if (!authenticatedUser) {
       window.location.href = '/login';
     }
+    setUser(authenticatedUser);
     getTickets();
   }, []);
 

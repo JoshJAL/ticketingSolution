@@ -4,18 +4,21 @@ import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import supabase from './supabase';
-import { useUser } from '../context/user';
 
 export default function Header({ handleHamburgerClick }: { handleHamburgerClick: () => void }) {
   const [admin, setAdmin] = useState(false);
   const [QA, setQA] = useState(false);
-  const { user, handleLogout } = useUser();
 
   const mediaQueries = useMediaQueries({
     under768: '(max-width: 768px)',
   });
 
   const router = useRouter();
+
+  async function handleLogout(e: any) {
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
 
   async function updateUserDataErin() {
     const { user, error } = await supabase.auth.update({
@@ -24,6 +27,7 @@ export default function Header({ handleHamburgerClick }: { handleHamburgerClick:
   }
 
   useEffect(() => {
+    const user = supabase.auth.user()
     if (user && user.email == "erin@robgrahamenterprises.com" && !user.user_metadata.name) {
       updateUserDataErin();
     }

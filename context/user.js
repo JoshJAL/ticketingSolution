@@ -10,10 +10,8 @@ const Provider = ({ children }) => {
   const router = useRouter();
  
   useEffect(() => {
-    const sessionUser = supabase.auth.user();
-
     supabase.auth.onAuthStateChange(() => {
-      setUser({...supabase.auth.user(), ...sessionUser.user_metadata});
+      setUser(user);
     })
   }, [])
 

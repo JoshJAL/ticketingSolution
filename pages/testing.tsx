@@ -141,7 +141,7 @@ function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: 
   return (
     !ticket.reviewed_by && ticket.status === "Testing/QA" ?
       <div className='testing-ticket' key={ticket.id} style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
-        {ticket.reviewed_by ?
+        {ticket.reviewed_by && ticket.status === "Testing/QA" ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
             <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => setOpen(!open)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{`Send to ${ticket.assigned_to.split(" ")[0]}?`}</p>
           </div>
@@ -159,6 +159,21 @@ function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: 
         }
         <p style={{ fontWeight: 600, fontSize: 24 }} >{ticket.title}</p>
         <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-all" }}>{ticket.description}</p>
+        {ticket.notes ? <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Notes: "}</span>{ticket.notes}</p> : null}
+        {ticket.page_url.includes(".com") ?
+          <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Page Url(s):"}</span>{" "}
+            {ticket.page_url.split(",").map((url: string) => {
+              return (
+                <>
+                  <a key={ticket.id} style={{ color: "#2b27ff" }} href={url.trim()}>{url.trim()}</a>
+                  <br />
+                </>
+              )
+            })}
+          </p>
+          :
+          null
+        }
         {
           ticket.picture.includes(".png") || ticket.picture.includes(".jpg") || ticket.picture.includes(".jpeg") || !ticket.picture ?
             <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
@@ -216,7 +231,7 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
 
         {ticket.reviewed_by ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-            <button className="dev-ticket-button" onClick={(e) => setOpen(!open)}>{`Send to ${ticket.assigned_to.split(" ")[0]}?`}</button>
+            <button className="dev-ticket-button" onClick={(e) => { ticket.status === "Testing/QA" ? setOpen(!open) : {} }}>{ticket.status === "Testing/QA" ? `Send to ${ticket.assigned_to.split(" ")[0]}?` : `Being updated by ${ticket.assigned_to.split(" ")[0]}`}</button>
           </div>
           : null}
 
@@ -232,6 +247,7 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
         }
         <p style={{ fontWeight: 600, fontSize: 24 }} >{ticket.title}</p>
         <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-word" }}>{ticket.description}</p>
+        {ticket.notes ? <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Notes: "}</span>{ticket.notes}</p> : null}
         {ticket.page_url.includes(".com") ?
           <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Page Url(s):"}</span>{" "}
             {ticket.page_url.split(",").map((url: string) => {

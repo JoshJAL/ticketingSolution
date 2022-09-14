@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import HamburgerMenu from '../components/HamburgerMenu'
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
-import { useUser } from '../context/user'
 
 export default function Testing() {
   const [user, setUser] = useState<any>(null)

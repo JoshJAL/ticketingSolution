@@ -146,7 +146,9 @@ export default function DevTickets() {
       .from('tickets')
       .update({ page_url: urlText ? urlText : ticket.page_url, status: 'Testing/QA' })
       .eq('id', ticket.id)
-    sendSlackMessage(`${process.env.NEXT_PUBLIC_SLACK_WEBHOOK_TICKETS_TO_REVIEW}`, ticket, urlText)
+    if (!ticket.reviewed_by) {
+      sendSlackMessage(`${process.env.NEXT_PUBLIC_SLACK_WEBHOOK_TICKETS_TO_REVIEW}`, ticket, urlText)
+    }
     setSending(false)
     setOpen(false)
     getTickets();

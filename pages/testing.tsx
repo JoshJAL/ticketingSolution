@@ -47,7 +47,7 @@ export default function Testing() {
     setSending(true);
     const { data, error } = await supabase
       .from('tickets')
-      .update({ notes: notes, status: "In Development" })
+      .update({ notes: tickets.notes ? ticket.notes + notes : notes, status: "In Development" })
       .eq('id', ticket.id)
     setSending(false);
     setOpen(false)

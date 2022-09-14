@@ -107,7 +107,7 @@ export default function Testing() {
                 </div>
                 <p style={{ fontWeight: 700, fontSize: 30, marginBottom: 0 }}>Your Tickets</p>
                 <div style={{ margin: mediaQueries.under768 ? "12px 0" : "0", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap" }}>
-                  <YourTickets mediaQueries={mediaQueries} sorted={sorted} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} authedUser={authedUser} />
+                  <YourTickets mediaQueries={mediaQueries} sorted={sorted} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} authedUser={authedUser} getTickets={getTickets} />
                 </div>
               </>
             )
@@ -177,14 +177,14 @@ function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: 
   )
 }
 
-function YourTickets({ mediaQueries, sorted, handleSendToDev, handleReviewClick, authedUser }: { mediaQueries: any, sorted: any, handleSendToDev: Function, handleReviewClick: Function, authedUser: any }) {
+function YourTickets({ mediaQueries, sorted, handleSendToDev, handleReviewClick, authedUser, getTickets }: { mediaQueries: any, sorted: any, handleSendToDev: Function, handleReviewClick: Function, authedUser: any, getTickets: Function }) {
 
   return (
     sorted.map((ticket: any) => {
       return (
         ticket.reviewed_by === authedUser.user_metadata.name && ticket.status ?
           <div key={ticket.id} style={{ width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%" }}>
-            <YourActualTicket ticket={ticket} authedUser={authedUser} mediaQueries={mediaQueries} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} />
+            <YourActualTicket ticket={ticket} authedUser={authedUser} mediaQueries={mediaQueries} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} getTickets={getTickets} />
           </div>
           : null
       )
@@ -192,11 +192,23 @@ function YourTickets({ mediaQueries, sorted, handleSendToDev, handleReviewClick,
   )
 }
 
-function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, handleReviewClick }: { ticket: any, authedUser: any, mediaQueries: any, handleSendToDev: Function, handleReviewClick: Function }) {
+function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, handleReviewClick, getTickets }: { ticket: any, authedUser: any, mediaQueries: any, handleSendToDev: Function, handleReviewClick: Function, getTickets: Function }) {
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState("");
   const [sending, setSending] = useState(false);
   const [claiming, setClaiming] = useState(false);
+  const [returning, setReturning] = useState(false);
+
+  async function handleReturnToPool(e: any) {
+    e.preventDefault();
+    setReturning(true);
+    const { data, error } = await supabase
+      .from('tickets')
+      .update({ reviewed_by: null })
+      .match({ id: ticket.id })
+    getTickets();
+    setReturning(false);
+  }
 
   return (
     ticket.reviewed_by === authedUser.user_metadata.name && ticket.status ?
@@ -246,6 +258,7 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
             }}>{"Download associated file"}</button>
         }
         <p onClick={!ticket.reviewed_by || !claiming ? (e) => handleReviewClick(e, ticket, setClaiming) : () => { }} onMouseEnter={!ticket.reviewed_by ? (e) => OnMouseEnter((e)) : () => { }} onMouseOut={!ticket.reviewed_by ? (e) => OnMouseOut(e) : () => { }} style={{ fontSize: 18, fontWeight: 600, border: ticket.reviewed_by ? "none" : "1px solid rgba(255, 255, 255,  0.5)", padding: "5px 10px", borderRadius: "10px", cursor: ticket.reviewed_by ? "auto" : "pointer" }}>{ticket.reviewed_by ? `Being reviewed by: ${ticket.reviewed_by}` : claiming ? "Claimed!" : "Review me!"}</p>
+        <button className='dev-ticket-button' onClick={(e) => handleReturnToPool(e)}>{returning ? "Returning..." : "Return to pool"}</button>
       </div >
       : null
   )

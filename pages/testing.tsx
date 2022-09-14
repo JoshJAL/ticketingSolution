@@ -258,7 +258,7 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
             }}>{"Download associated file"}</button>
         }
         <p onClick={!ticket.reviewed_by || !claiming ? (e) => handleReviewClick(e, ticket, setClaiming) : () => { }} onMouseEnter={!ticket.reviewed_by ? (e) => OnMouseEnter((e)) : () => { }} onMouseOut={!ticket.reviewed_by ? (e) => OnMouseOut(e) : () => { }} style={{ fontSize: 18, fontWeight: 600, border: ticket.reviewed_by ? "none" : "1px solid rgba(255, 255, 255,  0.5)", padding: "5px 10px", borderRadius: "10px", cursor: ticket.reviewed_by ? "auto" : "pointer" }}>{ticket.reviewed_by ? `Being reviewed by: ${ticket.reviewed_by}` : claiming ? "Claimed!" : "Review me!"}</p>
-        <button className='dev-ticket-button' onClick={(e) => handleReturnToPool(e)}>{returning ? "Returning..." : "Return to pool"}</button>
+        <button className='dev-ticket-button' onClick={(e) => handleReturnToPool(e)}>{returning ? "Unclaiming..." : "Unclaim Ticket"}</button>
       </div >
       : null
   )

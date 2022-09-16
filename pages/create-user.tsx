@@ -1,4 +1,3 @@
-import useMediaQueries from 'media-queries-in-react';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react'
 import Footer from '../components/Footer';
@@ -13,18 +12,12 @@ export default function CreateUser() {
   const [creating, setCreating] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [hamburgerClick, setHamburgerClick] = useState(false);
-  const [user, setUser] = useState<any>(null);
-
-  const mediaQueries = useMediaQueries({
-    under768: '(max-width: 768px)',
-  });
 
   useEffect(() => {
     const authenticatedUser = supabase.auth.user()
     if (!authenticatedUser || authenticatedUser.user_metadata.typeOfUser !== 'admin') {
       window.location.href = "/"
     }
-    setUser(authenticatedUser);
   }, [])
 
   function handleSelectionChange(e: any) {
@@ -79,7 +72,6 @@ export default function CreateUser() {
         <meta name="ticketing" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <div style={{ width: "100%", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute" }}>
         <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>
           <HamburgerMenu hamburgerClick={hamburgerClick} setHamburgerClick={setHamburgerClick} />

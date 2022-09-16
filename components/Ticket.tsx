@@ -197,7 +197,6 @@ function ActualTicket({ ticket, user, handleClaimTicket, setPriorityLevel, downl
                   null
               }
             </div>
-
             {editing ?
               <form style={{ border: "none", width: "100%", height: "500px" }}>
                 <input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} style={{ width: mediaQueries.under768 ? "240px" : "400px", margin: "0 0 20px 0" }} />
@@ -221,7 +220,6 @@ function ActualTicket({ ticket, user, handleClaimTicket, setPriorityLevel, downl
                 }
               </>
             }
-
             {
               user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
                 <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
@@ -318,8 +316,6 @@ function MediumTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any
 }
 
 function LowTicket({ tickets, mediaQueries, priorityLevelTitleStyles, user, handleClaimTicket, downloadFile, getTickets }: { tickets: any, mediaQueries: any, priorityLevelTitleStyles: CSSProperties, user: any, handleClaimTicket: Function, downloadFile: Function, getTickets: Function }) {
-  const router = useRouter();
-
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100%", alignItems: 'center', justifyContent: 'center' }}>
       <LowTicketTitle tickets={tickets} priorityLevelTitleStyles={priorityLevelTitleStyles} />

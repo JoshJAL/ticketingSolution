@@ -182,7 +182,6 @@ function DragAndDropColumns() {
           <button className='dev-ticket-button' style={{ margin: "0 0 0 20px", padding: "10px 20px", fontSize: "21px" }} onClick={(e) => { e.preventDefault(); setShowNewProjectModal(true) }} >Start New Project</button>
         </div>
       }
-
       {
         showNewProjectModal ?
           <Modal styleOverride={{ maxHeight: "90vh", padding: "5px", overflowY: "auto", backgroundColor: palette.pageBackgroundColor, width: "50%", margin: "10% 25%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: "column", textAlign: "center", border: "1px solid rgba(0, 0, 0, 0.4)", borderRadius: "10px", color: "black" }} >
@@ -196,7 +195,6 @@ function DragAndDropColumns() {
           :
           null
       }
-
       {deleting ? null :
         selectedProject ? (
           <>
@@ -207,8 +205,6 @@ function DragAndDropColumns() {
           </>
         ) : null
       }
-
-
     </>
   )
 }
@@ -257,7 +253,6 @@ function KanbanTable({ showModal, setShowModal, setTaskName, setTaskDescription,
             <h1 style={{ textAlign: 'center', margin: '0 0 12px 0' }}>{group}</h1>
             <hr style={{ border: "1px solid black", width: "100%", margin: "0 0 10px 0" }} />
             <div>
-
               {items.filter((item: any) => item.status === group && item.project_name === selectedProject).map((item: any, index: number) => (
                 <div
                   key={item.id}
@@ -277,11 +272,9 @@ function KanbanTable({ showModal, setShowModal, setTaskName, setTaskDescription,
                 </div>
                 :
                 null}
-
             </div>
           </div>
         ))}
-
       </div>
     </>
   )
@@ -291,7 +284,6 @@ function OpenCard({ item, developers, assignCardToDev }: { item: any, developers
   const [clicked, setClicked] = useState(false);
 
   return (
-
     <>
       <button style={{ float: "right", margin: "0 0 0 0", cursor: "pointer", padding: "5px 10px", borderRadius: "10px", color: palette.pageBackgroundColor }} onClick={() => setClicked(true)}>{clicked ? "Opened" : "Open"}</button>
       <p>{item.title}</p>
@@ -302,7 +294,6 @@ function OpenCard({ item, developers, assignCardToDev }: { item: any, developers
 
 function TaskCard({ item, developers, assignCardToDev, clicked, setClicked }: { item: any, developers: any, assignCardToDev: Function, clicked: boolean, setClicked: Function }) {
   return (
-
     clicked ?
       <Modal styleOverride={{ maxHeight: "90vh", padding: "10px", overflowY: "auto", backgroundColor: palette.pageBackgroundColor, width: "50%", margin: "10% 25%", height: "fit-content", display: "flex", alignItems: "center", justifyContent: 'center', flexDirection: "column", textAlign: "center", border: "1px solid rgba(0, 0, 0, 0.4)", borderRadius: "10px", color: "black" }}>
         <p style={{ marginLeft: "auto", marginRight: "0px", cursor: "pointer", padding: "10px", marginBottom: 0 }} onClick={() => setClicked(false)} >X</p>
@@ -347,4 +338,3 @@ function AssignCardToDev({ developers, assignCardToDev, item }: { developers: an
 }
 
 export default DragAndDropColumns
-

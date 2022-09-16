@@ -8,7 +8,6 @@ import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 
 export default function Testing() {
-  const [user, setUser] = useState<any>(null)
   const [hamburgerClick, setHamburgerClick] = useState(false);
   const [tickets, setTickets] = useState<any>([]);
   const [authedUser, setAuthedUser] = useState<any>(null);
@@ -32,10 +31,8 @@ export default function Testing() {
       window.location.href = '/login'
     }
     getTickets();
-    setUser(authenticatedUser);
     setAuthedUser(authenticatedUser)
   }, [])
-
 
   function handleHamburgerClick() {
     setHamburgerClick(true);
@@ -145,7 +142,6 @@ function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: 
             <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => setOpen(!open)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{`Send to ${ticket.assigned_to.split(" ")[0]}?`}</p>
           </div>
           : null}
-
         {open ?
           <div style={{ border: "1px solid rgba(255, 255, 255, 0.5)", borderRadius: "10px", padding: "20px", margin: "10px 20px" }}>
             <p>{"Any notes?"}</p>
@@ -198,7 +194,7 @@ function YourTickets({ mediaQueries, sorted, handleSendToDev, handleReviewClick,
       return (
         ticket.reviewed_by === authedUser.user_metadata.name && ticket.status ?
           <div key={ticket.id} style={{ width: mediaQueries.under768 ? "75%" : "30%", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", margin: mediaQueries.under768 ? "21px 15px" : "25px 1%" }}>
-            <YourActualTicket ticket={ticket} authedUser={authedUser} mediaQueries={mediaQueries} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} getTickets={getTickets} />
+            <YourActualTicket ticket={ticket} authedUser={authedUser} handleSendToDev={handleSendToDev} handleReviewClick={handleReviewClick} getTickets={getTickets} />
           </div>
           : null
       )
@@ -206,7 +202,7 @@ function YourTickets({ mediaQueries, sorted, handleSendToDev, handleReviewClick,
   )
 }
 
-function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, handleReviewClick, getTickets }: { ticket: any, authedUser: any, mediaQueries: any, handleSendToDev: Function, handleReviewClick: Function, getTickets: Function }) {
+function YourActualTicket({ ticket, authedUser, handleSendToDev, handleReviewClick, getTickets }: { ticket: any, authedUser: any, handleSendToDev: Function, handleReviewClick: Function, getTickets: Function }) {
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState("");
   const [sending, setSending] = useState(false);
@@ -233,7 +229,6 @@ function YourActualTicket({ ticket, authedUser, mediaQueries, handleSendToDev, h
             <button className="dev-ticket-button" onClick={(e) => { ticket.status === "Testing/QA" ? setOpen(!open) : {} }}>{ticket.status === "Testing/QA" ? `Send to ${ticket.assigned_to.split(" ")[0]}?` : `Being updated by ${ticket.assigned_to.split(" ")[0]}`}</button>
           </div>
           : null}
-
         {open ?
           <div style={{ border: "1px solid black", borderRadius: "10px", padding: "20px", margin: "10px 20px", width: "100%" }}>
             <p>{"Any notes?"}</p>

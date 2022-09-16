@@ -1,4 +1,3 @@
-import type { NextPage } from 'next'
 import Head from 'next/head'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
@@ -9,7 +8,7 @@ import { useEffect, useState } from 'react'
 import HamburgerMenu from '../components/HamburgerMenu'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 
-const Home: NextPage = () => {
+export default function Home() {
   const [hamburgerClick, setHamburgerClick] = useState(false);
   const [authedUser, setAuthedUser] = useState<any>(null);
 
@@ -57,5 +56,3 @@ const Home: NextPage = () => {
     </div>
   )
 }
-
-export default Home

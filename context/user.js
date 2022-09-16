@@ -8,7 +8,7 @@ const Context = createContext();
 const Provider = ({ children }) => {
   const [user, setUser] = useState(supabase.auth.user());
   const router = useRouter();
- 
+
   useEffect(() => {
     supabase.auth.onAuthStateChange(() => {
       setUser(user);
@@ -17,7 +17,7 @@ const Provider = ({ children }) => {
 
   useEffect(() => {
     axios.post('/api/set-supabase-cookie', {
-      event: user ? 'SIGNED_IN' : 'SIGNED_OUT', 
+      event: user ? 'SIGNED_IN' : 'SIGNED_OUT',
       session: supabase.auth.session(),
     })
   }, [user])
@@ -46,7 +46,7 @@ const Provider = ({ children }) => {
   }
 
   const exposed = {
-    user, 
+    user,
     handleSignIn,
     handleLogout,
   }

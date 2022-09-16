@@ -121,117 +121,6 @@ function EmergencyTicket({ tickets, mediaQueries, priorityLevelTitleStyles, hand
   )
 }
 
-function ActualTicket({ ticket, user, handleClaimTicket, setPriorityLevel, downloadFile, getTickets }: { ticket: any, user: any, handleClaimTicket: Function, setPriorityLevel: number, downloadFile: Function, getTickets: Function }) {
-  const [claiming, setClaiming] = useState(false);
-  const [claimed, setClaimed] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [newTitle, setNewTitle] = useState(ticket.title);
-  const [newDescription, setNewDescription] = useState(ticket.description);
-  const [newFile, setNewFile] = useState("");
-  const [newFileUrl, setNewFileUrl] = useState("");
-  const [submittingEdits, setSubmittingEdits] = useState(false);
-
-  async function handleEdit() {
-    editing ? setEditing(false) : setEditing(true);
-  }
-
-  function handleFileUrl(e: any) {
-    setNewFile(e.target.files[0]);
-    setNewFileUrl(`public/${e.target.files[0].name}`);
-  }
-
-  async function handleSubmitNoFileChange() {
-    const { data, error } = await supabase
-      .from('tickets')
-      .update({ title: newTitle, description: newDescription })
-      .eq('id', ticket.id)
-  }
-
-  async function handleSubmit() {
-    setSubmittingEdits(true)
-    if (newFile && newFile !== "") {
-      const { data, error } = await supabase
-        .from('tickets')
-        .update({ title: newTitle, description: newDescription, picture: newFileUrl })
-        .eq('id', ticket.id)
-      fileUpload();
-    } else {
-      handleSubmitNoFileChange();
-    }
-    setSubmittingEdits(false);
-    getTickets();
-    setEditing(false);
-  }
-
-  async function fileUpload() {
-    if (newFile && newFile !== "") {
-      const { data, error } = await supabase.storage
-        .from('ticket-images')
-        .upload(newFileUrl, newFile, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-    } else {
-      return
-    }
-  }
-
-  const mediaQueries = useMediaQueries({
-    under768: "(max-width: 768px)",
-  })
-
-  return (
-    ticket.priority_level === setPriorityLevel ?
-      (
-        <div className='ticketList-ticket' key={ticket.id} >
-          <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", margin: "0 12px", color: "black" }}>
-            <div style={{ position: "relative", padding: "20px", width: "100%" }}>
-              {
-                user.user_metadata.typeOfUser === "admin" ? <p style={{ margin: 0, right: editing && mediaQueries.under768 ? 0 : editing ? 120 : 0, top: 20, position: "absolute", border: "1px solid black", padding: "4px 10px", borderRadius: "50%" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
-                  :
-                  null
-              }
-              {
-                user.email === ticket.created_by ? <button onClick={(e) => { e.preventDefault(); handleEdit() }} className='dev-ticket-button' style={{ left: editing && mediaQueries.under768 ? 0 : editing ? 120 : 0, top: 20, position: "absolute", margin: 0, padding: "7px 14px" }}>{editing ? "Cancel" : "Edit"}</button>
-                  :
-                  null
-              }
-            </div>
-            {editing ?
-              <form style={{ border: "none", width: "100%", height: "500px" }}>
-                <input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} style={{ width: mediaQueries.under768 ? "240px" : "400px", margin: "0 0 20px 0" }} />
-                <textarea value={newDescription} onChange={(e) => setNewDescription(e.target.value)} style={{ width: mediaQueries.under768 ? "240px" : "400px", margin: "0 0 20px 0" }} rows={9} />
-                <input onChange={(e) => handleFileUrl(e)} type="file" style={{ cursor: "pointer", width: mediaQueries.under768 ? "240px" : "400px" }} />
-                <button onClick={(e) => { e.preventDefault(); handleSubmit() }} style={{ margin: "20px 0 0 0" }}>{submittingEdits ? "Submitting..." : "Submit"}</button>
-              </form>
-              :
-              <>
-                <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
-                <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", wordBreak: "break-word" }}>{ticket.description}</p>
-                {ticket.picture.includes(".png") || ticket.picture.includes(".jpg") || ticket.picture.includes(".jpeg") || ticket.picture.includes(".gif") || !ticket.picture ?
-                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
-                    <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.png"} />
-                  </div>
-                  :
-                  <button onClick={(e) => {
-                    e.preventDefault();
-                    downloadFile(ticket);
-                  }}>{"Download associated file"}</button>
-                }
-              </>
-            }
-            {
-              user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
-                <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
-                :
-                <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
-            }
-          </div>
-        </div >
-      ) : null
-  )
-}
-
 function EmergencyTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any, priorityLevelTitleStyles: CSSProperties }) {
   let titleIndex: any = []
   return (
@@ -346,5 +235,116 @@ function LowTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: any, p
         )
       }
     }).slice(0, titleIndex[0] + 1)
+  )
+}
+
+function ActualTicket({ ticket, user, handleClaimTicket, setPriorityLevel, downloadFile, getTickets }: { ticket: any, user: any, handleClaimTicket: Function, setPriorityLevel: number, downloadFile: Function, getTickets: Function }) {
+  const [claiming, setClaiming] = useState(false);
+  const [claimed, setClaimed] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(ticket.title);
+  const [newDescription, setNewDescription] = useState(ticket.description);
+  const [newFile, setNewFile] = useState("");
+  const [newFileUrl, setNewFileUrl] = useState("");
+  const [submittingEdits, setSubmittingEdits] = useState(false);
+
+  async function handleEdit() {
+    editing ? setEditing(false) : setEditing(true);
+  }
+
+  function handleFileUrl(e: any) {
+    setNewFile(e.target.files[0]);
+    setNewFileUrl(`public/${e.target.files[0].name}`);
+  }
+
+  async function handleSubmitNoFileChange() {
+    const { data, error } = await supabase
+      .from('tickets')
+      .update({ title: newTitle, description: newDescription })
+      .eq('id', ticket.id)
+  }
+
+  async function handleSubmit() {
+    setSubmittingEdits(true)
+    if (newFile && newFile !== "") {
+      const { data, error } = await supabase
+        .from('tickets')
+        .update({ title: newTitle, description: newDescription, picture: newFileUrl })
+        .eq('id', ticket.id)
+      fileUpload();
+    } else {
+      handleSubmitNoFileChange();
+    }
+    setSubmittingEdits(false);
+    getTickets();
+    setEditing(false);
+  }
+
+  async function fileUpload() {
+    if (newFile && newFile !== "") {
+      const { data, error } = await supabase.storage
+        .from('ticket-images')
+        .upload(newFileUrl, newFile, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+    } else {
+      return
+    }
+  }
+
+  const mediaQueries = useMediaQueries({
+    under768: "(max-width: 768px)",
+  })
+
+  return (
+    ticket.priority_level === setPriorityLevel ?
+      (
+        <div className='ticketList-ticket' key={ticket.id} >
+          <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", margin: "0 12px", color: "black" }}>
+            <div style={{ position: "relative", padding: "20px", width: "100%" }}>
+              {
+                user.user_metadata.typeOfUser === "admin" ? <p style={{ margin: 0, right: editing && mediaQueries.under768 ? 0 : editing ? 120 : 0, top: 20, position: "absolute", border: "1px solid black", padding: "4px 10px", borderRadius: "50%" }}>{ticket.complexity_level ? ticket.complexity_level : "?"}</p>
+                  :
+                  null
+              }
+              {
+                user.email === ticket.created_by ? <button onClick={(e) => { e.preventDefault(); handleEdit() }} className='dev-ticket-button' style={{ left: editing && mediaQueries.under768 ? 0 : editing ? 120 : 0, top: 20, position: "absolute", margin: 0, padding: "7px 14px" }}>{editing ? "Cancel" : "Edit"}</button>
+                  :
+                  null
+              }
+            </div>
+            {editing ?
+              <form style={{ border: "none", width: "100%", height: "500px" }}>
+                <input value={newTitle} onChange={(e) => setNewTitle(e.target.value)} style={{ width: mediaQueries.under768 ? "240px" : "400px", margin: "0 0 20px 0" }} />
+                <textarea value={newDescription} onChange={(e) => setNewDescription(e.target.value)} style={{ width: mediaQueries.under768 ? "240px" : "400px", margin: "0 0 20px 0" }} rows={9} />
+                <input onChange={(e) => handleFileUrl(e)} type="file" style={{ cursor: "pointer", width: mediaQueries.under768 ? "240px" : "400px" }} />
+                <button onClick={(e) => { e.preventDefault(); handleSubmit() }} style={{ margin: "20px 0 0 0" }}>{submittingEdits ? "Submitting..." : "Submit"}</button>
+              </form>
+              :
+              <>
+                <p style={{ fontWeight: 700, fontSize: 24, textAlign: "center" }}>{ticket.title}</p>
+                <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", wordBreak: "break-word" }}>{ticket.description}</p>
+                {ticket.picture.includes(".png") || ticket.picture.includes(".jpg") || ticket.picture.includes(".jpeg") || ticket.picture.includes(".gif") || !ticket.picture ?
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", maxHeight: "fit-content", margin: "0 0 20px 0", overflow: "hidden" }}>
+                    <img style={{ maxWidth: "45%" }} src={ticket.picture ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}` : "https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.png"} />
+                  </div>
+                  :
+                  <button onClick={(e) => {
+                    e.preventDefault();
+                    downloadFile(ticket);
+                  }}>{"Download associated file"}</button>
+                }
+              </>
+            }
+            {
+              user.user_metadata.typeOfUser === "admin" && !ticket.assigned_to ?
+                <button onClick={(e) => handleClaimTicket(e, ticket, setClaiming, setClaimed)}>{claiming ? "Claiming..." : claimed ? "Claimed!" : "Claim"}</button>
+                :
+                <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
+            }
+          </div>
+        </div >
+      ) : null
   )
 }

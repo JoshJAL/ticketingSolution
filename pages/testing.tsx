@@ -160,7 +160,7 @@ function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: 
             {ticket.page_url.split(",").map((url: string) => {
               return (
                 <>
-                  <a key={ticket.id} style={{ color: "#2b27ff" }} href={url.trim()}>{url.trim()}</a>
+                  <a key={ticket.id} style={{ color: "#2b27ff" }} target="_blank" href={url.trim()}>{url.trim()}</a>
                   <br />
                 </>
               )
@@ -247,7 +247,7 @@ function YourActualTicket({ ticket, authedUser, handleSendToDev, handleReviewCli
             {ticket.page_url.split(",").map((url: string) => {
               return (
                 <>
-                  <a key={ticket.id} style={{ color: "#2b27ff" }} href={url.trim()}>{url.trim()}</a>
+                  <a key={ticket.id} style={{ color: "#2b27ff" }} target="_blank" href={url.trim()}>{url.trim()}</a>
                   <br />
                 </>
               )

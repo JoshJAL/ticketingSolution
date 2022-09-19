@@ -343,6 +343,12 @@ function ActualTicket({ ticket, user, handleClaimTicket, setPriorityLevel, downl
                 :
                 <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 6px 0" }}>{ticket.assigned_to ? `Assigned to: ${ticket.assigned_to}` : "Not yet assigned"}</p>
             }
+            {
+              ticket.reviewed_by ?
+                <p style={{ fontWeight: 500, fontSize: 18, textAlign: "center", margin: "0 0 12px 0" }} >Reviewed by: {ticket.reviewed_by}</p>
+                :
+                null
+            }
           </div>
         </div >
       ) : null

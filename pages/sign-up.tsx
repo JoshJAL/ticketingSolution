@@ -134,7 +134,7 @@ export default function SignUp() {
             {isCapsLockOn ?
               <p style={{ color: palette.emergencyRed, fontWeight: 700 }}>Warning: Caps Lock is on!</p>
               : null}
-            <label style={{ textAlign: "center", color: notAllowed ? "#a60505" : "black" }}>{notAllowed ? "You are not authorized to create an account with that email" : "Create an account!"}</label>
+            <label style={{ textAlign: "center", color: notAllowed ? palette.emergencyRed : "black" }}>{notAllowed ? "You are not authorized to create an account with that email" : "Create an account!"}</label>
             <label style={{ margin: "10px" }}>{"Email:"}</label>
             <input style={{ width: mediaQueries.under768 ? "250px" : "350px" }} onChange={(e) => setEmail(e.target.value)} value={email} type="email" onKeyUp={(event) => checkCapsLock(event)} />
             <label style={{ margin: "10px" }}>{"Password:"}</label>

@@ -286,7 +286,7 @@ function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries,
 
   return (
     ticket.assigned_to === name && showTickets ?
-      <div className="devTicketList-ticket" style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.4)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
+      <div className="devTicketList-ticket" style={{ border: ticket.priority_level === 3 ? `1px solid ${palette.emergencyRed}` : "1px solid rgba(255, 255, 255, 0.4)", boxShadow: ticket.priority_level === 3 ? `4px 2px 9px 1px ${palette.emergencyRed}` : "4px 2px 9px 1px #888888" }}>
         {ticket.assigned_to === authedUser.user_metadata.name ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
             <button className="dev-ticket-button" onClick={(e) => handleComplete(e, ticket)}>{"Complete?"}</button>

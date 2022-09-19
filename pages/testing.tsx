@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import HamburgerMenu from '../components/HamburgerMenu'
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
+import palette from '../styles/palette'
 
 export default function Testing() {
   const [hamburgerClick, setHamburgerClick] = useState(false);
@@ -136,7 +137,7 @@ function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: 
 
   return (
     !ticket.reviewed_by && ticket.status === "Testing/QA" ?
-      <div className='testing-ticket' key={ticket.id} style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
+      <div className='testing-ticket' key={ticket.id} style={{ border: ticket.priority_level === 3 ? `1px solid ${palette.emergencyRed}` : "1px solid rgba(255, 255, 255, 0.5)", boxShadow: ticket.priority_level === 3 ? `4px 2px 9px 1px ${palette.emergencyRed}` : "4px 2px 9px 1px #888888" }}>
         {ticket.reviewed_by && ticket.status === "Testing/QA" ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
             <p onMouseEnter={(e) => OnMouseEnter(e)} onMouseOut={(e) => OnMouseOut(e)} onClick={(e) => setOpen(!open)} style={{ marginBottom: "auto", fontSize: 15, fontWeight: 700, border: "1px solid rgba(255, 255, 255, 0.5)", padding: "5px", borderRadius: "10px", cursor: "pointer" }}>{`Send to ${ticket.assigned_to.split(" ")[0]}?`}</p>
@@ -222,7 +223,7 @@ function YourActualTicket({ ticket, authedUser, handleSendToDev, handleReviewCli
 
   return (
     ticket.reviewed_by === authedUser.user_metadata.name && ticket.status ?
-      <div className="testing-ticket" style={{ border: ticket.priority_level === 3 ? "1px solid #a60505" : "1px solid rgba(255, 255, 255, 0.5)", boxShadow: ticket.priority_level === 3 ? "4px 2px 9px 1px #a60505" : "4px 2px 9px 1px #888888" }}>
+      <div className="testing-ticket" style={{ border: ticket.priority_level === 3 ? `1px solid ${palette.emergencyRed}` : "1px solid rgba(255, 255, 255, 0.5)", boxShadow: ticket.priority_level === 3 ? `4px 2px 9px 1px ${palette.emergencyRed}` : "4px 2px 9px 1px #888888" }}>
 
         {ticket.reviewed_by ?
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>

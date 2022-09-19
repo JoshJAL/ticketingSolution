@@ -1,6 +1,7 @@
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 import React, { CSSProperties, useEffect, useState } from 'react'
+import palette from '../styles/palette';
 import LoadingSpinner from './LoadingSpinner/LoadingSpinner';
 import supabase from "./supabase";
 
@@ -128,7 +129,7 @@ function EmergencyTicketTitle({ tickets, priorityLevelTitleStyles }: { tickets: 
       if (ticket.priority_level === 3) {
         titleIndex.push(index)
         return (
-          <p key={index} style={priorityLevelTitleStyles}><span style={{ color: "#a60505", textDecoration: "underline" }}>EMERGENCY TICKETS</span></p>
+          <p key={index} style={priorityLevelTitleStyles}><span style={{ color: palette.emergencyRed, textDecoration: "underline" }}>EMERGENCY TICKETS</span></p>
 
         )
       }

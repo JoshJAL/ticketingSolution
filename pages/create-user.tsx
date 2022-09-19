@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Header from '../components/Header';
 import supabase from '../components/supabase';
+import palette from '../styles/palette';
 
 export default function CreateUser() {
   const [email, setEmail] = useState<string>('');
@@ -12,6 +13,7 @@ export default function CreateUser() {
   const [creating, setCreating] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [hamburgerClick, setHamburgerClick] = useState(false);
+  const [isCapsLockOn, setIsCapsLockOn] = useState(false);
 
   useEffect(() => {
     const authenticatedUser = supabase.auth.user()
@@ -65,6 +67,16 @@ export default function CreateUser() {
     setHamburgerClick(true);
   }
 
+  function checkCapsLock(event: any) {
+    if (event.getModifierState("CapsLock")) {
+      setIsCapsLockOn(true);
+      return isCapsLockOn;
+    } else {
+      setIsCapsLockOn(false);
+      return isCapsLockOn;
+    }
+  };
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <Head>
@@ -79,6 +91,9 @@ export default function CreateUser() {
         <Header handleHamburgerClick={handleHamburgerClick} />
         <main style={{ margin: 0, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", height: "88vh", width: "100%", overflowY: "auto" }}>
           <form style={{ margin: "-150px 0 0 0" }}>
+            {isCapsLockOn ?
+              <p style={{ color: palette.emergencyRed, fontWeight: 700 }}>Warning: Caps Lock is on!</p>
+              : null}
             {submitted ?
               <>
                 <p>User has been created!</p>
@@ -87,9 +102,9 @@ export default function CreateUser() {
               :
               <>
                 <label style={{ margin: "10px" }} >{"Enter user's email: "}</label>
-                <input onChange={(e) => setEmail(e.target.value)} style={{ width: "250px" }} type="email" />
+                <input onChange={(e) => setEmail(e.target.value)} style={{ width: "250px" }} type="email" onKeyUp={(event) => checkCapsLock(event)} />
                 <label style={{ margin: "10px" }} >{"Enter user's name: "}</label>
-                <input onChange={(e) => setName(e.target.value)} style={{ width: "250px" }} type="text" />
+                <input onChange={(e) => setName(e.target.value)} style={{ width: "250px" }} type="text" onKeyUp={(event) => checkCapsLock(event)} />
                 <select defaultValue={""} style={{ width: "250px", margin: "20px 0 0 0" }} onClick={(e) => handleSelectionChange(e)}>
                   <option value="">Select a user type</option>
                   <option value="general">General User</option>

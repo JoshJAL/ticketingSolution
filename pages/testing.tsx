@@ -155,7 +155,7 @@ function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: 
         <p style={{ fontWeight: 600, fontSize: 24 }} >{ticket.title}</p>
         <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-all" }}>{ticket.description}</p>
         {ticket.notes ? <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Notes: "}</span>{ticket.notes}</p> : null}
-        {ticket.page_url.includes(".com") ?
+        {ticket.page_url && ticket.page_url.includes(".com") ?
           <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Page Url(s):"}</span>{" "}
             {ticket.page_url.split(",").map((url: string) => {
               return (

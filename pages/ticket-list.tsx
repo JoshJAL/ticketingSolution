@@ -19,7 +19,7 @@ export default function TicketList() {
       <Header handleHamburgerClick={handleHamburgerClick} />
       <Head>
         <title>Ticketing Solution</title>
-        <meta name="ticketing" />
+        <meta name="Quick Ticketing Solution" />
         <link rel="icon" href="/ticket-favicon.png" />
       </Head>
 

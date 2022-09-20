@@ -36,7 +36,7 @@ export default function Home() {
       <Header handleHamburgerClick={handleHamburgerClick} />
       <Head>
         <title>Ticketing Solution</title>
-        <meta name="ticketing" />
+        <meta name="Quick Ticketing Solution" />
         <link rel="icon" href="/ticket-favicon.png" />
       </Head>
       <div style={{ width: "100%", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", overflow: "hidden" }}>

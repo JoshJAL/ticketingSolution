@@ -183,7 +183,7 @@ export default function DevTickets() {
     <div style={{ width: "100%", height: "100%" }}>
       <Head>
         <title>Ticketing Solution</title>
-        <meta name="ticketing" />
+        <meta name="Quick Ticketing Solution" />
         <link rel="icon" href="/ticket-favicon.png" />
       </Head>
       <div style={{ width: "100%", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute" }}>

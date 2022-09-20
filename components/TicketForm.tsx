@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
 import useMediaQueries from 'media-queries-in-react';
-import supabase from './supabase';
+import supabase from '../functions/supabase';
 import axios from 'axios';
 
 export default function TicketForm({ user }: { user: any }) {

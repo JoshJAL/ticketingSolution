@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import supabase from './supabase';
+import supabase from '../functions/supabase';
 import styles from '../styles/kanban.module.css'
 import palette from '../styles/palette';
 import Modal from './Modal';

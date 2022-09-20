@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import supabase from './supabase';
+import supabase from '../functions/supabase';
 
 export default function Header({ handleHamburgerClick }: { handleHamburgerClick: () => void }) {
   const [admin, setAdmin] = useState(false);

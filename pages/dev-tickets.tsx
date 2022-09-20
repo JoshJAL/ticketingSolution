@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import HamburgerMenu from '../components/HamburgerMenu';
 import Header from '../components/Header';
 import Modal from '../components/Modal';
-import supabase from '../components/supabase';
+import supabase from '../functions/supabase';
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents';
 import palette from '../styles/palette';
 import axios from 'axios';

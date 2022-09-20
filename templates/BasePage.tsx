@@ -5,7 +5,7 @@ import Footer from '../components/Footer'
 import HamburgerMenu from '../components/HamburgerMenu'
 import Header from '../components/Header'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
-import supabase from '../components/supabase'
+import supabase from '../functions/supabase'
 
 export default function Page() {
   const [hamburgerClick, setHamburgerClick] = useState(false);

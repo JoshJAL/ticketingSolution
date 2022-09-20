@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { CSSProperties, useEffect, useState } from 'react'
 import palette from '../styles/palette';
 import LoadingSpinner from './LoadingSpinner/LoadingSpinner';
-import supabase from "./supabase";
+import supabase from "../functions/supabase";
 
 export default function Ticket() {
   const [user, setUser] = useState<any>(null);

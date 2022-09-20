@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Footer from '../components/Footer';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Header from '../components/Header';
-import supabase from '../components/supabase';
+import supabase from '../functions/supabase';
 import palette from '../styles/palette';
 
 export default function CreateUser() {

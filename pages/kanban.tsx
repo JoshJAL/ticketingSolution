@@ -5,7 +5,7 @@ import DragAndDropColumns from '../components/DragAndDropColumns'
 import HamburgerMenu from '../components/HamburgerMenu'
 import Header from '../components/Header'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
-import supabase from '../components/supabase'
+import supabase from '../functions/supabase'
 
 export default function Kanban() {
   const [user, setUser] = useState<any>(null)

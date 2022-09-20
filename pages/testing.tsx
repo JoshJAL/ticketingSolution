@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Header from '../components/Header'
 import useMediaQueries from 'media-queries-in-react'
-import supabase from '../components/supabase'
+import supabase from '../functions/supabase'
 import { useEffect, useState } from 'react'
 import HamburgerMenu from '../components/HamburgerMenu'
 import { OnMouseEnter, OnMouseOut } from '../functions/MouseEvents'

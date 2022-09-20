@@ -1,7 +1,7 @@
 import useMediaQueries from 'media-queries-in-react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react'
-import supabase from '../components/supabase';
+import supabase from '../functions/supabase';
 import palette from '../styles/palette';
 
 export default function SignUp() {

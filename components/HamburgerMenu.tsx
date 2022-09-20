@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import supabase from './supabase';
+import supabase from '../functions/supabase';
 
 export default function HamburgerMenu({ hamburgerClick, setHamburgerClick, backgroundColor, color }: { hamburgerClick: boolean, setHamburgerClick: (value: boolean) => void, backgroundColor?: string, color?: string }) {
   const router = useRouter();

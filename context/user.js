@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { createContext, useState, useEffect, useContext } from "react";
-import supabase from "../components/supabase";
+import supabase from "../functions/supabase";
 
 const Context = createContext();
 

@@ -20,7 +20,7 @@ export default function TicketList() {
       <Head>
         <title>Ticketing Solution</title>
         <meta name="ticketing" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/ticket-favicon.png" />
       </Head>
 
       <div style={{ width: '100%', alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", height: "100%" }}>

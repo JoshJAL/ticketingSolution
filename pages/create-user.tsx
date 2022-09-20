@@ -82,7 +82,7 @@ export default function CreateUser() {
       <Head>
         <title>Ticketing Solution</title>
         <meta name="ticketing" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/ticket-favicon.png" />
       </Head>
       <div style={{ width: "100%", minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute" }}>
         <div style={{ display: "flex", justifyContent: "flex-end", width: "100%", zIndex: 3 }}>

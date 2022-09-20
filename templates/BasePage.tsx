@@ -36,7 +36,7 @@ export default function Page() {
       <Head>
         <title>Ticketing Solution</title>
         <meta name="ticketing" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/ticket-favicon.png" />
       </Head>
       <div style={{ width: "100%", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", overflow: "hidden" }}>
         <main style={{ margin: 0, padding: 0, width: "100%", overflow: mediaQueries.under768 ? "hidden" : "initial" }}>

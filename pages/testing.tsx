@@ -84,7 +84,7 @@ export default function Testing() {
       <Head>
         <title>Ticketing Solution</title>
         <meta name="ticketing" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/ticket-favicon.png" />
       </Head>
       <div style={{ width: "100%", minHeight: "100vh", alignItems: "center", position: hamburgerClick ? "fixed" : "absolute", overflow: "hidden" }}>
 

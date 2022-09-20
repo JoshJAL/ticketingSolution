@@ -1,4 +1,5 @@
 import useMediaQueries from 'media-queries-in-react';
+import Head from 'next/head';
 import React, { useEffect, useState } from 'react'
 import supabase from '../functions/supabase';
 import palette from '../styles/palette';
@@ -127,6 +128,11 @@ export default function SignUp() {
 
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
+      <Head>
+        <title>Ticketing Solution</title>
+        <meta name="Quick Ticketing Solution" />
+        <link rel="icon" href="/ticket-favicon.png" />
+      </Head>
       <form style={{ border: mediaQueries.under768 ? "none" : "1px solid black", borderRadius: "10px" }}>
         {verify ? <p style={{ textAlign: "center", margin: "20px" }}>{"Please check your email and verify your account!"}</p>
           :

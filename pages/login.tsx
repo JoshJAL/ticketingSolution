@@ -1,4 +1,5 @@
 import useMediaQueries from 'media-queries-in-react';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import supabase from '../functions/supabase';
@@ -46,6 +47,11 @@ export default function SignUp() {
 
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
+      <Head>
+        <title>Ticketing Solution</title>
+        <meta name="Quick Ticketing Solution" />
+        <link rel="icon" href="/ticket-favicon.png" />
+      </Head>
       <form>
         {isCapsLockOn ?
           <p style={{ color: palette.emergencyRed, fontWeight: 700 }}>Warning: Caps Lock is on!</p>

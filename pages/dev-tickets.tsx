@@ -305,7 +305,7 @@ function ActualTicket({ ticket, name, showTickets, handleComplete, mediaQueries,
             </div>
             : null
         }
-        <p style={{ fontWeight: "bold", fontSize: 18, marginBottom: 0 }}>{ticket.title}</p>
+        <p style={{ fontWeight: "bold", fontSize: 18, marginBottom: 0, wordBreak: "break-all" }}>{ticket.title}</p>
         <p style={{ wordBreak: "break-word" }}>{ticket.description}</p>
         {ticket.reviewed_by ? <p><span style={{ fontWeight: "bold", textDecoration: "underline" }}>{"Reviewed By:"}</span>{" "}{ticket.reviewed_by}</p> : null}
         {ticket.notes ? <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold", textDecoration: "underline" }}>{"Notes:"}</span>{" "}{ticket.notes}</p> : null}

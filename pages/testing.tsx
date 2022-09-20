@@ -153,7 +153,7 @@ function ActualTicket({ ticket, handleSendToDev, handleReviewClick }: { ticket: 
           </div>
           : null
         }
-        <p style={{ fontWeight: 600, fontSize: 24 }} >{ticket.title}</p>
+        <p style={{ fontWeight: 600, fontSize: 24, wordBreak: "break-all" }} >{ticket.title}</p>
         <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-all" }}>{ticket.description}</p>
         {ticket.notes ? <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Notes: "}</span>{ticket.notes}</p> : null}
         {ticket.page_url && ticket.page_url.includes(".com") ?
@@ -240,7 +240,7 @@ function YourActualTicket({ ticket, authedUser, handleSendToDev, handleReviewCli
           </div>
           : null
         }
-        <p style={{ fontWeight: 600, fontSize: 24 }} >{ticket.title}</p>
+        <p style={{ fontWeight: 600, fontSize: 24, wordBreak: "break-all" }} >{ticket.title}</p>
         <p style={{ fontWeight: 500, fontSize: 18, marginTop: 0, wordBreak: "break-word" }}>{ticket.description}</p>
         {ticket.notes ? <p style={{ marginTop: 0 }}><span style={{ fontWeight: "bold" }}>{"Notes: "}</span>{ticket.notes}</p> : null}
         {ticket.page_url && ticket.page_url.includes(".com") ?

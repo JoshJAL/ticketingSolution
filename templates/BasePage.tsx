@@ -1,7 +1,6 @@
 import useMediaQueries from 'media-queries-in-react'
 import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
-import Footer from '../components/Footer'
 import HamburgerMenu from '../components/HamburgerMenu'
 import Header from '../components/Header'
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
@@ -52,7 +51,6 @@ export default function Page() {
         </main>
       </div>
       // Feel free to remove the footer if you don't think the page needs it
-      <Footer />
     </div>
   )
 }

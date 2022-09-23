@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Footer from '../components/Footer'
 import Header from '../components/Header'
 import TicketForm from '../components/TicketForm'
 import useMediaQueries from 'media-queries-in-react'
@@ -52,7 +51,6 @@ export default function Home() {
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   )
 }

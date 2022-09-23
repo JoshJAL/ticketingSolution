@@ -32,10 +32,7 @@ export default function DevTickets() {
   const [tickets, setTickets] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [showJesseTickets, setShowJesseTickets] = useState(false);
   const [showJoshTickets, setShowJoshTickets] = useState(false);
-  const [showKenTickets, setShowKenTickets] = useState(false);
-  const [showRobertTickets, setShowRobertTickets] = useState(false);
   const [hamburgerClick, setHamburgerClick] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [developers, setDevelopers] = useState<any>([]);
@@ -44,15 +41,6 @@ export default function DevTickets() {
     let { data: devs, error } = await supabase
       .from('devs')
       .select('*')
-    let developersThatAreNotMark = []
-    if (devs) {
-      for (let i = 0; i < devs.length; i++) {
-        if (devs[i].name !== 'Mark Ingles') {
-          developersThatAreNotMark.push(devs[i])
-        }
-      }
-    }
-    setDevelopers(developersThatAreNotMark);
   }
 
   async function getTickets() {
@@ -216,21 +204,9 @@ export default function DevTickets() {
                   </div>
                 </Modal>
                 : null}
-              <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowJesseTickets(!showJesseTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Jesse's Tickets"}</p>
-              <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets authedUser={user} showTickets={showJesseTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Jesse Malmstrom"} handleSendToQA={handleSendToQA} developers={developers} getTickets={getTickets} />
-              </div>
               <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowJoshTickets(!showJoshTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Josh's Tickets"}</p>
               <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
                 <AssignedTickets authedUser={user} showTickets={showJoshTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Joshua Levine"} handleSendToQA={handleSendToQA} developers={developers} getTickets={getTickets} />
-              </div>
-              <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowKenTickets(!showKenTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Ken's Tickets"}</p>
-              <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets authedUser={user} showTickets={showKenTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Ken Parsons"} handleSendToQA={handleSendToQA} developers={developers} getTickets={getTickets} />
-              </div>
-              <p onMouseEnter={(e) => onMouseOver(e)} onMouseOut={(e) => onMouseLeave(e)} onClick={() => setShowRobertTickets(!showRobertTickets)} style={{ fontWeight: 700, fontSize: 30, cursor: "pointer" }}>{"Robert's Tickets"}</p>
-              <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "1500px", width: "100%" }}>
-                <AssignedTickets authedUser={user} showTickets={showRobertTickets} mediaQueries={mediaQueries} tickets={tickets} updateComplexityLevel={updateComplexityLevel} addComplexityLevel={addComplexityLevel} sorted={sorted} handleComplete={handleComplete} name={"Robert Thibault"} handleSendToQA={handleSendToQA} developers={developers} getTickets={getTickets} />
               </div>
               <div style={{ margin: mediaQueries.under768 ? "15% 0" : "2% 0" }} />
             </>

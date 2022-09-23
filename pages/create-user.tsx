@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react'
-import Footer from '../components/Footer';
 import HamburgerMenu from '../components/HamburgerMenu';
 import Header from '../components/Header';
 import supabase from '../functions/supabase';
@@ -115,7 +114,6 @@ export default function CreateUser() {
               </>
             }
           </form>
-          <Footer />
         </main>
       </div >
     </div >

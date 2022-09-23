@@ -28,15 +28,6 @@ function DragAndDropColumns() {
     let { data: devs, error } = await supabase
       .from('devs')
       .select('*')
-    let developersThatAreNotMark = []
-    if (devs) {
-      for (let i = 0; i < devs.length; i++) {
-        if (devs[i].name !== 'Mark Ingles') {
-          developersThatAreNotMark.push(devs[i])
-        }
-      }
-    }
-    setDevelopers(developersThatAreNotMark);
   }
 
   async function assignCardToDev(itemId: number, dev: string) {

@@ -30,12 +30,12 @@ export default function CreateUser() {
     setCreating(true);
     if (selection === 'admin') {
       const { data, error } = await supabase
-        .from('devs')
+        .from('admins')
         .insert([{ name: name.trim(), email: email.toLowerCase().trim(), user_type: selection }]);
       handleCreateProfile();
     } else if (selection === 'q&a') {
       const { data, error } = await supabase
-        .from('q&a')
+        .from('quality_assurance')
         .insert([{ name: name.trim(), email: email.toLowerCase().trim(), user_type: selection }]);
       handleCreateProfile();
     } else if (selection === 'general') {

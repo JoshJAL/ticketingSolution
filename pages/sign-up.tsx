@@ -19,15 +19,15 @@ export default function SignUp() {
   const [isCapsLockOn, setIsCapsLockOn] = useState(false);
 
   async function fetchAdminEmails() {
-    let { data: devs, error } = await supabase.from('devs').select('*');
-    setAdmins(devs);
-    setAdminEmails(devs?.map((dev) => dev.email));
+    let { data: admins, error } = await supabase.from('admins').select('*');
+    setAdmins(admins);
+    setAdminEmails(admins?.map((admin) => admin.email));
   }
 
   async function fetchQAEmails() {
-    let { data: qas, error } = await supabase.from('q&a').select('*');
-    setQAs(qas);
-    setqAEmails(qas?.map((qaMember) => qaMember.email));
+    let { data: qualityAssurance, error } = await supabase.from('quality_assurance').select('*');
+    setQAs(qualityAssurance);
+    setqAEmails(qualityAssurance?.map((qualityAssuranceMember) => qualityAssuranceMember.email));
   }
 
   async function fetchGeneralUserEmails() {
@@ -45,7 +45,7 @@ export default function SignUp() {
   }
 
   function setQAName(email: string) {
-    return qAs.find((qa: any) => qa.email === email.toLowerCase().trim())?.name;
+      return qAs.find((qa: any) => qa.email.toLowerCase() === email.toLowerCase().trim())?.name;
   }
 
   useEffect(() => {
@@ -155,7 +155,7 @@ export default function SignUp() {
             />
             <button
               style={{ margin: '10px 20px', fontSize: 18, padding: '10px', cursor: 'pointer' }}
-              onClick={(e) => handleSignUp(e)}
+                onClick={(e) => handleSignUp(e)}
             >
               {creating ? 'Creating Account...' : 'Sign Up'}
             </button>

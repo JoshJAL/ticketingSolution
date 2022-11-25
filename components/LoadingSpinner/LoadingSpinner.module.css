@@ -1,61 +1,61 @@
 .ldsGrid {
   display: inline-block;
+  height: 80px;
   position: relative;
   width: 80px;
-  height: 80px;
 }
 .ldsGrid div {
+  animation: ldsGrid 1.2s linear infinite;
+  background: black;
+  border-radius: 50%;
+  height: 16px;
   position: absolute;
   width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: black;
-  animation: ldsGrid 1.2s linear infinite;
 }
 .ldsGrid div:nth-child(1) {
-  top: 8px;
-  left: 8px;
   animation-delay: 0s;
+  left: 8px;
+  top: 8px;
 }
 .ldsGrid div:nth-child(2) {
-  top: 8px;
-  left: 32px;
   animation-delay: -0.4s;
+  left: 32px;
+  top: 8px;
 }
 .ldsGrid div:nth-child(3) {
-  top: 8px;
-  left: 56px;
   animation-delay: -0.8s;
+  left: 56px;
+  top: 8px;
 }
 .ldsGrid div:nth-child(4) {
-  top: 32px;
-  left: 8px;
   animation-delay: -0.4s;
+  left: 8px;
+  top: 32px;
 }
 .ldsGrid div:nth-child(5) {
-  top: 32px;
-  left: 32px;
   animation-delay: -0.8s;
+  left: 32px;
+  top: 32px;
 }
 .ldsGrid div:nth-child(6) {
-  top: 32px;
-  left: 56px;
   animation-delay: -1.2s;
+  left: 56px;
+  top: 32px;
 }
 .ldsGrid div:nth-child(7) {
-  top: 56px;
-  left: 8px;
   animation-delay: -0.8s;
+  left: 8px;
+  top: 56px;
 }
 .ldsGrid div:nth-child(8) {
-  top: 56px;
-  left: 32px;
   animation-delay: -1.2s;
+  left: 32px;
+  top: 56px;
 }
 .ldsGrid div:nth-child(9) {
-  top: 56px;
-  left: 56px;
   animation-delay: -1.6s;
+  left: 56px;
+  top: 56px;
 }
 @keyframes ldsGrid {
   0%, 100% {

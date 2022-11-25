@@ -1,0 +1,54 @@
+{
+  "editor.tabSize": 2,
+  "editor.wordWrapColumn": 120,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSave": true,
+  "typescript.suggest.completeFunctionCalls": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "git.autofetch": true,
+  "eslint.format.enable": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.parameterHints.enabled": false,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "editor.insertSpaces": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "git.autoStash": true,
+  "git.fetchOnPull": true,
+  "postcssSorting.config": {
+    "properties-order": "alphabetical"
+  },
+  "explorer.confirmDelete": false,
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "editor.detectIndentation": false,
+  "editor.inlineSuggest.enabled": true,
+  "reactSnippets.settings.prettierEnabled": true,
+  "editor.formatOnPaste": false,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": true
+  },
+  "px-to-rem.px-per-rem": 14
+}

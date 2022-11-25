@@ -1,8 +1,9 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next/core-web-vitals", "prettier", "prettier/@typescript-eslint", "prettier/react", "prettier/next"],
   "rules": {
     "max-len": ["error", { "code": 120, "ignoreUrls": true, "tabWidth": 2 }],
     "quotes": ["error", "single", { "avoidEscape": true, "allowTemplateLiterals": true }],
+    "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 3 }],
     "jsx-quotes": ["error", "prefer-single"]
   }
 }

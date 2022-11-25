@@ -1,11 +1,11 @@
 import { CSSProperties } from 'react';
 import palette from '../../styles/palette';
-import styles from '../../styles/Modal.module.css';
+import styles from './Modal.module.css'
 
 export default function Modal({ children, styleOverride }: { children: any; styleOverride?: CSSProperties }) {
   return (
     <div
-      classname={styles.modalContainer}
+      className={styles.modalContainer}
       style={{
         backgroundColor: palette.pageBackgroundColor,
         // you shouldn't override styles like this

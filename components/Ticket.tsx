@@ -481,6 +481,9 @@ function ActualTicket({
   const [newFile, setNewFile] = useState('');
   const [newFileUrl, setNewFileUrl] = useState('');
   const [submittingEdits, setSubmittingEdits] = useState(false);
+  const [newSelection, setNewSelection] = useState(ticket.priority_level);
+
+  const router = useRouter();
 
   async function handleEdit() {
     editing ? setEditing(false) : setEditing(true);
@@ -494,7 +497,7 @@ function ActualTicket({
   async function handleSubmitNoFileChange() {
     const { data, error } = await supabase
       .from('tickets')
-      .update({ title: newTitle, description: newDescription })
+      .update({ title: newTitle, description: newDescription, priority_level: newSelection })
       .eq('id', ticket.id);
   }
 
@@ -503,7 +506,7 @@ function ActualTicket({
     if (newFile && newFile !== '') {
       const { data, error } = await supabase
         .from('tickets')
-        .update({ title: newTitle, description: newDescription, picture: newFileUrl })
+        .update({ title: newTitle, description: newDescription, picture: newFileUrl, priority_level: newSelection })
         .eq('id', ticket.id);
       await fileUpload();
     } else {
@@ -558,7 +561,7 @@ function ActualTicket({
               {ticket.complexity_level ? ticket.complexity_level : '?'}
             </p>
           ) : null}
-          {user.email === ticket.created_by ? (
+          {user.email === ticket.creator_email ? (
             <button
               onClick={async (e) => {
                 e.preventDefault();
@@ -593,8 +596,14 @@ function ActualTicket({
             <input
               onChange={(e) => handleFileUrl(e)}
               type='file'
-              style={{ cursor: 'pointer', width: mediaQueries.under768 ? '240px' : '400px' }}
+              style={{ cursor: 'pointer', width: mediaQueries.under768 ? '240px' : '400px', margin: '0 0 20px 0' }}
             />
+            <select value={newSelection} style={{ width: mediaQueries.under768 ? '240px' : '400px' }} onChange={(e) => setNewSelection(e.target.value)}>
+              <option value={0}>Complete when you can</option>
+              <option value={1}>Complete this week</option>
+              <option value={2}>Complete by tomorrow</option>
+              <option value={3}>EMERGENCY NEEDS TO BE COMPLETED ASAP</option>
+            </select>
             <button
               onClick={async (e) => {
                 e.preventDefault();
@@ -664,6 +673,7 @@ function ActualTicket({
           </p>
         ) : null}
       </div>
+      <p style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => router.push('/ticket-list/' + ticket.id)}>{"Visit card page"}</p>
     </div>
   ) : null;
 }

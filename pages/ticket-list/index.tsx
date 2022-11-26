@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import React, { useState } from 'react';
-import HamburgerMenu from '../components/HamburgerMenu';
-import Header from '../components/Header';
-import Ticket from '../components/Ticket';
+import HamburgerMenu from '../../components/HamburgerMenu';
+import Header from '../../components/Header';
+import Ticket from '../../components/Ticket';
 
 export default function TicketList() {
   const [hamburgerClick, setHamburgerClick] = useState(false);

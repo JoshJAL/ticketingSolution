@@ -53,7 +53,7 @@ export default function TicketForm({ user }: { user: any }) {
   async function createTicket() {
     const { data, error } = await supabase
       .from('tickets')
-      .insert([{ title, description, picture: fileUrl, priority_level: selection, created_by: user.email.trim() }]);
+      .insert([{ title, description, picture: fileUrl, priority_level: selection, created_by: user.user_metadata.name.trim(), creator_email: user.email.trim() }]);
   }
 
   async function handleSubmit(e: any) {

@@ -1,0 +1,13 @@
+.ticketImage {
+  max-width: 45%;
+}
+
+.loading {
+  align-items: center;
+  display: flex;
+  height: 50vh;
+  justify-content: center;
+  margin: 20px;
+  transform: scale(3);
+  width: 100%;
+}

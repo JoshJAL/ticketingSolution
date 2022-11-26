@@ -1,7 +1,7 @@
 import Card from '../Card/Card';
 import CardBody from '../Card/CardBody';
 import CardFooter from '../Card/CardFooter';
-import styles from './TicketCard.module.css';
+import styles from './Ticket.module.css';
 import { Ticket } from '../../types/ticket';
 
 import CardHeader from '../Card/CardHeader';

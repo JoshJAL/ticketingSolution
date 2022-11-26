@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import styles from './CardHeader.module.css';
+import styles from './Card.module.css';
 
 interface CardHeaderProps {
   subtitle?: string;

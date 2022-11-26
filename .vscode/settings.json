@@ -50,5 +50,7 @@
     "**/Thumbs.db": true,
     "**/node_modules": true
   },
-  "px-to-rem.px-per-rem": 14
+  "px-to-rem.px-per-rem": 14,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

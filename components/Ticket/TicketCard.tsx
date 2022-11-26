@@ -29,13 +29,12 @@ export default function TicketCard({ ticket }: TicketCardProps) {
         </div>
         <div className={styles.ticketCardItem}>
           <div className={styles.ticketCardItemLabel}>Type</div>
-          <div className={styles.ticketCardItemValue}>{ticket.ticketType}</div>
+          <div className={styles.ticketCardItemValue}>{ticket.ticketType.value}</div>
         </div>
       </CardBody>
       <CardFooter>
         <div className={styles.ticketCardFooterItem}>
-          <div className={styles.ticketCardFooterItemLabel}>Priority</div>
-          <div className={styles.ticketCardFooterItemValue}>{ticket.priority_level}</div>
+          <div className={styles.ticketCardFooterItemLabel}>Priority: {ticket.priority_level}</div>
         </div>
       </CardFooter>
     </Card>

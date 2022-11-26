@@ -1,12 +1,13 @@
 import supabase from '@/utils/supabase';
 import TicketCard from '@/components/Ticket/TicketCard';
 import { Ticket } from '@/types/ticket';
+import { PostgrestResponse } from '@supabase/supabase-js';
 
 export const revalidate = 0;
 
-export default async function TicketListPage() {
+export default async function TicketsPage() {
   // TODO: when auth is added, filter by signed in user
-  const { data: tickets }: { data: Ticket[] | null } = await supabase.from('tickets').select(`
+  const supRes: PostgrestResponse<Ticket> = await supabase.from('tickets').select(`
     id,
     title,
     description,
@@ -18,9 +19,11 @@ export default async function TicketListPage() {
     reviewed_by,
     notes,
     created_by,
-    ticketType ( value )
+    ticketType:ticketTypeId(value)
   `);
-  if (!tickets) {
+  const { data: tickets }: { data: Ticket[] | null } & PostgrestResponse<Ticket> = supRes;
+
+  if (!tickets || !tickets.length) {
     return <p>No tickets found</p>;
   }
 

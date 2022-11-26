@@ -13,7 +13,12 @@ export type Ticket = {
   ticketType: TicketType;
 };
 
-enum TicketType {
+export type TicketType = {
+  id: number;
+  value: TicketTypeEnum;
+};
+
+enum TicketTypeEnum {
   Story = 'Story',
   Bug = 'Bug',
   Task = 'Task',

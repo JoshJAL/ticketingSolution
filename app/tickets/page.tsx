@@ -6,7 +6,7 @@ import { PostgrestResponse } from '@supabase/supabase-js';
 export const revalidate = 0;
 
 export default async function TicketsPage() {
-  // TODO: when auth is added, filter by signed in user
+  // TODO: add filter by assigned_to
   const supRes: PostgrestResponse<Ticket> = await supabase.from('tickets').select(`
     id,
     title,
@@ -19,7 +19,7 @@ export default async function TicketsPage() {
     reviewed_by,
     notes,
     created_by,
-    ticketType:ticketTypeId(value)
+    ticketType: ticketTypeId ( value )
   `);
   const { data: tickets }: { data: Ticket[] | null } & PostgrestResponse<Ticket> = supRes;
 

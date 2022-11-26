@@ -29,12 +29,12 @@ export default function Ticket() {
       window.location.href = '/login';
     }
     setUser(authenticatedUser);
-    getTickets();
+    getTickets().catch(error => alert(error));
   }, []);
 
   function downloadFile(ticket: any) {
     window.location.href = `${encodeURI(
-      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}`,
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/previews/${ticket.picture}`,
     )}`;
   }
 
@@ -70,12 +70,8 @@ export default function Ticket() {
     }
     setClaiming(false);
     setClaimed(true);
-    getTickets();
+    await getTickets();
   }
-
-  setTimeout(() => {
-    getTickets();
-  }, 720000);
 
   return loading || !user ? (
     <div
@@ -509,9 +505,9 @@ function ActualTicket({
         .from('tickets')
         .update({ title: newTitle, description: newDescription, picture: newFileUrl })
         .eq('id', ticket.id);
-      fileUpload();
+      await fileUpload();
     } else {
-      handleSubmitNoFileChange();
+      await handleSubmitNoFileChange();
     }
     setSubmittingEdits(false);
     getTickets();
@@ -520,7 +516,7 @@ function ActualTicket({
 
   async function fileUpload() {
     if (newFile && newFile !== '') {
-      const { data, error } = await supabase.storage.from('ticket-images').upload(newFileUrl, newFile, {
+      const { data, error } = await supabase.storage.from('previews').upload(newFileUrl, newFile, {
         cacheControl: '3600',
         upsert: false,
       });
@@ -564,9 +560,9 @@ function ActualTicket({
           ) : null}
           {user.email === ticket.created_by ? (
             <button
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
-                handleEdit();
+                await handleEdit();
               }}
               className='dev-ticket-button'
               style={{
@@ -600,9 +596,9 @@ function ActualTicket({
               style={{ cursor: 'pointer', width: mediaQueries.under768 ? '240px' : '400px' }}
             />
             <button
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
-                handleSubmit();
+                await handleSubmit();
               }}
               style={{ margin: '20px 0 0 0' }}
             >
@@ -634,10 +630,9 @@ function ActualTicket({
               >
                 <img
                   style={{ maxWidth: '45%' }}
-                  src={
-                    ticket.picture
-                      ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ticket-images/${ticket.picture}`
-                      : 'https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/ticket-images/public/noImage.png'
+                  src={ticket.picture
+                  ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/previews/${ticket.picture}`
+                  : 'https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/previews/public/noImage.png'
                   }
                 />
               </div>

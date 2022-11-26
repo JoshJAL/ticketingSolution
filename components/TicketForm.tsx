@@ -42,10 +42,9 @@ export default function TicketForm({ user }: { user: any }) {
 
   async function fileUpload() {
     if (file) {
-      const { data, error } = await supabase.storage.from('ticket-images').upload(fileUrl, file, {
-        cacheControl: '3600',
-        upsert: false,
-      });
+      const { data, error } = await supabase.storage
+      .from('previews')
+      .upload(fileUrl, file)
     } else {
       return;
     }
@@ -81,6 +80,8 @@ export default function TicketForm({ user }: { user: any }) {
   }
 
   async function createTicket() {
+      console.log(file);
+      console.log(fileUrl);
     const { data, error } = await supabase
       .from('tickets')
       .insert([{ title, description, picture: fileUrl, priority_level: selection, created_by: user.email.trim() }]);

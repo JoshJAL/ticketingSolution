@@ -18,19 +18,24 @@ export default function TicketCard({ ticket }: TicketCardProps) {
       <CardHeader>
         <Link href={`/ticket/${ticket.id}`}>{ticket.title}</Link>
       </CardHeader>
-      <CardBody>{ticket.description}</CardBody>
-      <CardFooter>
-        <div className={styles.ticketCardFooterItem}>
-          <div className={styles.ticketCardFooterItemLabel}>Status</div>
-          <div className={styles.ticketCardFooterItemValue}>{ticket.status}</div>
+      <CardBody>
+        <div className={styles.ticketCardItem}>
+          <div className={styles.ticketCardItemLabel}>Description</div>
+          <div className={styles.ticketCardItemValue}>{ticket.description}</div>
         </div>
+        <div className={styles.ticketCardItem}>
+          <div className={styles.ticketCardItemLabel}>Status</div>
+          <div className={styles.ticketCardItemValue}>{ticket.status}</div>
+        </div>
+        <div className={styles.ticketCardItem}>
+          <div className={styles.ticketCardItemLabel}>Type</div>
+          <div className={styles.ticketCardItemValue}>{ticket.ticketType}</div>
+        </div>
+      </CardBody>
+      <CardFooter>
         <div className={styles.ticketCardFooterItem}>
           <div className={styles.ticketCardFooterItemLabel}>Priority</div>
           <div className={styles.ticketCardFooterItemValue}>{ticket.priority_level}</div>
-        </div>
-        <div className={styles.ticketCardFooterItem}>
-          <div className={styles.ticketCardFooterItemLabel}>Type</div>
-          <div className={styles.ticketCardFooterItemValue}>{ticket.ticketType}</div>
         </div>
       </CardFooter>
     </Card>

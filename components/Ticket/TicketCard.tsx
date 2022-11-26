@@ -11,8 +11,7 @@ interface TicketCardProps {
   ticket: Ticket;
 }
 
-export default function TicketCard(props: TicketCardProps) {
-  const { ticket } = props;
+export default function TicketCard({ ticket }: TicketCardProps) {
   return (
     <Card>
       <CardHeader>

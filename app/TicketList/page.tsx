@@ -1,5 +1,5 @@
-import supabase from '../../utils/supabase';
-import TicketCard from '../../components/Ticket/TicketCard';
+import supabase from '@/utils/supabase';
+import TicketCard from '@/components/Ticket/TicketCard';
 
 export const revalidate = 0;
 

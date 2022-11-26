@@ -632,8 +632,9 @@ function ActualTicket({
                   style={{ maxWidth: '45%' }}
                   src={ticket.picture
                   ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/previews/${ticket.picture}`
-                  : 'https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/previews/public/noImage.png'
+                  : process.env.NEXT_PUBLIC_SUPABASE_URL + '/storage/v1/object/public/previews/public/noImage.png'
                   }
+                  alt={ticket.title + " image"}
                 />
               </div>
             ) : (

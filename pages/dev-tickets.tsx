@@ -10,6 +10,7 @@ import palette from '../styles/palette';
 import axios from 'axios';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import { useRouter } from 'next/router';
+import { sendSlackMessageReview } from '../functions/sendSlackMessage';
 
 export default function DevTickets() {
   const content = {
@@ -35,16 +36,29 @@ export default function DevTickets() {
 
   const router = useRouter();
 
+  interface Developer {
+    id: number;
+    created_at: string;
+    name: string;
+    email: string;
+    user_type: string;
+  }
+
   const [tickets, setTickets] = useState<any>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showJoshTickets, setShowJoshTickets] = useState(false);
   const [hamburgerClick, setHamburgerClick] = useState(false);
   const [user, setUser] = useState<any>(null);
-  const [developers, setDevelopers] = useState<any>([]);
+  const [developers, setDevelopers] = useState<Developer[]>([]);
 
   async function getDevNames() {
-    let { data: devs, error } = await supabase.from('devs').select('*');
+    const { data: admins, error } = await supabase.from('admins').select('*');
+    let adminsArray: Developer[] = [];
+    admins!.map((admin: Developer) => {
+      adminsArray.push(admin.name as any);
+    });
+    setDevelopers(adminsArray);
   }
 
   async function getTickets() {
@@ -109,35 +123,6 @@ export default function DevTickets() {
     }
   }
 
-  async function sendSlackMessage(webhookUrl: string, ticket: any, urlText: any) {
-    const data = {
-      username: 'Ticket Bot',
-      icon_url:
-        'https://camo.githubusercontent.com/6e466156683138348d4283ec8ab1a8a8a959dbb6e2f9c06c1300f06ab01c7504/687474703a2f2f66696c65732d6d6973632e73332e616d617a6f6e6177732e636f6d2f6c756e6368626f742e6a7067',
-      text: `A new ticket is ready for review from ${user.user_metadata.name}! \n Title: ${
-        ticket.title
-      } \n Description: ${ticket.description} \n Priority: ${
-        ticket.priority_level == 3
-          ? 'EMERGENCY'
-          : ticket.priority_level == 2
-          ? 'NEED TODAY OR TOMORROW'
-          : ticket.priority_level == 1
-          ? 'Need by the end of the week'
-          : 'No rush'
-      } ${urlText.trim() !== '' && urlText ? `\n Page URL: ${urlText}` : ``} `,
-    };
-    const res = await axios.post(webhookUrl, JSON.stringify(data), {
-      withCredentials: false,
-      transformRequest: [
-        (data, headers) => {
-          //@ts-ignore
-          delete headers.post['Content-Type'];
-          return data;
-        },
-      ],
-    });
-  }
-
   async function handleSendToQA(e: any, ticket: any, setSending: Function, urlText: any, setOpen: Function) {
     e.preventDefault();
     setSending(true);
@@ -146,7 +131,7 @@ export default function DevTickets() {
       .update({ page_url: urlText ? urlText : ticket.page_url, status: 'Testing/QA' })
       .eq('id', ticket.id);
     if (!ticket.reviewed_by) {
-      sendSlackMessage(`${process.env.NEXT_PUBLIC_SLACK_WEBHOOK_TICKETS_TO_REVIEW}`, ticket, urlText);
+      sendSlackMessageReview(`${process.env.NEXT_PUBLIC_SLACK_WEBHOOK_TICKETS_TO_REVIEW}`, ticket, urlText, user);
     }
     setSending(false);
     setOpen(false);
@@ -526,8 +511,9 @@ function ActualTicket({
             src={
               ticket.picture
                 ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/previews/${ticket.picture}`
-                : 'https://bzclbrsgarmfqbtxbzxz.supabase.co/storage/v1/object/public/previews/public/noImage.png'
+                : process.env.NEXT_PUBLIC_SUPABASE_URL + '/storage/v1/object/public/previews/public/noImage.png'
             }
+            alt={ticket.title + " image"}
           />
         </div>
       ) : (
